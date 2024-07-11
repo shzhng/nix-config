@@ -3,6 +3,8 @@
   users.users = {
     shuo = {
       home = "/Users/shuo";
+      # This is really just for setting $SHELL, rather than `chsh` your user
+      # Maybe a fix incoming?: https://github.com/LnL7/nix-darwin/issues/811
       shell = pkgs.fish;
     };
   };
