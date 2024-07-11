@@ -31,12 +31,22 @@
     (nerdfonts.override { fonts = [ "Hack" "Monaspace" ]; })
     source-code-pro
 
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
+    # Cloud host CLI tools
+    azure-cli
+    awscli
+    hcloud
+
+    # Development tools
+    kubectl
+    kubernetes-helm
+    opentofu
+    cf-terraforming
+
+    fastfetch
+    uutils-coreutils-noprefix
+
+    # Database tools
+    duckdb
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -77,7 +87,19 @@
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
 
-    fish.enable = true;
+    # Add in all shells I could possibly use to make sure all programs are
+    # integrated well - ie. starship prompt, better cli tools' autocompletion enabled
+    zsh.enable = true;
+    fish = {
+      enable = true;
+      interactiveShellInit = ''
+        ${pkgs.fastfetch}/bin/fastfetch
+      '';
+    };
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
 
     git = {
       enable = true;
@@ -105,8 +127,12 @@
       settings = pkgs.lib.importTOML ./modules/starship/starship.toml;
     };
 
-    wezterm.enable = true;
+    wezterm = {
+      enable = true;
+      extraConfig = builtins.readFile ./modules/wezterm/wezterm.lua;
+    };
 
     btop.enable = true;
+    bottom.enable = true;
   };
 }
