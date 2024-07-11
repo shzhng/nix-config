@@ -78,6 +78,14 @@
 
     git = {
       enable = true;
+      userName = "Shuo Zheng";
+      userEmail = "github@shuozheng.com";
+      ignores = [ ".DS_Store" ];
+      extraConfig = {
+        init.defaultBranch = "main";
+        push.autoSetupRemote = true;
+        pull.rebase = true;
+      };
       difftastic.enable = true;
     };
 
