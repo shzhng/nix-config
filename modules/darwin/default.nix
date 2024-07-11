@@ -36,22 +36,7 @@
 
     taps = [
       "1password/tap"
-      "babashka/brew"
-      "borkdude/brew"
-      "clojure-lsp/brew"
-      "clojure/tools"
-      "cloudflare/cloudflare"
-      "d12frosted/emacs-plus"
-      "derailed/k9s"
-      "hashicorp/tap"
-      "homebrew/bundle"
-      "homebrew/cask-drivers"
-      "homebrew/cask-versions"
-      "homebrew/services"
-      "jeffreywildman/virt-manager"
       "pluralsh/plural"
-      "railwaycat/emacsmacport"
-      "twilio/brew"
     ];
 
     brews = [
@@ -111,6 +96,9 @@
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
+
+  # Allow installing proprietary apps such as 1Password and Chrome
+  nixpkgs.config.allowUnfree = true;
 
   # Enable Touch ID for sudo, instead of entering password.
   security.pam.enableSudoTouchIdAuth = true;
