@@ -40,6 +40,11 @@
     cf-terraforming
 
     fastfetch
+
+    # Utils
+    doggo
+    duf
+    dust
     uutils-coreutils-noprefix
 
     # Database tools
