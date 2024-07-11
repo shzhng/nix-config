@@ -70,6 +70,18 @@
     # EDITOR = "emacs";
   };
 
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
+  programs = {
+    # Let Home Manager install and manage itself.
+    home-manager.enable = true;
+
+    fish.enable = true;
+
+    bat.enable = true;
+    fzf.enable = true;
+
+    starship = {
+      enable = true;
+      settings = pkgs.lib.importTOML ./modules/starship/starship.toml;
+    };
+  };
 }
