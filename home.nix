@@ -76,12 +76,24 @@
 
     fish.enable = true;
 
+    git = {
+      enable = true;
+      difftastic.enable = true;
+    };
+
     bat.enable = true;
     fzf.enable = true;
+    lsd = {
+      enable = true;
+      enableAliases = true;
+    };
+    zoxide.enable = true;
 
     starship = {
       enable = true;
       settings = pkgs.lib.importTOML ./modules/starship/starship.toml;
     };
+
+    btop.enable = true;
   };
 }

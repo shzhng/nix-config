@@ -21,6 +21,7 @@
       bat
       fd
       fzf
+      lsd
       git
     ];
 
@@ -73,7 +74,6 @@
       "boost"
       "bottom"
       "brotli"
-      "btop"
       "c-ares"
       "ca-certificates"
       "cairo"
@@ -92,7 +92,6 @@
       "dav1d"
       "dbus"
       "desktop-file-utils"
-      "difftastic"
       "direnv"
       "docutils"
       "dog"
@@ -125,7 +124,6 @@
       "gflags"
       "ghostscript"
       "giflib"
-      "git"
       "glances"
       "glib"
       "glib-networking"
@@ -233,7 +231,6 @@
       "libxfixes"
       "libxi"
       "little-cms2"
-      "lsd"
       "luajit"
       "luv"
       "lz4"
@@ -347,7 +344,6 @@
       "zeromq"
       "zimg"
       "zlib"
-      "zoxide"
       "zstd"
     ];
 
