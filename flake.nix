@@ -21,7 +21,10 @@
       # $ nix-env -qaP | grep wget
       environment.systemPackages = with pkgs; [
           vim
-          neofetch
+          bat
+          fd
+          fzf
+          git
         ];
 
       # Auto upgrade nix package and the daemon service.
