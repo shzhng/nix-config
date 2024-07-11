@@ -28,6 +28,7 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            verbose = true;
             users.shuo = import ./home.nix;
           };
 

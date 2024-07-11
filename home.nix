@@ -94,6 +94,8 @@
       settings = pkgs.lib.importTOML ./modules/starship/starship.toml;
     };
 
+    wezterm.enable = true;
+
     btop.enable = true;
   };
 }
