@@ -202,8 +202,6 @@
       "libpng"
       "libpsl"
       "libpthread-stubs"
-      "libraw"
-      "libreplaygain"
       "librist"
       "librsvg"
       "libsamplerate"
@@ -218,7 +216,6 @@
       "libtermkey"
       "libtiff"
       "libtool"
-      "libtorrent-rakshasa"
       "libunibreak"
       "libunistring"
       "libusb"
@@ -238,10 +235,6 @@
       "libxext"
       "libxfixes"
       "libxi"
-      "libxml2"
-      "libxrender"
-      "libxtst"
-      "libyaml"
       "little-cms2"
       "lsd"
       "luajit"
@@ -327,7 +320,6 @@
       "subversion"
       "svt-av1"
       "taglib"
-      "tailscale"
       "tbb"
       "tcl-tk"
       "tesseract"
@@ -336,7 +328,6 @@
       "theora"
       "tmux"
       "tree"
-      "tree-sitter"
       "unbound"
       "unibilium"
       "unixodbc"
@@ -384,19 +375,16 @@
       "font-source-code-pro"
       "google-chrome"
       "google-drive"
-      "iterm2"
       "karabiner-elements"
       "kitty"
       "microsoft-auto-update"
       "microsoft-office"
       "microsoft-teams"
       "mullvadvpn"
-      "notion"
       "plex"
-      "signal"
       "slack"
-      "sony-ps-remote-play"
       "spotify"
+      "tailscale"
       "vlc"
       "visual-studio-code"
       "wechat"
@@ -406,7 +394,6 @@
     ];
 
     masApps = {
-      Tailscale = 1475387142;
     };
   };
 
