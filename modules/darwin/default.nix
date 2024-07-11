@@ -94,6 +94,11 @@
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
 
+  # Following line should allow us to avoid a logout/login cycle when rebuilding
+  system.activationScripts.postUserActivation.text = ''
+    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+  '';
+
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
 

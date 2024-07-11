@@ -17,7 +17,7 @@ return {
   -- Taken from https://github.com/HaleTom/dotfiles/blob/a2049913a35676eb4c449ebaff09f65abe055f62/wezterm/.config/wezterm/wezterm.lua#L93
   font = wezterm.font {
     -- Normal text
-    family='Monaspace Neon',
+    family = 'Monaspace Neon',
     -- family = 'Monaspace Argon',
     -- family='Monaspace Xenon',
     -- family='Monaspace Radon',
@@ -36,6 +36,8 @@ return {
       'ss08'
     }
   },
+
+  font_size = 13,
 
   font_rules = {
     {
