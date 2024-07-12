@@ -9,7 +9,6 @@ function scheme_for_appearance(appearance)
 end
 
 return {
-  -- ...your existing config
   -- color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
   color_scheme = "Catppuccin Mocha",
 
@@ -19,9 +18,9 @@ return {
     -- Normal text
     family = 'Monaspace Neon',
     -- family = 'Monaspace Argon',
-    -- family='Monaspace Xenon',
-    -- family='Monaspace Radon',
-    -- family='Monaspace Krypton',
+    -- family = 'Monaspace Xenon',
+    -- family = 'Monaspace Radon',
+    -- family = 'Monaspace Krypton',
     harfbuzz_features = {
       'calt',
       'liga',
