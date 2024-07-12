@@ -1,12 +1,11 @@
 { pkgs, ... }: {
   # Provision my user account.
-  users.users = {
-    shuo = {
-      home = "/Users/shuo";
-      # This is really just for setting $SHELL, rather than `chsh` your user
-      # Maybe a fix incoming?: https://github.com/LnL7/nix-darwin/issues/811
-      shell = pkgs.fish;
-    };
+  users.users.shuo = {
+    home = "/Users/shuo";
+    description = "Shuo Zheng";
+    # This is really just for setting $SHELL, rather than `chsh` your user
+    # Maybe a fix incoming?: https://github.com/LnL7/nix-darwin/issues/811
+    shell = pkgs.fish;
   };
 
   # Create /etc/zshrc that loads the nix-darwin environment.
@@ -41,7 +40,6 @@
 
     brews = [
       "plural"
-      "tmux"
      ];
 
     casks = [
@@ -81,11 +79,37 @@
   };
 
   # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-  # nix.package = pkgs.nix;
+  services = {
+    nix-daemon.enable = true;
 
-  # Necessary for using flakes on this system.
-  nix.settings.experimental-features = "nix-command flakes";
+    # sketchybar = {
+    #   enable = true;
+    # };
+
+    # We explicitly don't use tailscaled + tailscale cli in favor of the
+    # standalone UI version, installed via homebrew cask.
+    tailscale.enable = false;
+  };
+
+  networking = {
+    knownNetworkServices = [
+      "Wi-Fi"
+      "Thunderbolt Bridge"
+      "iPhone USB"
+      "Tailscale"
+    ];
+  };
+
+  nix = {
+    # nix.package = pkgs.nix;
+
+    # Necessary for using flakes on this system.
+    settings.experimental-features = "nix-command flakes";
+    gc = {
+      automatic = true;
+      options = "--delete-older-than 7d";
+    };
+  };
 
   # Set Git commit hash for darwin-version.
   # system.configurationRevision = self.rev or self.dirtyRev or null;
