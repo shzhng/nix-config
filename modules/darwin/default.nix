@@ -57,7 +57,6 @@
       "google-chrome"
       "google-drive"
       "karabiner-elements"
-      "kitty"
       "microsoft-auto-update"
       "microsoft-office"
       "microsoft-teams"

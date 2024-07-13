@@ -1,15 +1,14 @@
 local wezterm = require 'wezterm'
 
-function scheme_for_appearance(appearance)
-  if appearance:find "Dark" then
-    return "Catppuccin Mocha"
-  else
-    return "Catppuccin Latte"
-  end
-end
-
 return {
-  -- color_scheme = scheme_for_appearance(wezterm.gui.get_appearance()),
+  -- Hide the title bar
+  -- window_decorations = "RESIZE",
+
+  enable_scroll_bar = true,
+  hide_tab_bar_if_only_one_tab = true,
+  tab_bar_at_bottom = true,
+  use_fancy_tab_bar = false,
+
   color_scheme = "Catppuccin Mocha",
 
   -- Monaspace:  https://monaspace.githubnext.com/

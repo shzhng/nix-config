@@ -146,6 +146,21 @@
       settings = pkgs.lib.importTOML ./modules/starship/starship.toml;
     };
 
+    alacritty = {
+      enable = true;
+      settings = pkgs.lib.importTOML ./modules/alacritty/alacritty.toml;
+    };
+
+    kitty = {
+      enable = true;
+      shellIntegration = {
+        enableFishIntegration = true;
+        enableZshIntegration = true;
+      };
+      theme = "Catppuccin-Mocha";
+      extraConfig = builtins.readFile ./modules/kitty/kitty.conf;
+    };
+
     wezterm = {
       enable = true;
       extraConfig = builtins.readFile ./modules/wezterm/wezterm.lua;
