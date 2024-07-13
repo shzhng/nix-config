@@ -40,7 +40,7 @@
 
     brews = [
       "plural"
-     ];
+    ];
 
     casks = [
       "1password"

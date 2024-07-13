@@ -116,7 +116,23 @@
       difftastic.enable = true;
     };
 
-    bat.enable = true;
+    bat = {
+      enable = true;
+      config = {
+        theme = "catppuccin";
+      };
+      themes = {
+        catppuccin = {
+          src = pkgs.fetchFromGitHub {
+            owner = "catppuccin";
+            repo = "bat";
+            rev = "d714cc1";
+            sha256 = "Q5B4NDrfCIK3UAMs94vdXnR42k4AXCqZz6sRn8bzmf4=";
+          };
+          file = "themes/Catppuccin Mocha.tmTheme";
+        };
+      };
+    };
     fzf.enable = true;
     lsd = {
       enable = true;
@@ -135,7 +151,20 @@
       extraConfig = builtins.readFile ./modules/wezterm/wezterm.lua;
     };
 
+    tmux = {
+      enable = true;
+      terminal = "screen-256color";
+      mouse = true;
+      keyMode = "vi";
+      plugins = with pkgs; [
+        tmuxPlugins.catppuccin
+      ];
+    };
+
     btop.enable = true;
-    bottom.enable = true;
+    bottom = {
+      enable = true;
+      settings = pkgs.lib.importTOML ./modules/bottom/bottom.toml;
+    };
   };
 }
