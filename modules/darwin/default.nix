@@ -88,6 +88,14 @@
     # We explicitly don't use tailscaled + tailscale cli in favor of the
     # standalone UI version, installed via homebrew cask.
     tailscale.enable = false;
+
+    sketchybar = {
+      enable = true;
+      extraPackages = [ pkgs.jq ];
+      config = builtins.readFile ../sketchybar/sketchybarrc;
+    };
+    skhd.enable = true;
+    yabai.enable = true;
   };
 
   networking = {

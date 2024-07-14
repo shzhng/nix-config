@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./modules/git
+  ];
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "shuo";
@@ -101,19 +105,6 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
-    };
-
-    git = {
-      enable = true;
-      userName = "Shuo Zheng";
-      userEmail = "github@shuo.dev";
-      ignores = [ ".DS_Store" ];
-      extraConfig = {
-        init.defaultBranch = "main";
-        push.autoSetupRemote = true;
-        pull.rebase = true;
-      };
-      difftastic.enable = true;
     };
 
     bat = {
