@@ -22,7 +22,7 @@
 
   outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, catppuccin }: {
     # Build darwin flake using:
-    # `darwin-rebuild switch --flake .#Shuos-Macbook-Air`
+    # `nix run nix-darwin -- switch --flake .`
     # Switch with:
     # `darwin-rebuild switch --flake .#Shuos-Macbook-Air`
     darwinConfigurations.Shuos-Macbook-Air = nix-darwin.lib.darwinSystem {
