@@ -80,10 +80,6 @@
   services = {
     nix-daemon.enable = true;
 
-    # sketchybar = {
-    #   enable = true;
-    # };
-
     # We explicitly don't use tailscaled + tailscale cli in favor of the
     # standalone UI version, installed via homebrew cask.
     tailscale.enable = false;

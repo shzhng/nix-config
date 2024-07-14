@@ -11,7 +11,8 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "shuo";
-  home.homeDirectory = "/Users/shuo";
+  # TODO this probably should be passed in as a parameter? and derived from username
+  home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/shuo" else "/home/shuo";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -56,6 +57,13 @@
 
     # Database tools
     duckdb
+
+    # Python
+    poetry
+
+    # Rust
+    cargo
+    rustc
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage

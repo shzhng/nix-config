@@ -1,5 +1,5 @@
 {
-  description = "Shuo's Darwin system flake";
+  description = "Nix/Darwin system tools flake for shzhng";
 
   inputs = {
     # Pin our primary nixpkgs repository. This is the main nixpkgs repository
@@ -22,10 +22,10 @@
 
   outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, catppuccin }: {
     # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#Shuos-Macbook-Air
-    darwinConfigurations."Shuos-Macbook-Air" = nix-darwin.lib.darwinSystem {
+    # `darwin-rebuild switch --flake .#Shuos-Macbook-Air`
+    darwinConfigurations.Shuos-Macbook-Air = nix-darwin.lib.darwinSystem {
       modules = [
-        # catppuccin.nixosModules.catppuccin
+        # catppuccin.nixosModules.catppuccin TODO only use this with NixOS
         ./modules/darwin
         home-manager.darwinModules.home-manager {
           home-manager = {
@@ -47,6 +47,13 @@
     };
 
     # Expose the package set, including overlays, for convenience.
-    darwinPackages = self.darwinConfigurations."Shuos-Macbook-Air".pkgs;
+    darwinPackages = self.darwinConfigurations.Shuos-Macbook-Air.pkgs;
+
+    # To be used as standalone when not on MacOS or NixOS
+    homeConfigurations.shuo = home-manager.lib.homeManagerConfiguration {
+      modules = [
+        ./home.nix
+      ];
+    };
   };
 }
