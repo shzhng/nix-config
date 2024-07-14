@@ -9,6 +9,7 @@ return {
   tab_bar_at_bottom = true,
   use_fancy_tab_bar = false,
 
+  -- TODO eventually remove this when wezterm is supported by catppuccin/nix
   color_scheme = "Catppuccin Mocha",
 
   -- Monaspace:  https://monaspace.githubnext.com/

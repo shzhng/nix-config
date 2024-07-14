@@ -3,6 +3,9 @@
 {
   imports = [
     ./modules/git
+    ./modules/shells
+    ./modules/terminals
+    ./modules/tools
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -89,104 +92,13 @@
     # EDITOR = "emacs";
   };
 
+  catppuccin = {
+    enable = true;
+    flavor = "mocha";
+  };
+
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
-
-    # Add in all shells I could possibly use to make sure all programs are
-    # integrated well - ie. starship prompt, better cli tools' autocompletion enabled
-    zsh.enable = true;
-    fish = {
-      enable = true;
-      interactiveShellInit = ''
-        ${pkgs.fastfetch}/bin/fastfetch
-      '';
-    };
-    direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-    };
-
-    bat = {
-      enable = true;
-      config = {
-        theme = "catppuccin";
-      };
-      themes = {
-        catppuccin = {
-          src = pkgs.fetchFromGitHub {
-            owner = "catppuccin";
-            repo = "bat";
-            rev = "d714cc1";
-            sha256 = "Q5B4NDrfCIK3UAMs94vdXnR42k4AXCqZz6sRn8bzmf4=";
-          };
-          file = "themes/Catppuccin Mocha.tmTheme";
-        };
-      };
-    };
-    fzf = {
-      enable = true;
-      colors = {
-        bg = "#1e1e2e";
-        "bg+" = "#313244";
-        fg = "#cdd6f4";
-        "fg+" = "#cdd6f4";
-        header = "#f38ba8";
-        hl = "#f38ba8";
-        "hl+" = "#f38ba8";
-        info = "#cba6f7";
-        marker = "#f5e0dc";
-        pointer = "#f5e0dc";
-        prompt = "#cba6f7";
-        spinner = "#f5e0dc";
-      };
-    };
-    lsd = {
-      enable = true;
-      enableAliases = true;
-    };
-    zoxide.enable = true;
-    atuin.enable = true;
-
-    starship = {
-      enable = true;
-      settings = pkgs.lib.importTOML ./modules/starship/starship.toml;
-    };
-
-    alacritty = {
-      enable = true;
-      settings = pkgs.lib.importTOML ./modules/alacritty/alacritty.toml;
-    };
-
-    kitty = {
-      enable = true;
-      shellIntegration = {
-        enableFishIntegration = true;
-        enableZshIntegration = true;
-      };
-      theme = "Catppuccin-Mocha";
-      extraConfig = builtins.readFile ./modules/kitty/kitty.conf;
-    };
-
-    wezterm = {
-      enable = true;
-      extraConfig = builtins.readFile ./modules/wezterm/wezterm.lua;
-    };
-
-    tmux = {
-      enable = true;
-      terminal = "screen-256color";
-      mouse = true;
-      keyMode = "vi";
-      plugins = with pkgs; [
-        tmuxPlugins.catppuccin
-      ];
-    };
-
-    btop.enable = true;
-    bottom = {
-      enable = true;
-      settings = pkgs.lib.importTOML ./modules/bottom/bottom.toml;
-    };
   };
 }
