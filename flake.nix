@@ -50,7 +50,13 @@
     darwinPackages = self.darwinConfigurations.Shuos-Macbook-Air.pkgs;
 
     # To be used as standalone when not on MacOS or NixOS
-    homeConfigurations.shuo = home-manager.lib.homeManagerConfiguration {
+    homeConfigurations.shuo = let
+      # TODO make this configurable
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+    in
+    home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+
       modules = [
         ./home.nix
       ];
