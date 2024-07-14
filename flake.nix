@@ -27,8 +27,7 @@
       modules = [
         # catppuccin.nixosModules.catppuccin
         ./modules/darwin
-        home-manager.darwinModules.home-manager
-        {
+        home-manager.darwinModules.home-manager {
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;

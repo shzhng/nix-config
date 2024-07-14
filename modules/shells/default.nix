@@ -16,7 +16,7 @@
     # Use starship for a universal prompt that's consistent across shells
     starship = {
       enable = true;
-      settings = pkgs.lib.importTOML ../starship/starship.toml;
+      settings = pkgs.lib.importTOML ../../config/starship/starship.toml;
     };
 
     tmux = {

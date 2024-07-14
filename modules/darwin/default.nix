@@ -91,7 +91,7 @@
     sketchybar = {
       enable = true;
       extraPackages = [ pkgs.jq ];
-      config = builtins.readFile ../sketchybar/sketchybarrc;
+      config = builtins.readFile ../../config/sketchybar/sketchybarrc;
     };
     skhd.enable = true;
     yabai.enable = true;
