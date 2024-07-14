@@ -1,6 +1,9 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
 
+[azure]
+disabled = false
+
 [aws]
 symbol = "  "
 
@@ -21,6 +24,9 @@ symbol = " "
 
 [directory]
 read_only = " 󰌾"
+
+[direnv]
+disabled = false
 
 [docker_context]
 symbol = " "
@@ -162,6 +168,9 @@ symbol = " "
 
 [swift]
 symbol = " "
+
+[terraform]
+symbol = "󱁢 "
 
 [time]
 disabled = false
