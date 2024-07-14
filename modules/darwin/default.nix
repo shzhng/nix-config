@@ -73,8 +73,7 @@
       "zoom"
     ];
 
-    masApps = {
-    };
+    masApps = { };
   };
 
   # Auto upgrade nix package and the daemon service.

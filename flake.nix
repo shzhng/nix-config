@@ -16,20 +16,29 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    catppuccin.url = "github:catppuccin/nix";
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs }: {
+  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, catppuccin }: {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#Shuos-Macbook-Air
     darwinConfigurations."Shuos-Macbook-Air" = nix-darwin.lib.darwinSystem {
       modules = [
+        # catppuccin.nixosModules.catppuccin
         ./modules/darwin
-        home-manager.darwinModules.home-manager {
+        home-manager.darwinModules.home-manager
+        {
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
             verbose = true;
-            users.shuo = import ./home.nix;
+            users.shuo = {
+              imports = [
+                ./home.nix
+                catppuccin.homeManagerModules.catppuccin
+              ];
+            };
           };
 
           # Optionally, use home-manager.extraSpecialArgs to pass
