@@ -1,5 +1,8 @@
 # Nix/MacOS System Configurations
 
+[![NixOS 24.05](https://img.shields.io/badge/NixOS-24.05-blue.svg?style=flat-square&logo=NixOS&logoColor=white)](https://nixos.org)
+[![NixOS 24.05](https://img.shields.io/badge/nixpkgs-24.05-blue.svg?style=flat-square&logo=NixOS&logoColor=white)](https://github.com/NixOS/nixpkgs)
+
 This repository contains my own personal MacOS (using
 [nix-darwin](https://github.com/LnL7/nix-darwin)) and
 [home-manager](https://github.com/nix-community/home-manager) system
