@@ -23,6 +23,8 @@
   outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, catppuccin }: {
     # Build darwin flake using:
     # `darwin-rebuild switch --flake .#Shuos-Macbook-Air`
+    # Switch with:
+    # `darwin-rebuild switch --flake .#Shuos-Macbook-Air`
     darwinConfigurations.Shuos-Macbook-Air = nix-darwin.lib.darwinSystem {
       modules = [
         # catppuccin.nixosModules.catppuccin TODO only use this with NixOS
@@ -50,6 +52,10 @@
     darwinPackages = self.darwinConfigurations.Shuos-Macbook-Air.pkgs;
 
     # To be used as standalone when not on MacOS or NixOS
+    # Initalize with:
+    # `nix run home-manager -- init --switch`
+    # Switch with:
+    # `home-manager switch --flake .#shuo`
     homeConfigurations.shuo = home-manager.lib.homeManagerConfiguration {
       # TODO make this configurable
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
