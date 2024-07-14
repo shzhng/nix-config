@@ -62,7 +62,7 @@ symbol = " "
 symbol = " "
 
 [hostname]
-ssh_symbol = " "
+ssh_symbol = "󰣀 "
 
 [java]
 symbol = " "
@@ -165,9 +165,6 @@ symbol = " "
 
 [scala]
 symbol = " "
-
-[ssh]
-ssh_symbol = "󰣀 "
 
 [swift]
 symbol = " "
