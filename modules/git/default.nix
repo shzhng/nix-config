@@ -8,6 +8,9 @@
         ".DS_Store"
         ".envrc"
       ];
+      aliases = {
+        root = "rev-parse --show-toplevel";
+      };
       extraConfig = {
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
@@ -27,6 +30,7 @@
     "gf" = "git fetch";
     "gm" = "git merge";
     "gp" = "git push";
+    "grt" = "cd (git root)";
     "gst" = "git status";
   };
 }
