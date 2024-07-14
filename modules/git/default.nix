@@ -16,4 +16,17 @@
       difftastic.enable = true;
     };
   };
+
+  home.shellAliases = {
+    "g" = "git";
+    "ga" = "git add";
+    "gc" = "git commit";
+    "gcam" = "git commit -a -m";
+    "gd" = "git diff";
+    "gds" = "git diff --staged";
+    "gf" = "git fetch";
+    "gm" = "git merge";
+    "gp" = "git push";
+    "gst" = "git status";
+  };
 }

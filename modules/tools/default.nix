@@ -12,4 +12,14 @@
     };
     zoxide.enable = true;
   };
+
+  home.sessionVariables = {
+    # Use bat for man pages
+    MANPAGER = "sh -c 'col -bx | bat -l man -p'";
+  };
+
+  home.shellAliases = {
+    "cat" = "bat --paging=never";
+  };
+
 }
