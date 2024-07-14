@@ -166,6 +166,9 @@ symbol = " "
 [scala]
 symbol = " "
 
+[ssh]
+ssh_symbol = "󰣀 "
+
 [swift]
 symbol = " "
 
