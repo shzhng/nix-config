@@ -7,7 +7,8 @@ configurations. I use this to provision my MacOS instance, as well as provision
 the same environment on Linux systems (currently non-NixOS) using standalone
 home-manager.
 
-> [!IMPORTANT] This is a work in progress and may not work as expected. It isn't
+> [!IMPORTANT]
+> This is a work in progress and may not work as expected. It isn't
 > intended to be used by other people in their own setup, but feel free to
 > reference it as you get into using `nix`.
 
