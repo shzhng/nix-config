@@ -1,7 +1,10 @@
-{ ... }: {
+{ pkgs, ... }: {
   programs = {
     atuin.enable = true;
-    bat.enable = true;
+    bat = {
+      enable = true;
+      extraPackages = with pkgs.bat-extras; [ batman ];
+    };
     bottom.enable = true;
     btop.enable = true;
     fd.enable = true;
