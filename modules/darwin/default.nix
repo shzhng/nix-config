@@ -84,13 +84,27 @@
     # standalone UI version, installed via homebrew cask.
     tailscale.enable = false;
 
-    sketchybar = {
+    # TODO temporarily disable sketchybar while
+    # sketchybar = {
+    #   enable = true;
+    #   extraPackages = [ pkgs.jq ];
+    #   config = builtins.readFile ../../config/sketchybar/sketchybarrc;
+    # };
+    skhd = {
       enable = true;
-      extraPackages = [ pkgs.jq ];
-      config = builtins.readFile ../../config/sketchybar/sketchybarrc;
+      skhdConfig = builtins.readFile ../../config/skhd/skhdrc;
     };
-    skhd.enable = true;
-    yabai.enable = true;
+    yabai = {
+      enable = true;
+      config = {
+        layout = "float";
+        top_padding = 10;
+        bottom_padding = 10;
+        left_padding = 10;
+        right_padding = 10;
+        window_gap = 10;
+      };
+    };
   };
 
   networking = {
@@ -100,6 +114,47 @@
       "iPhone USB"
       "Tailscale"
     ];
+  };
+
+  # Set Git commit hash for darwin-version.
+  # system.configurationRevision = self.rev or self.dirtyRev or null;
+
+  system = {
+    # Used for backwards compatibility, please read the changelog before changing.
+    # $ darwin-rebuild changelog
+    stateVersion = 4;
+
+    # Following line should allow us to avoid a logout/login cycle when rebuilding
+    activationScripts.postUserActivation.text = ''
+      /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+    '';
+
+    defaults = {
+      dock = {
+        autohide = true;
+        autohide-delay = 0.0;
+        autohide-time-modifier = 0.2;
+        orientation = "bottom";
+      };
+
+      loginwindow = {
+        GuestEnabled = false;
+        # If I'm logged in, require password to shutdown/poweroff/restart
+        ShutDownDisabledWhileLoggedIn = true;
+        PowerOffDisabledWhileLoggedIn = true;
+        RestartDisabledWhileLoggedIn = true;
+      };
+
+      NSGlobalDomain = {
+        _HIHideMenuBar = false;
+      };
+
+      CustomUserPreferences = {
+        # Use this to set arbitrary custom preferences not yet supported by nix-darwin
+        # See https://github.com/LnL7/nix-darwin/blob/master/modules/system/defaults/CustomPreferences.nix
+        # and https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
+      };
+    };
   };
 
   nix = {
@@ -112,18 +167,6 @@
       options = "--delete-older-than 7d";
     };
   };
-
-  # Set Git commit hash for darwin-version.
-  # system.configurationRevision = self.rev or self.dirtyRev or null;
-
-  # Used for backwards compatibility, please read the changelog before changing.
-  # $ darwin-rebuild changelog
-  system.stateVersion = 4;
-
-  # Following line should allow us to avoid a logout/login cycle when rebuilding
-  system.activationScripts.postUserActivation.text = ''
-    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-  '';
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = "aarch64-darwin";
