@@ -45,31 +45,23 @@
     casks = [
       "1password"
       "1password-cli"
-      "alfred"
       "azure-data-studio"
-      "calibre"
       "cursor"
       "discord"
       "figma"
       "figma-agent"
       "firefox"
-      "flipper"
       "google-chrome"
       "google-drive"
-      "karabiner-elements"
       "microsoft-auto-update"
       "microsoft-office"
       "microsoft-teams"
-      "mullvadvpn"
+      "raycast"
       "plex"
       "slack"
       "spotify"
       "tailscale"
-      "vlc"
       "visual-studio-code"
-      "wechat"
-      "wezterm"
-      "whatsapp"
       "zoom"
     ];
 
@@ -79,12 +71,14 @@
   # Auto upgrade nix package and the daemon service.
   services = {
     nix-daemon.enable = true;
+    # TODO: config via home manager, really just for the caps = esc/ctrl mapping
+    karabiner-elements.enable = true;
 
     # We explicitly don't use tailscaled + tailscale cli in favor of the
     # standalone UI version, installed via homebrew cask.
     tailscale.enable = false;
 
-    # TODO temporarily disable sketchybar while
+    # TODO temporarily disable sketchybar
     # sketchybar = {
     #   enable = true;
     #   extraPackages = [ pkgs.jq ];
@@ -97,7 +91,7 @@
     yabai = {
       enable = true;
       config = {
-        layout = "float";
+        layout = "bsp";
         top_padding = 10;
         bottom_padding = 10;
         left_padding = 10;
