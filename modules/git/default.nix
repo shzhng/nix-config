@@ -18,6 +18,7 @@
       };
       difftastic.enable = true;
     };
+    lazygit.enable = true;
   };
 
   home.shellAliases = {
