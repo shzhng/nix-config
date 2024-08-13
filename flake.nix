@@ -29,16 +29,14 @@
       modules = [
         # catppuccin.nixosModules.catppuccin TODO only use this with NixOS
         ./modules/darwin
-        home-manager.darwinModules.home-manager {
+        home-manager.darwinModules.home-manager
+        {
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
             verbose = true;
             users.shuo = {
-              imports = [
-                ./home.nix
-                catppuccin.homeManagerModules.catppuccin
-              ];
+              imports = [ ./home.nix catppuccin.homeManagerModules.catppuccin ];
             };
           };
 
@@ -59,10 +57,7 @@
     homeConfigurations.shuo = home-manager.lib.homeManagerConfiguration {
       # TODO make this configurable
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
-      modules = [
-        ./home.nix
-        catppuccin.homeManagerModules.catppuccin
-      ];
+      modules = [ ./home.nix catppuccin.homeManagerModules.catppuccin ];
     };
   };
 }

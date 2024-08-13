@@ -9,20 +9,13 @@
   };
 
   # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true;  # default shell on catalina
+  programs.zsh.enable = true; # default shell on catalina
   programs.fish.enable = true;
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment = {
-    systemPackages = with pkgs; [
-      vim
-      bat
-      fd
-      fzf
-      lsd
-      git
-    ];
+    systemPackages = with pkgs; [ vim bat fd fzf lsd git ];
 
     # Set shells that will be available to users.
     shells = with pkgs; [ zsh fish ];
@@ -33,14 +26,9 @@
     # Uninstall brews and cleanup casks files if we remove packages here
     onActivation.cleanup = "zap";
 
-    taps = [
-      "1password/tap"
-      "pluralsh/plural"
-    ];
+    taps = [ "1password/tap" "pluralsh/plural" ];
 
-    brews = [
-      "plural"
-    ];
+    brews = [ "plural" ];
 
     casks = [
       "1password"
@@ -105,12 +93,8 @@
   };
 
   networking = {
-    knownNetworkServices = [
-      "Wi-Fi"
-      "Thunderbolt Bridge"
-      "iPhone USB"
-      "Tailscale"
-    ];
+    knownNetworkServices =
+      [ "Wi-Fi" "Thunderbolt Bridge" "iPhone USB" "Tailscale" ];
   };
 
   # Set Git commit hash for darwin-version.
@@ -147,9 +131,7 @@
         RestartDisabledWhileLoggedIn = true;
       };
 
-      NSGlobalDomain = {
-        _HIHideMenuBar = false;
-      };
+      NSGlobalDomain = { _HIHideMenuBar = false; };
 
       CustomUserPreferences = {
         # Use this to set arbitrary custom preferences not yet supported by nix-darwin
