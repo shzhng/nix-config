@@ -49,6 +49,10 @@
 
     fastfetch
 
+    # Nix
+    nixfmt
+    nixd
+
     # Utils
     doggo
     duf

@@ -53,13 +53,16 @@
       "firefox"
       "google-chrome"
       "google-drive"
+      "logitech-g-hub"
       "microsoft-auto-update"
       "microsoft-office"
       "microsoft-teams"
+      "moonlight"
       "raycast"
       "plex"
       "slack"
       "spotify"
+      "switchresx"
       "tailscale"
       "visual-studio-code"
       "zoom"
@@ -85,11 +88,11 @@
     #   config = builtins.readFile ../../config/sketchybar/sketchybarrc;
     # };
     skhd = {
-      enable = true;
+      enable = false;
       skhdConfig = builtins.readFile ../../config/skhd/skhdrc;
     };
     yabai = {
-      enable = true;
+      enable = false;
       config = {
         layout = "bsp";
         top_padding = 10;
