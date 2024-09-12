@@ -22,7 +22,13 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
+  home.packages = let wrapped-poetry = pkgs.writeShellScriptBin "poetry" ''
+      # Wrap in libraries expected by numpy etc
+      export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib/
+      export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ pkgs.zlib ]}:$LD_LIBRARY_PATH"
+      exec ${pkgs.poetry}/bin/poetry $@
+    '';
+  in with pkgs; [
 
     # fonts
     fira-code
@@ -60,7 +66,7 @@
     duckdb
 
     # Python
-    poetry
+    wrapped-poetry
 
     # Rust
     cargo
