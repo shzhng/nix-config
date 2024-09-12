@@ -33,6 +33,7 @@
     casks = [
       "1password"
       "1password-cli"
+      "astro-command-center"
       "azure-data-studio"
       "cursor"
       "discord"
