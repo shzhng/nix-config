@@ -57,9 +57,11 @@
     nixd
 
     # Utils
+    certbot
     doggo
     duf
     dust
+    unixODBC
     uutils-coreutils-noprefix
 
     # Database tools
