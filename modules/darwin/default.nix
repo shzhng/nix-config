@@ -9,8 +9,18 @@
   };
 
   # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true; # default shell on catalina
-  programs.fish.enable = true;
+  programs.zsh = {
+    enable = true; # default shell on catalina
+    loginShellInit = ''
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    '';
+  };
+  programs.fish = {
+    enable = true;
+    loginShellInit = ''
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    '';
+  };
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -26,9 +36,9 @@
     # Uninstall brews and cleanup casks files if we remove packages here
     onActivation.cleanup = "zap";
 
-    taps = [ "1password/tap" "pluralsh/plural" ];
+    taps = [ "1password/tap" "homebrew/services" ];
 
-    brews = [ "plural" ];
+    brews = [ "postgresql" ];
 
     casks = [
       "1password"
@@ -40,13 +50,16 @@
       "figma"
       "figma-agent"
       "firefox"
+      "ghostty"
       "google-chrome"
       "google-drive"
+      # "ledger-live"
       "logitech-g-hub"
       "microsoft-auto-update"
       "microsoft-office"
       "microsoft-teams"
       "moonlight"
+      "morgen"
       "raycast"
       "plex"
       "slack"
@@ -57,7 +70,9 @@
       "zoom"
     ];
 
-    masApps = { };
+    # masApps = {
+    #   "1Password for Safari" = 1569813296;
+    # };
   };
 
   # Auto upgrade nix package and the daemon service.

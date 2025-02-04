@@ -7,18 +7,19 @@
     };
 
     # Testing out other ones
-    alacritty = {
-      enable = true;
-      settings = pkgs.lib.importTOML ../../config/alacritty/alacritty.toml;
-    };
+    # alacritty = {
+    #   enable = true;
+    #   settings = pkgs.lib.importTOML ../../config/alacritty/alacritty.toml;
+    # };
 
-    kitty = {
-      enable = true;
-      shellIntegration = {
-        enableFishIntegration = true;
-        enableZshIntegration = true;
-      };
-      extraConfig = builtins.readFile ../../config/kitty/kitty.conf;
-    };
+    # kitty = {
+    #   enable = true;
+    #   shellIntegration = {
+    #     enableFishIntegration = true;
+    #     enableZshIntegration = true;
+    #   };
+    #   extraConfig = builtins.readFile ../../config/kitty/kitty.conf;
+    #   themeFile = "${pkgs.catppuccin-kitty}/share/kitty-themes/Catppuccin-Mocha.conf";
+    # };
   };
 }

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, ghostty, ... }:
 
 {
   imports =
@@ -29,7 +29,6 @@
       exec ${pkgs.poetry}/bin/poetry $@
     '';
   in with pkgs; [
-
     # fonts
     fira-code
     hubot-sans
@@ -67,12 +66,19 @@
     # Database tools
     duckdb
 
+    # Elixir
+    elixir
+    flyctl
+
     # Python
     wrapped-poetry
 
     # Rust
     cargo
     rustc
+
+    # Add ghostty from the flake input
+    # ghostty.packages.${pkgs.system}.default
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
