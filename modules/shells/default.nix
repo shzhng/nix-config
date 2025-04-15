@@ -51,6 +51,7 @@
       terminal = "screen-256color";
       mouse = true;
       keyMode = "vi";
+      extraConfig = builtins.readFile ../../config/tmux/tmux.conf;
     };
   };
 }
