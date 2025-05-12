@@ -4,8 +4,6 @@
     home = "/Users/shuo";
     description = "Shuo Zheng";
     shell = pkgs.fish;
-    # Add this to ensure the user is managed by nix-darwin
-    isNormalUser = true;
   };
 
   # Create /etc/zshrc that loads the nix-darwin environment.
