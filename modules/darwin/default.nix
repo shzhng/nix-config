@@ -3,15 +3,15 @@
   users.users.shuo = {
     home = "/Users/shuo";
     description = "Shuo Zheng";
-    # This is really just for setting $SHELL, rather than `chsh` your user
-    # Maybe a fix incoming?: https://github.com/LnL7/nix-darwin/issues/811
     shell = pkgs.fish;
+    # Add this to ensure the user is managed by nix-darwin
+    isNormalUser = true;
   };
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh = {
     enable = true; # default shell on catalina
-    loginShellInit = ''
+    initContent = ''
       eval "$(/opt/homebrew/bin/brew shellenv)"
     '';
   };
@@ -162,7 +162,12 @@
     # nix.package = pkgs.nix;
 
     # Necessary for using flakes on this system.
-    settings.experimental-features = "nix-command flakes";
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      # Remove deprecated settings
+      # always-allow-substitutes = true;
+      # upgrade-nix-store-path-url = "...";
+    };
     gc = {
       automatic = true;
       options = "--delete-older-than 7d";
