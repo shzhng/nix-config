@@ -53,6 +53,8 @@
             # arguments to home.nix
           }
           {
+            # Overlay for karabiner-elements
+            # https://github.com/LnL7/nix-darwin/issues/811
             nixpkgs.overlays = [
               (self: super: {
                 karabiner-elements = super.karabiner-elements.overrideAttrs (old: {
