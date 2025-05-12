@@ -34,7 +34,7 @@
     # Uninstall brews and cleanup casks files if we remove packages here
     onActivation.cleanup = "zap";
 
-    taps = [ "1password/tap" "homebrew/services" ];
+    taps = [ "1password/tap" ];
 
     brews = [ "postgresql" ];
 
@@ -69,14 +69,13 @@
       "zoom"
     ];
 
-    # masApps = {
-    #   "1Password for Safari" = 1569813296;
-    # };
+    masApps = {
+      "1Password for Safari" = 1569813296;
+    };
   };
 
   # Auto upgrade nix package and the daemon service.
   services = {
-    nix-daemon.enable = true;
     # TODO: config via home manager, really just for the caps = esc/ctrl mapping
     karabiner-elements.enable = true;
 
@@ -157,19 +156,22 @@
   };
 
   nix = {
+    # Let determinate handle nix management. See https://determinate.systems/posts/nix-darwin-updates/
+    enable = false;
+
     # nix.package = pkgs.nix;
 
     # Necessary for using flakes on this system.
-    settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      # Remove deprecated settings
-      # always-allow-substitutes = true;
-      # upgrade-nix-store-path-url = "...";
-    };
-    gc = {
-      automatic = true;
-      options = "--delete-older-than 7d";
-    };
+    #settings = {
+    #  experimental-features = [ "nix-command" "flakes" ];
+    #  # Remove deprecated settings
+    #  # always-allow-substitutes = true;
+    #  # upgrade-nix-store-path-url = "...";
+    #};
+    #gc = {
+    #  automatic = true;
+    #  options = "--delete-older-than 7d";
+    #};
   };
 
   # The platform the configuration will be used on.
@@ -179,5 +181,5 @@
   nixpkgs.config.allowUnfree = true;
 
   # Enable Touch ID for sudo, instead of entering password.
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 }
