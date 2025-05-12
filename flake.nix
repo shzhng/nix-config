@@ -52,6 +52,19 @@
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
           }
+          {
+            nixpkgs.overlays = [
+              (self: super: {
+                karabiner-elements = super.karabiner-elements.overrideAttrs (old: {
+                  version = "14.13.0";
+                  src = super.fetchurl {
+                    inherit (old.src) url;
+                    hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
+                  };
+                });
+              })
+            ];
+          }
         ];
       };
 
@@ -69,4 +82,15 @@
         modules = [ ./home.nix catppuccin.homeManagerModules.catppuccin ];
       };
     };
+
+  nixConfig = {
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://cache.nixos.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    ];
+  };
 }
