@@ -29,6 +29,9 @@
       exec ${pkgs.poetry}/bin/poetry $@
     '';
   in with pkgs; [
+    # Editors
+    neovim
+
     # fonts
     fira-code
     hubot-sans
@@ -52,7 +55,7 @@
     fastfetch
 
     # Nix
-    nixfmt
+    nixfmt-rfc-style
     nixd
 
     # Utils
