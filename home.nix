@@ -38,7 +38,8 @@
     jetbrains-mono
     monaspace
     # Only install select nerdfonts since it's huge
-    (nerdfonts.override { fonts = [ "Hack" "Monaspace" ]; })
+    pkgs.nerd-fonts.hack
+    pkgs.nerd-fonts.monaspace
     source-code-pro
 
     # Cloud host CLI tools
