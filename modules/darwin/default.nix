@@ -45,8 +45,8 @@
     # Uninstall brews and cleanup casks files if we remove packages here
     onActivation.cleanup = "zap";
 
-    brews = [ 
-      "postgresql" 
+    brews = [
+      "postgresql"
     ];
 
     casks = [
@@ -184,7 +184,11 @@
           "64" = {
             enabled = true;
             value = {
-              parameters = [ 32 49 524288 ];
+              parameters = [
+                32
+                49
+                524288
+              ];
               type = "standard";
             };
           };

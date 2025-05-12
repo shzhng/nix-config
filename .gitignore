@@ -1,1 +1,5 @@
+# Nix build result
 result
+
+# Generated pre-commit config (created by nix run .#install-git-hooks)
+.pre-commit-config.yaml

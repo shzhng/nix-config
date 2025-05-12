@@ -33,6 +33,12 @@
     };
 
     catppuccin.url = "github:catppuccin/nix";
+
+    # Add git-hooks.nix for pre-commit hooks
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -45,6 +51,7 @@
       homebrew-cask,
       home-manager,
       catppuccin,
+      git-hooks,
     }:
     let
       # Define shared tap configuration
@@ -52,10 +59,10 @@
         "homebrew/homebrew-core" = homebrew-core;
         "homebrew/homebrew-cask" = homebrew-cask;
       };
-      
+
       # Get just the tap names (for nix-darwin's homebrew.taps)
       brewTapNames = builtins.attrNames brewTaps;
-      
+
       # Shared configuration for all your macOS systems
       darwinCommonModules = [
         # catppuccin.nixosModules.catppuccin TODO only use this with NixOS
@@ -126,6 +133,17 @@
           ];
         }
       ];
+
+      # Create pre-commit hooks configuration
+      # This enables automatic formatting of Nix files before each commit
+      # To install hooks, run: nix run .#install-git-hooks
+      # The hooks are configured to use nixfmt-rfc-style to format all .nix files
+      # A .pre-commit-config.yaml file will be generated (and git-ignored)
+      systems = [
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ];
+      forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
     in
     {
       # Build darwin flake using:
@@ -147,6 +165,39 @@
       # Expose the package set, including overlays, for convenience.
       # We can just reference one configuration as the package set is the same for both
       darwinPackages = self.darwinConfigurations.Shuos-MacBook-Pro.pkgs;
+
+      # Add pre-commit hooks check
+      # This configures the git pre-commit hooks to run nixfmt-rfc-style
+      # on all Nix files in the repository before each commit
+      checks = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          pre-commit-check = git-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              nixfmt-rfc-style.enable = true;
+            };
+          };
+        }
+      );
+
+      # This allows running: nix run .#install-git-hooks
+      # Running this command will install the git pre-commit hooks
+      # These hooks will automatically format Nix files when committing
+      apps = forAllSystems (system: {
+        install-git-hooks = {
+          type = "app";
+          program = toString (
+            nixpkgs.legacyPackages.${system}.writeShellScript "install-git-hooks" ''
+              ${self.checks.${system}.pre-commit-check.shellHook}
+              echo "Git hooks installed successfully!"
+            ''
+          );
+        };
+      });
 
       # To be used as standalone when not on MacOS or NixOS
       # Initalize with:

@@ -49,3 +49,42 @@ darwin-rebuild switch --flake .
 ```sh
 home-manager switch --flake .
 ```
+
+## Code Formatting
+
+This repository uses automatic code formatting to maintain consistent style across all Nix files. The formatting is enforced using git pre-commit hooks that run before each commit.
+
+### Setting Up Pre-commit Hooks
+
+To set up the pre-commit hooks:
+
+```sh
+nix run .#install-git-hooks
+```
+
+This will install a git pre-commit hook that automatically formats all Nix files using `nixfmt-rfc-style` whenever you make a commit.
+
+### Manual Formatting
+
+If you want to manually format all Nix files in the repository:
+
+```sh
+find . -name "*.nix" -type f -exec nix run nixpkgs#nixfmt-rfc-style -- {} \;
+```
+
+### How It Works
+
+- The hooks are configured in the `flake.nix` file using [git-hooks.nix](https://github.com/cachix/git-hooks.nix)
+- A `.pre-commit-config.yaml` file is generated automatically (and git-ignored)
+- The hooks run `nixfmt-rfc-style` on all Nix files before each commit
+- If formatting fails, the commit is aborted
+
+### Skipping Hooks
+
+If you need to bypass the pre-commit hooks for a specific commit:
+
+```sh
+git commit --no-verify
+```
+
+However, it's generally recommended to let the hooks run to maintain consistent formatting.
