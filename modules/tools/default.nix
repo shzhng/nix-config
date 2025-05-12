@@ -9,10 +9,7 @@
     btop.enable = true;
     fd.enable = true;
     fzf.enable = true;
-    lsd = {
-      enable = true;
-      enableAliases = true;
-    };
+    lsd.enable = true;
     zoxide.enable = true;
   };
 
