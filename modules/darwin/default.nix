@@ -34,8 +34,6 @@
     # Uninstall brews and cleanup casks files if we remove packages here
     onActivation.cleanup = "zap";
 
-    taps = [ "1password/tap" ];
-
     brews = [ "postgresql" ];
 
     casks = [

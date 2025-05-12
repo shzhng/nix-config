@@ -21,11 +21,11 @@
       url = "github:homebrew/homebrew-core";
       flake = false;
     };
+
     homebrew-cask = {
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
-
 
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -33,13 +33,20 @@
     };
 
     catppuccin.url = "github:catppuccin/nix";
-
-    # Remove the nixpkgs override from ghostty
-    ghostty.url = "github:mitchellh/ghostty";
   };
 
-  outputs = inputs@{ self, nixpkgs, nix-darwin, nix-homebrew, homebrew-core, homebrew-cask, home-manager
-    , catppuccin, ghostty }: {
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      nix-darwin,
+      nix-homebrew,
+      homebrew-core,
+      homebrew-cask,
+      home-manager,
+      catppuccin,
+    }:
+    {
       # Build darwin flake using:
       # `nix run nix-darwin -- switch --flake .`
       # Switch with:
@@ -57,10 +64,11 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               verbose = true;
-              extraSpecialArgs = { inherit ghostty; };
               users.shuo = {
-                imports =
-                  [ ./home.nix catppuccin.homeManagerModules.catppuccin ];
+                imports = [
+                  ./home.nix
+                  catppuccin.homeManagerModules.catppuccin
+                ];
               };
             };
 
@@ -90,6 +98,8 @@
               #
               # With mutableTaps disabled, taps can no longer be added imperatively with `brew tap`.
               mutableTaps = false;
+
+              autoMigrate = true;
             };
           }
 
@@ -122,7 +132,10 @@
       homeConfigurations.shuo = home-manager.lib.homeManagerConfiguration {
         # TODO make this configurable
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
-        modules = [ ./home.nix catppuccin.homeManagerModules.catppuccin ];
+        modules = [
+          ./home.nix
+          catppuccin.homeManagerModules.catppuccin
+        ];
       };
     };
 

@@ -1,4 +1,4 @@
-{ pkgs, ghostty, ... }:
+{ pkgs, ... }:
 
 {
   imports =
@@ -80,9 +80,6 @@
     # Rust
     cargo
     rustc
-
-    # Add ghostty from the flake input
-    # ghostty.packages.${pkgs.system}.default
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
