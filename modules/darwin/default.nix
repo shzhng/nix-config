@@ -45,7 +45,9 @@
     # Uninstall brews and cleanup casks files if we remove packages here
     onActivation.cleanup = "zap";
 
-    brews = [ "postgresql" ];
+    brews = [ 
+      "postgresql" 
+    ];
 
     casks = [
       "1password"
@@ -160,12 +162,33 @@
 
       NSGlobalDomain = {
         _HIHideMenuBar = false;
+        AppleShowScrollBars = "Always";
+        AppleShowAllExtensions = true;
+        # Reverse scroll direction
+        "com.apple.swipescrolldirection" = false;
+      };
+
+      controlcenter = {
+        BatteryShowPercentage = true;
+      };
+
+      menuExtraClock = {
+        ShowSeconds = true;
       };
 
       CustomUserPreferences = {
         # Use this to set arbitrary custom preferences not yet supported by nix-darwin
         # See https://github.com/LnL7/nix-darwin/blob/master/modules/system/defaults/CustomPreferences.nix
         # and https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
+        "com.apple.symbolichotkeys.AppleSymbolicHotKeys" = {
+          "64" = {
+            enabled = true;
+            value = {
+              parameters = [ 32 49 524288 ];
+              type = "standard";
+            };
+          };
+        };
       };
     };
   };
