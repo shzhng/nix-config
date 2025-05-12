@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   programs = {
     atuin.enable = true;
     bat = {
@@ -24,6 +25,8 @@
       LS_COLORS = "$(vivid generate catppuccin-mocha)";
     };
 
-    shellAliases = { "cat" = "bat --paging=never"; };
+    shellAliases = {
+      "cat" = "bat --paging=never";
+    };
   };
 }

@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   programs = {
     # Add in all shells I could possibly use to make sure all programs set up
     # autcompletion prompt injection, etc properly

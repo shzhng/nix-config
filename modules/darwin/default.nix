@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # Provision my user account.
   users.users.shuo = {
     home = "/Users/shuo";
@@ -23,10 +24,20 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment = {
-    systemPackages = with pkgs; [ vim bat fd fzf lsd git ];
+    systemPackages = with pkgs; [
+      vim
+      bat
+      fd
+      fzf
+      lsd
+      git
+    ];
 
     # Set shells that will be available to users.
-    shells = with pkgs; [ zsh fish ];
+    shells = with pkgs; [
+      zsh
+      fish
+    ];
   };
 
   homebrew = {
@@ -105,8 +116,12 @@
   };
 
   networking = {
-    knownNetworkServices =
-      [ "Wi-Fi" "Thunderbolt Bridge" "iPhone USB" "Tailscale" ];
+    knownNetworkServices = [
+      "Wi-Fi"
+      "Thunderbolt Bridge"
+      "iPhone USB"
+      "Tailscale"
+    ];
   };
 
   # Set Git commit hash for darwin-version.
@@ -143,7 +158,9 @@
         RestartDisabledWhileLoggedIn = true;
       };
 
-      NSGlobalDomain = { _HIHideMenuBar = false; };
+      NSGlobalDomain = {
+        _HIHideMenuBar = false;
+      };
 
       CustomUserPreferences = {
         # Use this to set arbitrary custom preferences not yet supported by nix-darwin

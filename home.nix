@@ -1,15 +1,18 @@
 { pkgs, ... }:
 
 {
-  imports =
-    [ ./modules/git ./modules/shells ./modules/terminals ./modules/tools ];
+  imports = [
+    ./modules/git
+    ./modules/shells
+    ./modules/terminals
+    ./modules/tools
+  ];
 
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "shuo";
   # TODO this probably should be passed in as a parameter? and derived from username
-  home.homeDirectory =
-    if pkgs.stdenv.isDarwin then "/Users/shuo" else "/home/shuo";
+  home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/shuo" else "/home/shuo";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -22,65 +25,69 @@
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = let wrapped-poetry = pkgs.writeShellScriptBin "poetry" ''
-      # Wrap in libraries expected by numpy etc
-      export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib/
-      export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ pkgs.zlib ]}:$LD_LIBRARY_PATH"
-      exec ${pkgs.poetry}/bin/poetry $@
-    '';
-  in with pkgs; [
-    # Editors
-    neovim
+  home.packages =
+    let
+      wrapped-poetry = pkgs.writeShellScriptBin "poetry" ''
+        # Wrap in libraries expected by numpy etc
+        export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib/
+        export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ pkgs.zlib ]}:$LD_LIBRARY_PATH"
+        exec ${pkgs.poetry}/bin/poetry $@
+      '';
+    in
+    with pkgs;
+    [
+      # Editors
+      neovim
 
-    # fonts
-    fira-code
-    hubot-sans
-    jetbrains-mono
-    monaspace
-    # Only install select nerdfonts since it's huge
-    pkgs.nerd-fonts.hack
-    pkgs.nerd-fonts.monaspace
-    source-code-pro
+      # fonts
+      fira-code
+      hubot-sans
+      jetbrains-mono
+      monaspace
+      # Only install select nerdfonts since it's huge
+      pkgs.nerd-fonts.hack
+      pkgs.nerd-fonts.monaspace
+      source-code-pro
 
-    # Cloud host CLI tools
-    azure-cli
-    awscli
-    hcloud
+      # Cloud host CLI tools
+      azure-cli
+      awscli
+      hcloud
 
-    # Development tools
-    kubectl
-    kubernetes-helm
-    opentofu
-    cf-terraforming
+      # Development tools
+      kubectl
+      kubernetes-helm
+      opentofu
+      cf-terraforming
 
-    fastfetch
+      fastfetch
 
-    # Nix
-    nixfmt-rfc-style
-    nixd
+      # Nix
+      nixfmt-rfc-style
+      nixd
 
-    # Utils
-    certbot
-    doggo
-    duf
-    dust
-    unixODBC
-    uutils-coreutils-noprefix
+      # Utils
+      certbot
+      doggo
+      duf
+      dust
+      unixODBC
+      uutils-coreutils-noprefix
 
-    # Database tools
-    duckdb
+      # Database tools
+      duckdb
 
-    # Elixir
-    elixir
-    flyctl
+      # Elixir
+      elixir
+      flyctl
 
-    # Python
-    wrapped-poetry
+      # Python
+      wrapped-poetry
 
-    # Rust
-    cargo
-    rustc
-  ];
+      # Rust
+      cargo
+      rustc
+    ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
