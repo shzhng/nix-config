@@ -68,6 +68,7 @@
 
       # Utils
       certbot
+      devenv
       doggo
       duf
       dust
