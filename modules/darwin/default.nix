@@ -62,6 +62,7 @@
       "ghostty"
       "google-chrome"
       "google-drive"
+      "hiddenbar"
       "ledger-live"
       "logitech-g-hub"
       "microsoft-auto-update"

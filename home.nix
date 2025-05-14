@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./modules/editors
     ./modules/git
     ./modules/shells
     ./modules/terminals
@@ -36,8 +37,6 @@
     in
     with pkgs;
     [
-      # Editors
-      neovim
 
       # fonts
       fira-code

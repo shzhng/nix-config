@@ -1,0 +1,7 @@
+{
+  "auto_install_extensions": {
+    "catppuccin-icons": true
+  },
+  "autosave": "on_focus_change",
+  "vim_mode": true
+}

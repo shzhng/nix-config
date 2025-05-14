@@ -76,6 +76,7 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             verbose = true;
+            backupFileExtension = "backup";
             users.shuo = {
               imports = [
                 ./home.nix
