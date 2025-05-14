@@ -80,7 +80,7 @@
             users.shuo = {
               imports = [
                 ./home.nix
-                catppuccin.homeManagerModules.catppuccin
+                catppuccin.homeModules.catppuccin
               ];
             };
           };
@@ -210,7 +210,7 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
           ./home.nix
-          catppuccin.homeManagerModules.catppuccin
+          catppuccin.homeModules.catppuccin
         ];
       };
     };

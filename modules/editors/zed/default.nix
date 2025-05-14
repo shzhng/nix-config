@@ -1,7 +1,7 @@
 { ... }:
 
 let
-  settingsFile = ./settings.json;
+  settingsFile = ../../../config/zed/settings.json;
   settingsContent = builtins.fromJSON (builtins.readFile settingsFile);
 in
 {
