@@ -44,8 +44,8 @@
       jetbrains-mono
       monaspace
       # Only install select nerdfonts since it's huge
-      pkgs.nerd-fonts.hack
-      pkgs.nerd-fonts.monaspace
+      nerd-fonts.hack
+      nerd-fonts.monaspace
       source-code-pro
 
       # Cloud host CLI tools

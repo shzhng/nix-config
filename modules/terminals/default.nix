@@ -32,12 +32,12 @@
       enableBashIntegration = true;
       enableZshIntegration = true;
       enableFishIntegration = true;
-      #   settings = {
-      #     # Add your ghostty settings here
-      #     # For example:
-      #     # font-family = "JetBrains Mono";
-      #     # font-size = 12;
-      #   };
+      settings = {
+        # Add your ghostty settings here
+        # For example:
+        font-family = "Monaspace Neon Var";
+        font-size = 15;
+      };
     };
   };
 }
