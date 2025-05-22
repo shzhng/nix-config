@@ -4,6 +4,13 @@
   },
   "autosave": "on_focus_change",
   "buffer_font_family": "MonaspiceNe Nerd Font Mono",
+  "buffer_font_features": {
+    "ss01": true,
+    "ss02": true,
+    "ss03": true,
+    "ss04": true,
+    "ss05": true
+  },
   "buffer_font_size": 14,
   "ui_font_family": "Hubot Sans",
   "vim_mode": true

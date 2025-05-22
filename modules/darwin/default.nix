@@ -73,7 +73,7 @@
       "plex"
       "slack"
       "spotify"
-      "switchresx"
+      # "switchresx"
       "tailscale"
       "visual-studio-code"
       "zoom"

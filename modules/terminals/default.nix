@@ -29,14 +29,17 @@
     ghostty = {
       enable = true;
       package = null; # installed through homebrew
+
       enableBashIntegration = true;
       enableZshIntegration = true;
       enableFishIntegration = true;
+
       settings = {
         # Add your ghostty settings here
         # For example:
-        font-family = "Monaspace Neon Var";
-        font-size = 15;
+        font-family = "MonaspiceNe Nerd Font Mono";
+        font-feature = "+ss01, +ss02, +ss03, +ss04, +ss05";
+        font-size = 14;
       };
     };
   };
