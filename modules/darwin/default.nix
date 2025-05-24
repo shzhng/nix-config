@@ -73,6 +73,7 @@
       "plex"
       "slack"
       "spotify"
+      "steam"
       # "switchresx"
       "tailscale"
       "visual-studio-code"
@@ -87,7 +88,20 @@
   # Auto upgrade nix package and the daemon service.
   services = {
     # TODO: config via home manager, really just for the caps = esc/ctrl mapping
-    karabiner-elements.enable = true;
+    karabiner-elements = {
+      enable = true;
+      # "https://github.com/nix-darwin/nix-darwin/issues/1041"
+      package = pkgs.karabiner-elements.overrideAttrs (old: {
+        version = "14.13.0";
+
+        src = pkgs.fetchurl {
+          inherit (old.src) url;
+          hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
+        };
+
+        dontFixup = true;
+      });
+    };
 
     # We explicitly don't use tailscaled + tailscale cli in favor of the
     # standalone UI version, installed via homebrew cask.

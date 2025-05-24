@@ -1,0 +1,31 @@
+{
+  "title": "Left Control to Escape/Control",
+  "rules": [
+    {
+      "description": "Left Control to Escape/Control",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "left_control",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to_if_held_down": [
+            {
+              "key_code": "left_control"
+            }
+          ],
+          "to_if_tapped": [
+            {
+              "key_code": "escape"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -102,6 +102,11 @@
     #   org.gradle.console=verbose
     #   org.gradle.daemon.idletimeout=3600000
     # '';
+
+    karabiner = {
+      target = ".config/karabiner/karabiner.json";
+      source = ./config/karabiner/karabiner.json;
+    };
   };
 
   # Home Manager can also manage your environment variables through
