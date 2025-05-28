@@ -37,15 +37,16 @@
     in
     with pkgs;
     [
-      # Apps
+      # Cross-platform apps
       _1password-gui
       _1password-cli
       code-cursor
+      discord
       firefox
       google-chrome
       slack
       spotify
-      tailscale
+      # tailscale
       vscode
       zoom-us
 

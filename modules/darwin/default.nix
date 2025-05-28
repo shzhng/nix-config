@@ -45,7 +45,7 @@
       lsd
       git
 
-      # Apps
+      # Mac-specific apps
       raycast
       teams
     ];
@@ -66,7 +66,6 @@
 
     casks = [
       "astro-command-center"
-      "discord"
       "figma"
       "figma-agent"
       "ghostty"
