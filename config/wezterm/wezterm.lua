@@ -9,9 +9,6 @@ return {
   tab_bar_at_bottom = true,
   use_fancy_tab_bar = false,
 
-  -- TODO eventually remove this when wezterm is supported by catppuccin/nix
-  color_scheme = "Catppuccin Mocha",
-
   -- Monaspace:  https://monaspace.githubnext.com/
   -- Taken from https://github.com/HaleTom/dotfiles/blob/a2049913a35676eb4c449ebaff09f65abe055f62/wezterm/.config/wezterm/wezterm.lua#L93
   font = wezterm.font {
