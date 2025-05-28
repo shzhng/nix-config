@@ -70,7 +70,6 @@
       "figma"
       "figma-agent"
       "ghostty"
-      "google-chrome"
       "google-drive"
       "hiddenbar"
       "ledger-live"

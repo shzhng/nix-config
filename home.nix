@@ -42,8 +42,10 @@
       _1password-cli
       code-cursor
       firefox
+      google-chrome
       slack
       spotify
+      tailscale
       vscode
       zoom-us
 
