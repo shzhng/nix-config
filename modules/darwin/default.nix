@@ -8,17 +8,24 @@
   };
 
   # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh = {
-    enable = true; # default shell on catalina
-    shellInit = ''
-      eval "$(/opt/homebrew/bin/brew shellenv)"
-    '';
-  };
-  programs.fish = {
-    enable = true;
-    loginShellInit = ''
-      eval "$(/opt/homebrew/bin/brew shellenv)"
-    '';
+  programs = {
+    zsh = {
+      enable = true; # default shell on catalina
+      shellInit = ''
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      '';
+    };
+    fish = {
+      enable = true;
+      loginShellInit = ''
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      '';
+    };
+
+    # Include this to make 1password work, even though it's installed via home-manager
+    # See "https://github.com/nix-darwin/nix-darwin/pull/1438"
+    _1password.enable = true;
+    _1password-gui.enable = true;
   };
 
   # List packages installed in system profile. To search by name, run:
@@ -48,15 +55,12 @@
     brews = [ ];
 
     casks = [
-      "1password"
-      "1password-cli"
       "astro-command-center"
       "azure-data-studio"
       "cursor"
       "discord"
       "figma"
       "figma-agent"
-      "firefox"
       "ghostty"
       "google-chrome"
       "google-drive"
@@ -71,13 +75,10 @@
       "mullvadvpn"
       "raycast"
       "plex"
-      "slack"
       "spotify"
       "steam"
       # "switchresx"
       "tailscale"
-      "visual-studio-code"
-      "zoom"
     ];
 
     masApps = {
@@ -148,9 +149,11 @@
     stateVersion = 4;
 
     # Following line should allow us to avoid a logout/login cycle when rebuilding
-    activationScripts.postUserActivation.text = ''
-      /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-    '';
+    # activationScripts.postUserActivation.text = ''
+    #   /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+    # '';
+
+    primaryUser = "shuo";
 
     keyboard = {
       enableKeyMapping = true;

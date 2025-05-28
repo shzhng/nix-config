@@ -37,6 +37,13 @@
     in
     with pkgs;
     [
+      # Apps
+      _1password-gui
+      _1password-cli
+      firefox
+      slack
+      vscode
+      zoom-us
 
       # fonts
       fira-code
