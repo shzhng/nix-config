@@ -7,6 +7,12 @@
     shell = pkgs.fish;
   };
 
+  # "https://github.com/nix-darwin/nix-darwin/issues/902"
+  launchd.user.agents.raycast = {
+    serviceConfig.ProgramArguments = [ "/Applications/Nix Apps/Raycast.app/Contents/MacOS/Raycast" ];
+    serviceConfig.RunAtLoad = true;
+  };
+
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs = {
     zsh = {
@@ -24,8 +30,8 @@
 
     # Include this to make 1password work, even though it's installed via home-manager
     # See "https://github.com/nix-darwin/nix-darwin/pull/1438"
-    _1password.enable = true;
     _1password-gui.enable = true;
+    _1password.enable = true;
   };
 
   # List packages installed in system profile. To search by name, run:
@@ -38,6 +44,10 @@
       fzf
       lsd
       git
+
+      # Apps
+      raycast
+      teams
     ];
 
     # Set shells that will be available to users.
@@ -56,8 +66,6 @@
 
     casks = [
       "astro-command-center"
-      "azure-data-studio"
-      "cursor"
       "discord"
       "figma"
       "figma-agent"
@@ -69,15 +77,11 @@
       "logitech-g-hub"
       "microsoft-auto-update"
       "microsoft-office"
-      "microsoft-teams"
       "moonlight"
       "morgen"
       "mullvadvpn"
-      "raycast"
       "plex"
-      "spotify"
       "steam"
-      # "switchresx"
       "tailscale"
     ];
 

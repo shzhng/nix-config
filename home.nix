@@ -40,8 +40,10 @@
       # Apps
       _1password-gui
       _1password-cli
+      code-cursor
       firefox
       slack
+      spotify
       vscode
       zoom-us
 
@@ -110,9 +112,31 @@
     #   org.gradle.daemon.idletimeout=3600000
     # '';
 
-    karabiner = {
-      target = ".config/karabiner/karabiner.json";
-      source = ./config/karabiner/karabiner.json;
+    karabiner =
+      if pkgs.stdenv.isDarwin then
+        {
+          target = ".config/karabiner/karabiner.json";
+          source = ./config/karabiner/karabiner.json;
+        }
+      else
+        null;
+
+    ssh = {
+      target = ".ssh/config";
+      # Add 1password agent to ssh config
+      text =
+        let
+          _1password-agent =
+            if pkgs.stdenv.isDarwin then
+              "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+            else
+              "~/.1password/agent.sock";
+        in
+        ''
+          Match host * exec "test -z $SSH_CONNECTION"
+            IdentityAgent "${_1password-agent}"
+            ForwardAgent yes
+        '';
     };
   };
 
