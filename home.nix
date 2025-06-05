@@ -115,14 +115,10 @@
     #   org.gradle.daemon.idletimeout=3600000
     # '';
 
-    karabiner =
-      if pkgs.stdenv.isDarwin then
-        {
-          target = ".config/karabiner/karabiner.json";
-          source = ./config/karabiner/karabiner.json;
-        }
-      else
-        null;
+    karabiner = pkgs.lib.mkIf pkgs.stdenv.isDarwin {
+      target = ".config/karabiner/karabiner.json";
+      source = ./config/karabiner/karabiner.json;
+    };
 
     ssh = {
       target = ".ssh/config";
