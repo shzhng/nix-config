@@ -48,6 +48,9 @@
       # Mac-specific apps
       raycast
       teams
+
+      docker
+      colima
     ];
 
     # Set shells that will be available to users.

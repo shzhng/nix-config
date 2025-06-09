@@ -93,6 +93,9 @@
       # Database tools
       duckdb
 
+      # DotNet
+      dotnet-sdk
+
       # Elixir
       elixir
       flyctl
