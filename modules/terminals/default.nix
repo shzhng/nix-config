@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   programs = {
-    # Main driver right now
     wezterm = {
       enable = true;
       extraConfig = builtins.readFile ../../config/wezterm/wezterm.lua;
@@ -40,6 +39,8 @@
         font-family = "MonaspiceNe Nerd Font Mono";
         font-feature = "+ss01, +ss02, +ss03, +ss04, +ss05";
         font-size = 14;
+
+        keybind = "shift+enter=text:\n";
       };
     };
   };

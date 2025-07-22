@@ -70,6 +70,7 @@
       hcloud
 
       # Development tools
+      claude-code
       kubectl
       kubernetes-helm
       opentofu

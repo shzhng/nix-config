@@ -12,6 +12,16 @@
     "ss05": true
   },
   "buffer_font_size": 14,
+  "languages": {
+    "Elixir": {
+      "format_on_save": {
+        "external": {
+          "command": "mix",
+          "arguments": ["format", "--stdin-filename", "{buffer_path}", "-"]
+        }
+      }
+    }
+  },
   "ui_font_family": "Hubot Sans",
   "vim_mode": true
 }

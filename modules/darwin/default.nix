@@ -63,7 +63,11 @@
   homebrew = {
     enable = true;
     # Uninstall brews and cleanup casks files if we remove packages here
-    onActivation.cleanup = "zap";
+    onActivation = {
+      cleanup = "zap";
+      upgrade = true;
+      autoUpdate = true;
+    };
 
     brews = [ ];
 
@@ -83,7 +87,6 @@
       "mullvadvpn"
       "plex"
       "steam"
-      "tailscale"
     ];
 
     masApps = {
@@ -111,7 +114,7 @@
 
     # We explicitly don't use tailscaled + tailscale cli in favor of the
     # standalone UI version, installed via homebrew cask.
-    tailscale.enable = false;
+    tailscale.enable = true;
 
     # TODO temporarily disable sketchybar
     # sketchybar = {
