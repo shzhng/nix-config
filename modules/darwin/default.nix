@@ -74,7 +74,8 @@
     casks = [
       "astro-command-center"
       "figma"
-      "figma-agent"
+      # TODO Broken, investigate later
+      # "figma-agent"
       "ghostty"
       "google-drive"
       "hiddenbar"
@@ -83,8 +84,8 @@
       "microsoft-auto-update"
       "microsoft-office"
       "moonlight"
-      "morgen"
-      "mullvadvpn"
+      # "morgen"
+      # "mullvadvpn"
       "plex"
       "steam"
     ];
@@ -228,12 +229,12 @@
     # nix.package = pkgs.nix;
 
     # Necessary for using flakes on this system.
-    #settings = {
-    #  experimental-features = [ "nix-command" "flakes" ];
-    #  # Remove deprecated settings
-    #  # always-allow-substitutes = true;
-    #  # upgrade-nix-store-path-url = "...";
-    #};
+    settings = {
+      trusted-users = [
+        "root"
+        "shuo"
+      ];
+    };
     #gc = {
     #  automatic = true;
     #  options = "--delete-older-than 7d";

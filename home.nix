@@ -48,9 +48,10 @@
       discord
       firefox
       google-chrome
+      mullvad
       slack
       spotify
-      # tailscale
+      tailscale
       vscode
       zoom-us
 
