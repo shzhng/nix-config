@@ -1,5 +1,8 @@
 { pkgs, ... }:
 
+let
+  fonts = import ./modules/fonts.nix { inherit pkgs; };
+in
 {
   nixpkgs.config = {
     allowUnfree = true;
@@ -55,16 +58,6 @@
       vscode
       zoom-us
 
-      # fonts
-      fira-code
-      hubot-sans
-      jetbrains-mono
-      monaspace
-      # Only install select nerdfonts since it's huge
-      nerd-fonts.hack
-      nerd-fonts.monaspace
-      source-code-pro
-
       # Cloud host CLI tools
       azure-cli
       awscli
@@ -108,7 +101,8 @@
       # Rust
       cargo
       rustc
-    ];
+    ]
+    ++ fonts.fonts.packages;
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.

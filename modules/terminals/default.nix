@@ -1,10 +1,13 @@
 { pkgs, ... }:
+let
+  fonts = import ../fonts.nix { inherit pkgs; };
+in
 {
+  imports = [
+    ./wezterm.nix
+  ];
+
   programs = {
-    wezterm = {
-      enable = true;
-      extraConfig = builtins.readFile ../../config/wezterm/wezterm.lua;
-    };
 
     # Testing out other ones
     # alacritty = {
@@ -34,10 +37,15 @@
       enableFishIntegration = true;
 
       settings = {
-        # Add your ghostty settings here
-        # For example:
-        font-family = "MonaspiceNe Nerd Font Mono";
-        font-feature = "+ss01, +ss02, +ss03, +ss04, +ss05";
+        # Font settings from central configuration
+        font-family = fonts.fonts.primary.family;
+        font-feature = builtins.concatStringsSep ", " (
+          builtins.filter (s: s != "") (
+            builtins.map (name: if fonts.fonts.primary.features.${name} then "+${name}" else "") (
+              builtins.attrNames fonts.fonts.primary.features
+            )
+          )
+        );
         font-size = 14;
 
         keybind = "shift+enter=text:\n";
