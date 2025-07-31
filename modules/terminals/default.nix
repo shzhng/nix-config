@@ -48,7 +48,10 @@ in
         );
         font-size = 14;
 
-        keybind = "shift+enter=text:\n";
+        keybind = [
+          # Shift+Enter to insert newline - required for Claude Code multiline input
+          "shift+enter=text:\\n"
+        ];
       };
     };
   };
