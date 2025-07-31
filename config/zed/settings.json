@@ -1,7 +1,4 @@
 {
-  "auto_install_extensions": {
-    "catppuccin-icons": true
-  },
   "autosave": "on_focus_change",
   "buffer_font_size": 14,
   "languages": {

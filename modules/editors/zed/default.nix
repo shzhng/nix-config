@@ -30,6 +30,18 @@ in
   programs.zed-editor = {
     enable = true;
 
+    # Auto-install extensions
+    extensions = [
+      "catppuccin"
+      "catppuccin-icons"
+      "elixir"
+      "env"
+      "git-firefly"
+      "html"
+      "nix"
+      "rainbow-csv"
+    ];
+
     # Use merged settings
     userSettings = mergedSettings;
   };
