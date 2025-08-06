@@ -33,6 +33,8 @@ in
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
+  # IMPORTANT: When adding/removing CLI tools, update the ~/.claude/CLAUDE.md file below
+  # to keep Claude Code informed about available tools
   home.packages =
     let
       wrapped-poetry = pkgs.writeShellScriptBin "poetry" ''
@@ -82,6 +84,7 @@ in
       doggo
       duf
       dust
+      jq
       unixODBC
       uutils-coreutils-noprefix
 
@@ -139,6 +142,77 @@ in
             IdentityAgent "${_1password-agent}"
             ForwardAgent yes
         '';
+    };
+
+    ".claude/CLAUDE.md" = {
+      # IMPORTANT: Keep this file updated when adding/removing CLI tools above
+      # This helps Claude Code make better tool recommendations
+      text = ''
+        # Available CLI Tools
+
+        This file documents the CLI tools available in this environment to help Claude Code make better recommendations.
+
+        ## File Operations
+        - `fd` - Fast find replacement for searching files and directories
+        - `bat` - Cat replacement with syntax highlighting and paging
+        - `lsd` - Modern ls replacement with icons and colors
+        - `duf` - Modern df replacement for disk usage
+        - `dust` - Modern du replacement for directory sizes
+
+        ## Text Processing
+        - `jq` - JSON processor for parsing and manipulating JSON data
+        - `doggo` - DNS lookup utility
+        - `fzf` - Fuzzy finder for interactive filtering
+
+        ## System Monitoring
+        - `bottom` (btop) - Cross-platform system monitor
+        - `btop` - Resource monitor with better interface
+
+        ## Development Tools
+        - `git` - Version control with delta pager configured
+        - `lazygit` - Terminal UI for git commands
+        - `kubectl` - Kubernetes command line tool
+        - `helm` - Kubernetes package manager
+        - `opentofu` - Infrastructure as code tool
+        - `cf-terraforming` - CloudFlare terraform generator
+
+        ## Cloud Tools
+        - `azure-cli` (az) - Azure command line interface
+        - `awscli` (aws) - AWS command line interface
+        - `hcloud` - Hetzner Cloud CLI
+        - `flyctl` - Fly.io deployment tool
+
+        ## Package Managers
+        - `poetry` - Python dependency management (wrapped for library compatibility)
+        - `cargo` - Rust package manager
+
+        ## Shell Enhancement
+        - `zoxide` - Smart cd command with frecency
+        - `atuin` - Shell history replacement with sync
+        - `starship` - Cross-shell prompt
+        - `tmux` - Terminal multiplexer
+        - `direnv` - Environment variable management per directory
+
+        ## Database Tools
+        - `duckdb` - Analytical SQL database
+
+        ## Nix Tools
+        - `nixfmt-rfc-style` - Nix code formatter
+        - `nixd` - Nix language server
+
+        ## System Information
+        - `fastfetch` - System information display
+
+        ## Aliases
+        - `cat` -> `bat --paging=never`
+        - `g` -> `git` (plus many git aliases like `ga`, `gc`, `gst`, etc.)
+
+        ## Notes
+        - All tools are installed via Nix and available in PATH
+        - Many tools have enhanced configurations (e.g., git uses delta pager)
+        - Shell completions are automatically configured for zsh and fish
+        - Prefer these modern alternatives over traditional tools when available
+      '';
     };
   };
 
