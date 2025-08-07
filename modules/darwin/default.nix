@@ -88,6 +88,7 @@
       # "mullvadvpn"
       "plex"
       "steam"
+      "yubico-authenticator"
     ];
 
     masApps = {

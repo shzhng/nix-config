@@ -67,6 +67,7 @@ in
 
       # Development tools
       claude-code
+      gh
       kubectl
       kubernetes-helm
       opentofu
@@ -170,6 +171,7 @@ in
 
         ## Development Tools
         - `git` - Version control with delta pager configured
+        - `gh` - GitHub CLI for interacting with GitHub from the command line
         - `lazygit` - Terminal UI for git commands
         - `kubectl` - Kubernetes command line tool
         - `helm` - Kubernetes package manager
