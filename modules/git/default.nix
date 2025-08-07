@@ -24,6 +24,7 @@
         delta.navigate = true;
         merge.conflictStyle = "diff3";
         diff.colorMoved = "default";
+        credential.helper = "gh auth git-credential";
       };
 
       delta = {
