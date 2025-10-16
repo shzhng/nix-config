@@ -128,7 +128,7 @@
         "aarch64-darwin"
         "x86_64-darwin"
       ];
-      forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
+      forAllSystems = f: nixpkgs.lib.genAttrs systems f;
     in
     {
       # Build darwin flake using:

@@ -56,7 +56,7 @@ jobs:
 
       - name: Build Darwin configuration
         run: |
-          nix build .#darwinConfigurations.shuos-MacBook-Pro.system \
+          nix build .#darwinConfigurations.Shuos-MacBook-Pro.system \
             --no-link \
             --print-build-logs \
             --system ${{ matrix.system }}
@@ -79,7 +79,7 @@ jobs:
 
       - name: Validate Home Manager configuration
         run: |
-          nix build .#darwinConfigurations.shuos-MacBook-Pro.config.home-manager.users.shuo.home.activationPackage \
+          nix build .#darwinConfigurations.Shuos-MacBook-Pro.config.home-manager.users.shuo.home.activationPackage \
             --no-link \
             --print-build-logs
 

@@ -61,9 +61,9 @@ jobs:
       - name: Check what would be built
         run: |
           echo "### Darwin system build plan:" >> $GITHUB_STEP_SUMMARY
-          nix build .#darwinConfigurations.shuos-MacBook-Pro.system \
+          nix build .#darwinConfigurations.Shuos-MacBook-Pro.system \
             --dry-run 2>&1 | tee -a $GITHUB_STEP_SUMMARY || true
 
           echo "### Home Manager build plan:" >> $GITHUB_STEP_SUMMARY
-          nix build .#darwinConfigurations.shuos-MacBook-Pro.config.home-manager.users.shuo.home.activationPackage \
+          nix build .#darwinConfigurations.Shuos-MacBook-Pro.config.home-manager.users.shuo.home.activationPackage \
             --dry-run 2>&1 | tee -a $GITHUB_STEP_SUMMARY || true
