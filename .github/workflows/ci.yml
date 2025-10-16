@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    name: Check Nix Flake
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+        with:
+          extra-conf: |
+            accept-flake-config = true
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v3
+
+      - name: Check Nix flake
+        run: nix flake check --no-build
+
+      - name: Check formatting
+        run: |
+          nix run nixpkgs#nixfmt-rfc-style -- --check flake.nix
+          nix run nixpkgs#nixfmt-rfc-style -- --check home.nix
+          nix run nixpkgs#nixfmt-rfc-style -- --check modules/
+
+  build:
+    name: Build Darwin System
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        system:
+          - aarch64-darwin
+          - x86_64-darwin
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+        with:
+          extra-conf: |
+            accept-flake-config = true
+            system = ${{ matrix.system }}
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v3
+
+      - name: Build Darwin configuration
+        run: |
+          nix build .#darwinConfigurations.shuos-MacBook-Pro.system \
+            --no-link \
+            --print-build-logs \
+            --system ${{ matrix.system }}
+
+  validate-home-manager:
+    name: Validate Home Manager Configuration
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+        with:
+          extra-conf: |
+            accept-flake-config = true
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v3
+
+      - name: Validate Home Manager configuration
+        run: |
+          nix build .#darwinConfigurations.shuos-MacBook-Pro.config.home-manager.users.shuo.home.activationPackage \
+            --no-link \
+            --print-build-logs
+
+  update-flake-lock:
+    name: Update flake.lock
+    runs-on: macos-latest
+    if: github.event_name == 'schedule'
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@v20
+        with:
+          pr-title: "chore: update flake.lock"
+          pr-labels: |
+            dependencies
+            automated

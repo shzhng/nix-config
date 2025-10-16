@@ -1,0 +1,69 @@
+name: PR Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-formatting:
+    name: Check Nix Formatting
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+
+      - name: Check formatting with nixfmt-rfc-style
+        run: |
+          nix run nixpkgs#nixfmt-rfc-style -- --check flake.nix
+          nix run nixpkgs#nixfmt-rfc-style -- --check home.nix
+          nix run nixpkgs#nixfmt-rfc-style -- --check modules/
+
+  lint:
+    name: Lint Nix Files
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v3
+
+      - name: Run statix linter
+        run: |
+          nix run nixpkgs#statix -- check .
+
+      - name: Run deadnix to find unused code
+        run: |
+          nix run nixpkgs#deadnix -- --fail .
+
+  build-dry-run:
+    name: Dry-run Build
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+        with:
+          extra-conf: |
+            accept-flake-config = true
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v3
+
+      - name: Check what would be built
+        run: |
+          echo "### Darwin system build plan:" >> $GITHUB_STEP_SUMMARY
+          nix build .#darwinConfigurations.shuos-MacBook-Pro.system \
+            --dry-run 2>&1 | tee -a $GITHUB_STEP_SUMMARY || true
+
+          echo "### Home Manager build plan:" >> $GITHUB_STEP_SUMMARY
+          nix build .#darwinConfigurations.shuos-MacBook-Pro.config.home-manager.users.shuo.home.activationPackage \
+            --dry-run 2>&1 | tee -a $GITHUB_STEP_SUMMARY || true
