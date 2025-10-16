@@ -39,7 +39,6 @@ jobs:
       matrix:
         system:
           - aarch64-darwin
-          - x86_64-darwin
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

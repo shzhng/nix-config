@@ -126,7 +126,7 @@
       # A .pre-commit-config.yaml file will be generated (and git-ignored)
       systems = [
         "aarch64-darwin"
-        "x86_64-darwin"
+        # x86_64-darwin is not included due to catppuccin themes requiring ARM builds
       ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems f;
     in
