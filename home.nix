@@ -47,12 +47,8 @@ in
     with pkgs;
     [
       # Cross-platform apps
-      _1password-gui
-      _1password-cli
       code-cursor
       discord
-      firefox
-      google-chrome
       mullvad
       slack
       spotify

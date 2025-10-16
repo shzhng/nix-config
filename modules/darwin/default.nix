@@ -47,7 +47,6 @@
 
       # Mac-specific apps
       raycast
-      teams
 
       docker
       colima
@@ -72,20 +71,26 @@
     brews = [ ];
 
     casks = [
+      "1password"
       "astro-command-center"
       "figma"
       # TODO Broken, investigate later
       # "figma-agent"
+      "firefox"
       "ghostty"
+      "google-chrome"
       "google-drive"
       "hiddenbar"
       "ledger-live"
+      "livebook"
       "logitech-g-hub"
       "microsoft-auto-update"
       "microsoft-office"
+      "microsoft-teams"
       "moonlight"
       # "morgen"
       # "mullvadvpn"
+      "openbb-terminal"
       "plex"
       "steam"
       "yubico-authenticator"
