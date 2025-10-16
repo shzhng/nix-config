@@ -42,7 +42,7 @@
   };
 
   outputs =
-    inputs@{
+    {
       self,
       nixpkgs,
       nix-darwin,
@@ -154,20 +154,14 @@
       # Add pre-commit hooks check
       # This configures the git pre-commit hooks to run nixfmt-rfc-style
       # on all Nix files in the repository before each commit
-      checks = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
-          pre-commit-check = git-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              nixfmt-rfc-style.enable = true;
-            };
+      checks = forAllSystems (system: {
+        pre-commit-check = git-hooks.lib.${system}.run {
+          src = ./.;
+          hooks = {
+            nixfmt-rfc-style.enable = true;
           };
-        }
-      );
+        };
+      });
 
       # This allows running: nix run .#install-git-hooks
       # Running this command will install the git pre-commit hooks
