@@ -93,6 +93,7 @@
       "openbb-terminal"
       "plex"
       "steam"
+      "thinkorswim"
       "yubico-authenticator"
     ];
 
