@@ -24,7 +24,7 @@ jobs:
             accept-flake-config = true
 
       - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@v20
+        uses: DeterminateSystems/update-flake-lock@v27
         with:
           pr-title: "chore: update flake.lock"
           pr-body: |
