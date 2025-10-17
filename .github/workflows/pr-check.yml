@@ -32,7 +32,7 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v9
 
       - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v3
+        uses: DeterminateSystems/magic-nix-cache-action@v13
 
       - name: Run statix linter
         run: |
@@ -56,7 +56,7 @@ jobs:
             accept-flake-config = true
 
       - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v3
+        uses: DeterminateSystems/magic-nix-cache-action@v13
 
       - name: Check what would be built
         run: |
