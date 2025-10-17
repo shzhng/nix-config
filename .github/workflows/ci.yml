@@ -21,7 +21,7 @@ jobs:
             accept-flake-config = true
 
       - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v3
+        uses: DeterminateSystems/magic-nix-cache-action@v13
 
       - name: Check Nix flake
         run: nix flake check --no-build
@@ -51,7 +51,7 @@ jobs:
             system = ${{ matrix.system }}
 
       - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v3
+        uses: DeterminateSystems/magic-nix-cache-action@v13
 
       - name: Build Darwin configuration
         run: |
@@ -74,7 +74,7 @@ jobs:
             accept-flake-config = true
 
       - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v3
+        uses: DeterminateSystems/magic-nix-cache-action@v13
 
       - name: Validate Home Manager configuration
         run: |
