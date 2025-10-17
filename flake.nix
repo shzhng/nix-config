@@ -42,7 +42,7 @@
   };
 
   outputs =
-    inputs@{
+    {
       self,
       nixpkgs,
       nix-darwin,
@@ -126,9 +126,9 @@
       # A .pre-commit-config.yaml file will be generated (and git-ignored)
       systems = [
         "aarch64-darwin"
-        "x86_64-darwin"
+        # x86_64-darwin is not included due to catppuccin themes requiring ARM builds
       ];
-      forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
+      forAllSystems = f: nixpkgs.lib.genAttrs systems f;
     in
     {
       # Build darwin flake using:
@@ -154,20 +154,14 @@
       # Add pre-commit hooks check
       # This configures the git pre-commit hooks to run nixfmt-rfc-style
       # on all Nix files in the repository before each commit
-      checks = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
-          pre-commit-check = git-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              nixfmt-rfc-style.enable = true;
-            };
+      checks = forAllSystems (system: {
+        pre-commit-check = git-hooks.lib.${system}.run {
+          src = ./.;
+          hooks = {
+            nixfmt-rfc-style.enable = true;
           };
-        }
-      );
+        };
+      });
 
       # This allows running: nix run .#install-git-hooks
       # Running this command will install the git pre-commit hooks

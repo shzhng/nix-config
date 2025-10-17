@@ -1,0 +1,36 @@
+name: Update Dependencies
+
+on:
+  schedule:
+    # Run weekly on Monday at 3am UTC
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: Update flake.lock
+    runs-on: macos-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+        with:
+          extra-conf: |
+            accept-flake-config = true
+
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@v20
+        with:
+          pr-title: "chore: update flake.lock"
+          pr-body: |
+            Automated weekly update of flake.lock dependencies.
+
+            Please review the changes and ensure everything builds correctly before merging.
+          pr-labels: |
+            dependencies
+            automated
