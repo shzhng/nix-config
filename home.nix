@@ -66,6 +66,7 @@ in
       # Development tools
       claude-code
       gh
+      nodejs
       kubectl
       kubernetes-helm
       opentofu
@@ -171,6 +172,8 @@ in
         - `git` - Version control with delta pager configured
         - `gh` - GitHub CLI for interacting with GitHub from the command line
         - `lazygit` - Terminal UI for git commands
+        - `node` - Node.js JavaScript runtime (version 18+)
+        - `npm` - Node.js package manager
         - `kubectl` - Kubernetes command line tool
         - `helm` - Kubernetes package manager
         - `opentofu` - Infrastructure as code tool
