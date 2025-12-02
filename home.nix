@@ -53,7 +53,7 @@ in
       discord
       mullvad
       slack
-      spotify
+      # spotify # Temporarily disabled due to hash mismatch
       tailscale
       vscode
       zoom-us
