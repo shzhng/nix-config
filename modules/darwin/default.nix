@@ -94,6 +94,7 @@
       "plex"
       "steam"
       "thinkorswim"
+      "trader-workstation"
       "yubico-authenticator"
     ];
 
