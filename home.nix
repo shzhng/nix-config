@@ -75,6 +75,7 @@ in
       fastfetch
 
       # Nix
+      nil
       nixfmt-rfc-style
       nixd
 
@@ -200,6 +201,7 @@ in
         - `duckdb` - Analytical SQL database
 
         ## Nix Tools
+        - `nil` - Nix language server
         - `nixfmt-rfc-style` - Nix code formatter
         - `nixd` - Nix language server
 

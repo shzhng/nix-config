@@ -28,10 +28,8 @@
       '';
     };
 
-    # Include this to make 1password work, even though it's installed via home-manager
-    # See "https://github.com/nix-darwin/nix-darwin/pull/1438"
-    _1password-gui.enable = true;
-    _1password.enable = true;
+    # 1password is installed via homebrew cask
+    # The nix-darwin modules (programs._1password*) would conflict with homebrew installation
   };
 
   # List packages installed in system profile. To search by name, run:
@@ -74,11 +72,12 @@
       "1password"
       "astro-command-center"
       "figma"
+      "google-chrome"
+      "karabiner-elements"
       # TODO Broken, investigate later
       # "figma-agent"
       "firefox"
       "ghostty"
-      "google-chrome"
       "google-drive"
       "hiddenbar"
       "ledger-live"
@@ -105,22 +104,6 @@
 
   # Auto upgrade nix package and the daemon service.
   services = {
-    # TODO: config via home manager, really just for the caps = esc/ctrl mapping
-    karabiner-elements = {
-      enable = true;
-      # "https://github.com/nix-darwin/nix-darwin/issues/1041"
-      package = pkgs.karabiner-elements.overrideAttrs (old: {
-        version = "14.13.0";
-
-        src = pkgs.fetchurl {
-          inherit (old.src) url;
-          hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
-        };
-
-        dontFixup = true;
-      });
-    };
-
     # We explicitly don't use tailscaled + tailscale cli in favor of the
     # standalone UI version, installed via homebrew cask.
     tailscale.enable = true;
