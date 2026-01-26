@@ -53,7 +53,7 @@ in
       discord
       mullvad
       slack
-      spotify
+      # spotify # Temporarily disabled due to hash mismatch
       tailscale
       vscode
       zoom-us
@@ -66,6 +66,7 @@ in
       # Development tools
       claude-code
       gh
+      nodejs
       kubectl
       kubernetes-helm
       opentofu
@@ -74,6 +75,7 @@ in
       fastfetch
 
       # Nix
+      nil
       nixfmt-rfc-style
       nixd
 
@@ -171,6 +173,8 @@ in
         - `git` - Version control with delta pager configured
         - `gh` - GitHub CLI for interacting with GitHub from the command line
         - `lazygit` - Terminal UI for git commands
+        - `node` - Node.js JavaScript runtime (version 18+)
+        - `npm` - Node.js package manager
         - `kubectl` - Kubernetes command line tool
         - `helm` - Kubernetes package manager
         - `opentofu` - Infrastructure as code tool
@@ -197,6 +201,7 @@ in
         - `duckdb` - Analytical SQL database
 
         ## Nix Tools
+        - `nil` - Nix language server
         - `nixfmt-rfc-style` - Nix code formatter
         - `nixd` - Nix language server
 
