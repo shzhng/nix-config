@@ -51,7 +51,6 @@ in
       # Cross-platform apps
       code-cursor
       discord
-      mullvad
       slack
       # spotify # Temporarily disabled due to hash mismatch
       tailscale
