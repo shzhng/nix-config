@@ -88,7 +88,7 @@
       "microsoft-teams"
       "moonlight"
       # "morgen"
-      # "mullvadvpn"
+      "mullvadvpn"
       "openbb-terminal"
       "plex"
       "steam"
@@ -99,6 +99,7 @@
 
     masApps = {
       "1Password for Safari" = 1569813296;
+      "WireGuard" = 1451685025;
     };
   };
 
