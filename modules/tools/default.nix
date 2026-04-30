@@ -11,6 +11,12 @@
     fd.enable = true;
     fzf.enable = true;
     lsd.enable = true;
+    mise = {
+      enable = true;
+      enableZshIntegration = true;
+      enableFishIntegration = true;
+    };
+    uv.enable = true;
     zoxide.enable = true;
   };
 

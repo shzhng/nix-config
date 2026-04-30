@@ -38,24 +38,16 @@ in
   # IMPORTANT: When adding/removing CLI tools, update the ~/.claude/CLAUDE.md file below
   # to keep Claude Code informed about available tools
   home.packages =
-    let
-      wrapped-poetry = pkgs.writeShellScriptBin "poetry" ''
-        # Wrap in libraries expected by numpy etc
-        export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib/
-        export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ pkgs.zlib ]}:$LD_LIBRARY_PATH"
-        exec ${pkgs.poetry}/bin/poetry $@
-      '';
-    in
     with pkgs;
     [
       # Cross-platform apps
-      code-cursor
-      discord
-      slack
+      # code-cursor
+      # discord
+      # slack
       # spotify # Temporarily disabled due to hash mismatch
-      tailscale
-      vscode
-      zoom-us
+      # tailscale
+      # vscode
+      # zoom-us
 
       # Cloud host CLI tools
       azure-cli
@@ -75,12 +67,12 @@ in
 
       # Nix
       nil
-      nixfmt-rfc-style
+      nixfmt
       nixd
 
       # Utils
       certbot
-      devenv
+      # devenv
       doggo
       duf
       dust
@@ -99,7 +91,7 @@ in
       flyctl
 
       # Python
-      wrapped-poetry
+      # wrapped-poetry
 
       # Rust
       cargo
@@ -138,6 +130,8 @@ in
               "~/.1password/agent.sock";
         in
         ''
+          Include ~/.ssh/1Password/config
+
           Match host * exec "test -z $SSH_CONNECTION"
             IdentityAgent "${_1password-agent}"
             ForwardAgent yes
@@ -187,6 +181,7 @@ in
 
         ## Package Managers
         - `poetry` - Python dependency management (wrapped for library compatibility)
+        - `uv` - Fast Python package installer and resolver
         - `cargo` - Rust package manager
 
         ## Shell Enhancement

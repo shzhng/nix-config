@@ -18,13 +18,17 @@
     zsh = {
       enable = true; # default shell on catalina
       shellInit = ''
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+        if [[ -o interactive ]]; then
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
       '';
     };
     fish = {
       enable = true;
       loginShellInit = ''
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+        if [[ -o interactive ]]; then
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
       '';
     };
 
@@ -47,7 +51,7 @@
       raycast
 
       docker
-      colima
+      # colima
     ];
 
     # Set shells that will be available to users.
@@ -70,36 +74,39 @@
 
     casks = [
       "1password"
-      "astro-command-center"
+      # "astro-command-center"
+      "cloudflare-warp"
       "figma"
       "google-chrome"
       "karabiner-elements"
       # TODO Broken, investigate later
       # "figma-agent"
-      "firefox"
+      # "firefox"
       "ghostty"
       "google-drive"
       "hiddenbar"
-      "ledger-live"
+      # "ledger-live"
       "livebook"
-      "logitech-g-hub"
-      "microsoft-auto-update"
-      "microsoft-office"
-      "microsoft-teams"
-      "moonlight"
+      # "logitech-g-hub"
+      # "microsoft-auto-update"
+      # "microsoft-office"
+      # "microsoft-teams"
+      # "moonlight"
       # "morgen"
-      "mullvadvpn"
-      "openbb-terminal"
-      "plex"
-      "steam"
-      "thinkorswim"
-      "trader-workstation"
-      "yubico-authenticator"
+      # "mullvadvpn"
+      "notion"
+      # "openbb-terminal"
+      # "plex"
+      "slack"
+      # "steam"
+      # "thinkorswim"
+      # "trader-workstation"
+      # "yubico-authenticator"
     ];
 
     masApps = {
       "1Password for Safari" = 1569813296;
-      "WireGuard" = 1451685025;
+      #      "WireGuard" = 1451685025;
     };
   };
 
