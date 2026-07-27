@@ -85,7 +85,10 @@
       "hiddenbar"
       "karabiner-elements"
       "livebook"
+      "microsoft-office"
       "slack"
+      "tailscale-app"
+      "zoom"
     ];
 
     masApps = {

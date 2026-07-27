@@ -9,6 +9,5 @@
     discord
     # spotify # Temporarily disabled due to hash mismatch
     vscode
-    zoom-us
   ];
 }

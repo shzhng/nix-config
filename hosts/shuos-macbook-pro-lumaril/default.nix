@@ -5,7 +5,6 @@
     "headlamp"
     "notion"
     "parallels"
-    "zoom"
   ];
 
   home-manager.users.shuo.imports = [ ./home.nix ];
