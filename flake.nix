@@ -7,6 +7,10 @@
     # it'll impact your entire system.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
+    # Rolling nixpkgs used only for cherry-picked packages that need to be
+    # newer than the 25.11 release (see the overlay below).
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
     nix-darwin = {
       url = "github:LnL7/nix-darwin/nix-darwin-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -39,12 +43,19 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Always-fresh Claude Code package (updated hourly).
+    # Replaces the nixpkgs claude-code via the overlay applied below.
+    claude-code = {
+      url = "github:sadjow/claude-code-nix";
+    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      nixpkgs-unstable,
       nix-darwin,
       nix-homebrew,
       homebrew-core,
@@ -52,6 +63,7 @@
       home-manager,
       catppuccin,
       git-hooks,
+      claude-code,
     }:
     let
       # Define shared tap configuration
@@ -67,6 +79,19 @@
       darwinCommonModules = [
         # catppuccin.nixosModules.catppuccin TODO only use this with NixOS
         ./modules/darwin
+        # Apply the claude-code overlay so `pkgs.claude-code` resolves to the
+        # hourly-updated build from github:sadjow/claude-code-nix.
+        {
+          nixpkgs.overlays = [
+            claude-code.overlays.default
+            # mise moves fast and the 25.11 build (2025.11.x) can't parse
+            # newer mise.toml features (e.g. templated http-tool URLs), so
+            # take just mise from unstable.
+            (final: prev: {
+              mise = nixpkgs-unstable.legacyPackages.${prev.stdenv.hostPlatform.system}.mise;
+            })
+          ];
+        }
         home-manager.darwinModules.home-manager
         {
           # Add this configuration block to allow broken packages
@@ -197,10 +222,12 @@
     extra-substituters = [
       "https://nix-community.cachix.org"
       "https://cache.nixos.org"
+      "https://claude-code.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
     ];
   };
 }
