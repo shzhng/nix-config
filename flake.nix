@@ -49,12 +49,6 @@
     claude-code = {
       url = "github:sadjow/claude-code-nix";
     };
-
-    # Clawdbot - AI assistant gateway
-    nix-clawdbot = {
-      url = "github:clawdbot/nix-clawdbot";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -70,7 +64,6 @@
       catppuccin,
       git-hooks,
       claude-code,
-      nix-clawdbot,
     }:
     let
       # Define shared tap configuration
@@ -97,8 +90,6 @@
             (final: prev: {
               mise = nixpkgs-unstable.legacyPackages.${prev.stdenv.hostPlatform.system}.mise;
             })
-            # Clawdbot overlay disabled due to packaging bugs
-            # nix-clawdbot.overlays.default
           ];
         }
         home-manager.darwinModules.home-manager
@@ -115,7 +106,6 @@
               imports = [
                 ./home.nix
                 catppuccin.homeModules.catppuccin
-                # nix-clawdbot.homeManagerModules.clawdbot  # disabled due to packaging bugs
               ];
             };
           };

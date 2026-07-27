@@ -228,20 +228,5 @@ in
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
-
-    # Clawdbot - disabled due to nix-clawdbot packaging bugs (missing extensions)
-    # See: https://github.com/clawdbot/nix-clawdbot/issues/14
-    # Install via npm instead: npm install -g @anthropic/clawdbot
-    # clawdbot = {
-    #   enable = true;
-    #   documents = ./clawdbot-docs;
-    #   instances.default = {
-    #     providers.telegram = {
-    #       enable = true;
-    #       botTokenFile = "/Users/shuo/.secrets/telegram-bot-token";
-    #       allowFrom = [ 2109448369 ];
-    #     };
-    #   };
-    # };
   };
 }
