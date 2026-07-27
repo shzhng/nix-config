@@ -9,7 +9,11 @@
     bottom.enable = true;
     btop.enable = true;
     fd.enable = true;
-    fzf.enable = true;
+    fzf = {
+      enable = true;
+      # Atuin owns Ctrl-R for shell history; keep fzf for files/dirs only.
+      historyWidget.command = "";
+    };
     lsd.enable = true;
     mise = {
       enable = true;
