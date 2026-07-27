@@ -8,11 +8,15 @@ _: {
         ".envrc"
       ];
 
+      # Sign commits with the 1Password SSH key on all machines
       signing = {
+        format = "ssh";
         key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBG6S0nj4gCq5Nf2vIwBqOXVb8GQbldX8Z0dsLXWBj0";
         signByDefault = true;
+        signer = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
       };
 
+      # Use new settings format (replaces userName, userEmail, aliases, extraConfig)
       settings = {
         user = {
           name = "Shuo Zheng";
@@ -24,23 +28,17 @@ _: {
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
         pull.rebase = true;
-        # Following are recommended by delta
-        # https://github.com/dandavison/delta?tab=readme-ov-file#get-started
-        delta.navigate = true;
         merge.conflictStyle = "diff3";
         diff.colorMoved = "default";
         credential.helper = "gh auth git-credential";
-        gpg.format = "ssh";
-        "gpg \"ssh\"".program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
       };
     };
 
+    # Delta installed for manual use, but not as default git pager (for agent compatibility)
+    # Use manually with: git diff | delta
     delta = {
       enable = true;
-      enableGitIntegration = true;
-      options = {
-        # side-by-side = true;
-      };
+      enableGitIntegration = false;
     };
 
     lazygit = {

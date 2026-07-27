@@ -86,38 +86,22 @@
       "headlamp"
       "google-drive"
       "hiddenbar"
-      # "ledger-live"
       "livebook"
-      # "logitech-g-hub"
-      # "microsoft-auto-update"
-      # "microsoft-office"
-      # "microsoft-teams"
-      # "moonlight"
-      # "morgen"
-      # "mullvadvpn"
       "notion"
-      # "openbb-terminal"
-      # "plex"
       "slack"
       "zoom"
       "parallels"
-      # "steam"
-      # "thinkorswim"
-      # "trader-workstation"
-      # "yubico-authenticator"
     ];
 
     masApps = {
       "1Password for Safari" = 1569813296;
-      #      "WireGuard" = 1451685025;
     };
   };
 
   # Auto upgrade nix package and the daemon service.
   services = {
-    # We explicitly don't use tailscaled + tailscale cli in favor of the
-    # standalone UI version, installed via homebrew cask.
-    tailscale.enable = true;
+    # Tailscale installed via homebrew cask
+    tailscale.enable = false;
 
     # TODO temporarily disable sketchybar
     # sketchybar = {

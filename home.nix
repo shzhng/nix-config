@@ -4,9 +4,8 @@ let
   fonts = import ./modules/fonts.nix { inherit pkgs; };
 in
 {
-  nixpkgs.config = {
-    allowUnfree = true;
-  };
+  # Note: nixpkgs.config is set in modules/darwin (allowUnfree) when using
+  # useGlobalPkgs. Setting it here would cause a warning.
 
   imports = [
     ./modules/editors
@@ -34,21 +33,12 @@ in
   };
 
   # The home.packages option allows you to install Nix packages into your
-  # environment.
+  # environment. Machine-specific packages live in hosts/<hostname>/home.nix.
   # IMPORTANT: When adding/removing CLI tools, update the ~/.claude/CLAUDE.md file below
   # to keep Claude Code informed about available tools
   home.packages =
     with pkgs;
     [
-      # Cross-platform apps
-      # code-cursor
-      # discord
-      # slack
-      # spotify # Temporarily disabled due to hash mismatch
-      # tailscale
-      # vscode
-      # zoom-us
-
       # Cloud host CLI tools
       azure-cli
       awscli2
@@ -73,7 +63,6 @@ in
 
       # Utils
       certbot
-      # devenv
       doggo
       duf
       dust
@@ -84,15 +73,9 @@ in
       # Database tools
       duckdb
 
-      # DotNet
-      dotnet-sdk
-
       # Elixir
       elixir
       flyctl
-
-      # Python
-      # wrapped-poetry
 
       # Rust
       cargo
@@ -117,6 +100,7 @@ in
     karabiner = pkgs.lib.mkIf pkgs.stdenv.isDarwin {
       target = ".config/karabiner/karabiner.json";
       source = ./config/karabiner/karabiner.json;
+      force = true; # Overwrite without backup to avoid .backup file conflicts
     };
 
     ssh = {
@@ -165,7 +149,7 @@ in
         - `btop` - Resource monitor with better interface
 
         ## Development Tools
-        - `git` - Version control with delta pager configured
+        - `git` - Version control
         - `gh` - GitHub CLI for interacting with GitHub from the command line
         - `lazygit` - Terminal UI for git commands
         - `node` - Node.js JavaScript runtime (version 18+)
@@ -182,7 +166,6 @@ in
         - `flyctl` - Fly.io deployment tool
 
         ## Package Managers
-        - `poetry` - Python dependency management (wrapped for library compatibility)
         - `uv` - Fast Python package installer and resolver
         - `cargo` - Rust package manager
 
@@ -198,7 +181,7 @@ in
 
         ## Nix Tools
         - `nil` - Nix language server
-        - `nixfmt-rfc-style` - Nix code formatter
+        - `nixfmt` - Nix code formatter
         - `nixd` - Nix language server
 
         ## System Information
@@ -210,7 +193,8 @@ in
 
         ## Notes
         - All tools are installed via Nix and available in PATH
-        - Many tools have enhanced configurations (e.g., git uses delta pager)
+        - Many tools have enhanced configurations
+        - Delta is available for manual use: `git diff | delta`
         - Shell completions are automatically configured for zsh and fish
         - Prefer these modern alternatives over traditional tools when available
       '';
@@ -244,5 +228,20 @@ in
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
+
+    # Clawdbot - disabled due to nix-clawdbot packaging bugs (missing extensions)
+    # See: https://github.com/clawdbot/nix-clawdbot/issues/14
+    # Install via npm instead: npm install -g @anthropic/clawdbot
+    # clawdbot = {
+    #   enable = true;
+    #   documents = ./clawdbot-docs;
+    #   instances.default = {
+    #     providers.telegram = {
+    #       enable = true;
+    #       botTokenFile = "/Users/shuo/.secrets/telegram-bot-token";
+    #       allowFrom = [ 2109448369 ];
+    #     };
+    #   };
+    # };
   };
 }
