@@ -1,7 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, llm-agents, ... }:
 
 let
   fonts = import ./modules/fonts.nix { inherit pkgs; };
+  claudeCode = llm-agents.packages.${pkgs.system}.claude-code;
 in
 {
   # Note: nixpkgs.config is set in flake.nix (darwin module) when using useGlobalPkgs
@@ -52,7 +53,7 @@ in
       hcloud
 
       # Development tools
-      claude-code
+      claudeCode
       gh
       nodejs
       kubectl

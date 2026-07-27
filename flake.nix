@@ -45,6 +45,9 @@
       url = "github:clawdbot/nix-clawdbot";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Latest AI agent CLI tools, updated daily from official releases
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs =
@@ -59,6 +62,7 @@
       catppuccin,
       git-hooks,
       nix-clawdbot,
+      llm-agents,
     }:
     let
       # Define shared tap configuration
@@ -87,6 +91,7 @@
             useUserPackages = true;
             verbose = true;
             backupFileExtension = "backup";
+            extraSpecialArgs = { inherit llm-agents; };
             users.shuo = {
               imports = [
                 ./home.nix
