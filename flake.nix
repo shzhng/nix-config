@@ -147,7 +147,7 @@
       # Create pre-commit hooks configuration
       # This enables automatic formatting of Nix files before each commit
       # To install hooks, run: nix run .#install-git-hooks
-      # The hooks are configured to use nixfmt-rfc-style to format all .nix files
+      # The hooks are configured to use nixfmt to format all .nix files
       # A .pre-commit-config.yaml file will be generated (and git-ignored)
       systems = [
         "aarch64-darwin"
@@ -182,13 +182,13 @@
       darwinPackages = self.darwinConfigurations.Shuos-MacBook-Pro.pkgs;
 
       # Add pre-commit hooks check
-      # This configures the git pre-commit hooks to run nixfmt-rfc-style
+      # This configures the git pre-commit hooks to run nixfmt
       # on all Nix files in the repository before each commit
       checks = forAllSystems (system: {
         pre-commit-check = git-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
-            nixfmt-rfc-style.enable = true;
+            nixfmt.enable = true;
           };
         };
       });
