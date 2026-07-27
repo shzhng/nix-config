@@ -1,6 +1,5 @@
 # Personal MacBook Pro
-{ ... }:
-{
+_: {
   homebrew = {
     casks = [
       "astro-command-center"

@@ -1,6 +1,5 @@
 # Lumaril work MacBook Pro
-{ ... }:
-{
+_: {
   homebrew.casks = [
     "headlamp"
     "notion"

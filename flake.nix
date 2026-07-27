@@ -87,7 +87,7 @@
             # mise moves fast and the 25.11 build (2025.11.x) can't parse
             # newer mise.toml features (e.g. templated http-tool URLs), so
             # take just mise from unstable.
-            (final: prev: {
+            (_final: prev: {
               mise = nixpkgs-unstable.legacyPackages.${prev.stdenv.hostPlatform.system}.mise;
             })
           ];
