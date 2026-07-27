@@ -6,6 +6,26 @@
             "virtual_hid_keyboard": {
                 "keyboard_type_v2": "ansi"
             },
+            "complex_modifications": {
+                "rules": [
+                    {
+                        "description": "Left Control to Escape/Control",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "left_control",
+                                    "modifiers": {
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to_if_held_down": [{ "key_code": "left_control" }],
+                                "to_if_tapped": [{ "key_code": "escape" }],
+                                "type": "basic"
+                            }
+                        ]
+                    }
+                ]
+            },
             "devices": [
                 {
                     "identifiers": {
@@ -31,24 +51,6 @@
                             "to": [{ "key_code": "right_option" }]
                         }
                     ]
-                }
-            ]
-        }
-    ],
-    "rules": [
-        {
-            "description": "Left Control to Escape/Control",
-            "manipulators": [
-                {
-                    "from": {
-                        "key_code": "left_control",
-                        "modifiers": {
-                            "optional": ["any"]
-                        }
-                    },
-                    "to_if_held_down": [{ "key_code": "left_control" }],
-                    "to_if_tapped": [{ "key_code": "escape" }],
-                    "type": "basic"
                 }
             ]
         }
