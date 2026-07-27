@@ -15,11 +15,12 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v21
 
-      - name: Check formatting with nixfmt-rfc-style
+      - name: Check formatting with nixfmt
         run: |
-          nix run nixpkgs#nixfmt-rfc-style -- --check flake.nix
-          nix run nixpkgs#nixfmt-rfc-style -- --check home.nix
-          nix run nixpkgs#nixfmt-rfc-style -- --check modules/
+          nix run nixpkgs#nixfmt -- --check flake.nix
+          nix run nixpkgs#nixfmt -- --check home.nix
+          nix run nixpkgs#nixfmt -- --check hosts/
+          nix run nixpkgs#nixfmt -- --check modules/
 
   lint:
     name: Lint Nix Files
@@ -30,9 +31,6 @@ jobs:
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v21
-
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v13
 
       - name: Run statix linter
         run: |
@@ -54,9 +52,6 @@ jobs:
         with:
           extra-conf: |
             accept-flake-config = true
-
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v13
 
       - name: Check what would be built
         run: |

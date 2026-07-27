@@ -18,13 +18,17 @@
     zsh = {
       enable = true; # default shell on catalina
       shellInit = ''
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+        if [[ -o interactive ]]; then
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
       '';
     };
     fish = {
       enable = true;
       loginShellInit = ''
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+        if status is-interactive
+          /opt/homebrew/bin/brew shellenv | source
+        end
       '';
     };
 
@@ -46,8 +50,8 @@
       # Mac-specific apps
       raycast
 
-      docker
-      colima
+      docker_29
+      # colima
     ];
 
     # Set shells that will be available to users.
@@ -68,46 +72,34 @@
 
     brews = [ ];
 
+    # Shared casks only - machine-specific casks live in hosts/<hostname>/
     casks = [
       "1password"
-      "astro-command-center"
+      "cloudflare-warp"
       "figma"
-      "google-chrome"
-      "karabiner-elements"
       # TODO Broken, investigate later
       # "figma-agent"
-      "firefox"
       "ghostty"
+      "google-chrome"
       "google-drive"
       "hiddenbar"
-      "ledger-live"
+      "karabiner-elements"
       "livebook"
-      "logitech-g-hub"
-      "microsoft-auto-update"
       "microsoft-office"
-      "microsoft-teams"
-      "moonlight"
-      # "morgen"
-      "mullvadvpn"
-      "openbb-terminal"
-      "plex"
-      "steam"
-      "thinkorswim"
-      "trader-workstation"
-      "yubico-authenticator"
+      "slack"
+      "tailscale-app"
+      "zoom"
     ];
 
     masApps = {
       "1Password for Safari" = 1569813296;
-      "WireGuard" = 1451685025;
     };
   };
 
   # Auto upgrade nix package and the daemon service.
   services = {
-    # We explicitly don't use tailscaled + tailscale cli in favor of the
-    # standalone UI version, installed via homebrew cask.
-    tailscale.enable = true;
+    # Tailscale installed via homebrew cask
+    tailscale.enable = false;
 
     # TODO temporarily disable sketchybar
     # sketchybar = {

@@ -34,7 +34,7 @@
     packages = with pkgs; [
       fira-code
       hubot-sans
-      jetbrains-mono
+      # jetbrains-mono  # Disabled: build broken on nixpkgs 25.11 (gftools/ffmpeg-python sandbox SIGKILL)
       monaspace
       nerd-fonts.hack
       nerd-fonts.monaspace

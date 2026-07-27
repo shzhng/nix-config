@@ -4,9 +4,8 @@ let
   fonts = import ./modules/fonts.nix { inherit pkgs; };
 in
 {
-  nixpkgs.config = {
-    allowUnfree = true;
-  };
+  # Note: nixpkgs.config is set in modules/darwin (allowUnfree) when using
+  # useGlobalPkgs. Setting it here would cause a warning.
 
   imports = [
     ./modules/editors
@@ -34,32 +33,15 @@ in
   };
 
   # The home.packages option allows you to install Nix packages into your
-  # environment.
+  # environment. Machine-specific packages live in hosts/<hostname>/home.nix.
   # IMPORTANT: When adding/removing CLI tools, update the ~/.claude/CLAUDE.md file below
   # to keep Claude Code informed about available tools
   home.packages =
-    let
-      wrapped-poetry = pkgs.writeShellScriptBin "poetry" ''
-        # Wrap in libraries expected by numpy etc
-        export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib/
-        export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ pkgs.zlib ]}:$LD_LIBRARY_PATH"
-        exec ${pkgs.poetry}/bin/poetry $@
-      '';
-    in
     with pkgs;
     [
-      # Cross-platform apps
-      code-cursor
-      discord
-      slack
-      # spotify # Temporarily disabled due to hash mismatch
-      tailscale
-      vscode
-      zoom-us
-
       # Cloud host CLI tools
       azure-cli
-      awscli
+      awscli2
       hcloud
 
       # Development tools
@@ -72,15 +54,15 @@ in
       cf-terraforming
 
       fastfetch
+      ripgrep
 
       # Nix
       nil
-      nixfmt-rfc-style
+      nixfmt
       nixd
 
       # Utils
       certbot
-      devenv
       doggo
       duf
       dust
@@ -91,15 +73,9 @@ in
       # Database tools
       duckdb
 
-      # DotNet
-      dotnet-sdk
-
       # Elixir
       elixir
       flyctl
-
-      # Python
-      wrapped-poetry
 
       # Rust
       cargo
@@ -124,6 +100,7 @@ in
     karabiner = pkgs.lib.mkIf pkgs.stdenv.isDarwin {
       target = ".config/karabiner/karabiner.json";
       source = ./config/karabiner/karabiner.json;
+      force = true; # Overwrite without backup to avoid .backup file conflicts
     };
 
     ssh = {
@@ -138,6 +115,8 @@ in
               "~/.1password/agent.sock";
         in
         ''
+          Include ~/.ssh/1Password/config
+
           Match host * exec "test -z $SSH_CONNECTION"
             IdentityAgent "${_1password-agent}"
             ForwardAgent yes
@@ -153,6 +132,7 @@ in
         This file documents the CLI tools available in this environment to help Claude Code make better recommendations.
 
         ## File Operations
+        - `rg` (ripgrep) - Fast recursive grep replacement for searching file contents
         - `fd` - Fast find replacement for searching files and directories
         - `bat` - Cat replacement with syntax highlighting and paging
         - `lsd` - Modern ls replacement with icons and colors
@@ -169,7 +149,7 @@ in
         - `btop` - Resource monitor with better interface
 
         ## Development Tools
-        - `git` - Version control with delta pager configured
+        - `git` - Version control
         - `gh` - GitHub CLI for interacting with GitHub from the command line
         - `lazygit` - Terminal UI for git commands
         - `node` - Node.js JavaScript runtime (version 18+)
@@ -181,12 +161,12 @@ in
 
         ## Cloud Tools
         - `azure-cli` (az) - Azure command line interface
-        - `awscli` (aws) - AWS command line interface
+        - `awscli2` (aws) - AWS command line interface v2
         - `hcloud` - Hetzner Cloud CLI
         - `flyctl` - Fly.io deployment tool
 
         ## Package Managers
-        - `poetry` - Python dependency management (wrapped for library compatibility)
+        - `uv` - Fast Python package installer and resolver
         - `cargo` - Rust package manager
 
         ## Shell Enhancement
@@ -201,7 +181,7 @@ in
 
         ## Nix Tools
         - `nil` - Nix language server
-        - `nixfmt-rfc-style` - Nix code formatter
+        - `nixfmt` - Nix code formatter
         - `nixd` - Nix language server
 
         ## System Information
@@ -213,7 +193,8 @@ in
 
         ## Notes
         - All tools are installed via Nix and available in PATH
-        - Many tools have enhanced configurations (e.g., git uses delta pager)
+        - Many tools have enhanced configurations
+        - Delta is available for manual use: `git diff | delta`
         - Shell completions are automatically configured for zsh and fish
         - Prefer these modern alternatives over traditional tools when available
       '';
