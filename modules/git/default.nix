@@ -8,16 +8,9 @@ _: {
         ".envrc"
       ];
 
-      # Sign commits with the 1Password SSH key on all machines
-      signing = {
-        format = "ssh";
-        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBG6S0nj4gCq5Nf2vIwBqOXVb8GQbldX8Z0dsLXWBj0";
-        signByDefault = true;
-        signer = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
-      };
-
       # Use new settings format (replaces userName, userEmail, aliases, extraConfig)
-      # user.email is machine-specific and set in hosts/<hostname>/home.nix
+      # user.email and commit signing are machine-specific and set in
+      # hosts/<hostname>/home.nix
       settings = {
         user = {
           name = "Shuo Zheng";
