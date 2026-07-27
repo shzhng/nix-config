@@ -72,25 +72,20 @@
 
     brews = [ ];
 
+    # Shared casks only - machine-specific casks live in hosts/<hostname>/
     casks = [
       "1password"
-      # "astro-command-center"
       "cloudflare-warp"
       "figma"
-      "google-chrome"
-      "karabiner-elements"
       # TODO Broken, investigate later
       # "figma-agent"
-      # "firefox"
       "ghostty"
-      "headlamp"
+      "google-chrome"
       "google-drive"
       "hiddenbar"
+      "karabiner-elements"
       "livebook"
-      "notion"
       "slack"
-      "zoom"
-      "parallels"
     ];
 
     masApps = {

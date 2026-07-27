@@ -164,22 +164,27 @@
         # x86_64-darwin is not included due to catppuccin themes requiring ARM builds
       ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems f;
+
+      # A host = shared modules + its profile under ./hosts.
+      # Keys match each machine's hostname so a bare
+      # `sudo darwin-rebuild switch --flake .` resolves automatically.
+      mkDarwinHost =
+        hostModule:
+        nix-darwin.lib.darwinSystem {
+          modules = darwinCommonModules ++ [ hostModule ];
+        };
     in
     {
       # Build darwin flake using:
       # `nix run nix-darwin -- switch --flake .`
       # Switch with:
-      # `darwin-rebuild switch --flake .#Shuos-Macbook-Air`
+      # `sudo darwin-rebuild switch --flake .`
       darwinConfigurations = {
-        # Configuration for MacBook Air
-        Shuos-Macbook-Air = nix-darwin.lib.darwinSystem {
-          modules = darwinCommonModules;
-        };
+        # Personal MacBook Pro
+        Shuos-MacBook-Pro = mkDarwinHost ./hosts/shuos-macbook-pro;
 
-        # Configuration for MacBook Pro - using the same modules
-        Shuos-MacBook-Pro = nix-darwin.lib.darwinSystem {
-          modules = darwinCommonModules;
-        };
+        # Lumaril work MacBook Pro
+        Shuos-MacBook-Pro-Lumaril = mkDarwinHost ./hosts/shuos-macbook-pro-lumaril;
       };
 
       # Expose the package set, including overlays, for convenience.

@@ -17,10 +17,10 @@ _: {
       };
 
       # Use new settings format (replaces userName, userEmail, aliases, extraConfig)
+      # user.email is machine-specific and set in hosts/<hostname>/home.nix
       settings = {
         user = {
           name = "Shuo Zheng";
-          email = "shuo@lumaril.com";
         };
         alias = {
           root = "rev-parse --show-toplevel";
