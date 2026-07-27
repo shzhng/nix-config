@@ -57,6 +57,7 @@ in
       ripgrep
 
       # Nix
+      cachix
       nil
       nixfmt
       nixd
@@ -180,6 +181,7 @@ in
         - `duckdb` - Analytical SQL database
 
         ## Nix Tools
+        - `cachix` - Binary cache client (personal cache: shzhng.cachix.org)
         - `nil` - Nix language server
         - `nixfmt` - Nix code formatter
         - `nixd` - Nix language server
@@ -190,6 +192,7 @@ in
         ## Aliases
         - `cat` -> `bat --paging=never`
         - `g` -> `git` (plus many git aliases like `ga`, `gc`, `gst`, etc.)
+        - `rebuild` -> darwin-rebuild build+switch, pushing built paths to cachix (run from the nix-config repo)
 
         ## Notes
         - All tools are installed via Nix and available in PATH
@@ -218,6 +221,16 @@ in
   #
   home.sessionVariables = {
     # EDITOR = "emacs";
+  };
+
+  home.shellAliases = pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+    # Rebuild the system, pushing locally-built store paths to the personal
+    # cachix. post-build-hook mode only ever uploads paths *built* on this
+    # machine (never substituted downloads), so it cannot blow the quota.
+    # Requires one-time setup per machine:
+    #   cachix authtoken <token>
+    #   trusted-users = root shuo   (in /etc/nix/nix.custom.conf)
+    rebuild = "cachix watch-exec --watch-mode post-build-hook shzhng -- darwin-rebuild build --flake . && sudo darwin-rebuild switch --flake .";
   };
 
   catppuccin = {

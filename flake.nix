@@ -231,12 +231,16 @@
       # Serves the whiskers cargo-vendor FOD, letting CI avoid crates.io
       # downloads that GitHub-hosted runners get 403'd on.
       "https://catppuccin.cachix.org"
+      # Personal cache: CI pushes built system closures here; both machines
+      # and later CI runs substitute from it.
+      "https://shzhng.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
       "catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
+      "shzhng.cachix.org-1:qLS1ho8pcjo0IbhSiwc66NzdLWk6Mcug/+RXO3SkR2o="
     ];
   };
 }

@@ -3,7 +3,8 @@
 - prefer using the home-manager way of configuring a tool rather than directly outputting the config file
 
 # Commands
-- `sudo darwin-rebuild switch --flake .` to rebuild the system
+- `rebuild` (shell alias, run from this repo) to rebuild the system and push locally-built paths to the shzhng cachix cache
+- `sudo darwin-rebuild switch --flake .` to rebuild the system without pushing to the cache
 
 # Configuration
 - when adding and removing cli tools, make sure to update our configuration to output it into our `~/.claude/CLAUDE.md` file
