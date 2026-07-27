@@ -235,6 +235,9 @@ in
 
   catppuccin = {
     enable = true;
+    # Opt in to catppuccin/nix's upcoming behavior early: autoEnable themes
+    # every supported program; enable acts as the global toggle.
+    autoEnable = true;
     flavor = "mocha";
   };
 
