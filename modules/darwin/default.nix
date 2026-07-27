@@ -26,9 +26,9 @@
     fish = {
       enable = true;
       loginShellInit = ''
-        if [[ -o interactive ]]; then
-          eval "$(/opt/homebrew/bin/brew shellenv)"
-        fi
+        if status is-interactive
+          /opt/homebrew/bin/brew shellenv | source
+        end
       '';
     };
 
@@ -50,7 +50,7 @@
       # Mac-specific apps
       raycast
 
-      docker
+      docker_29
       # colima
     ];
 
@@ -83,6 +83,7 @@
       # "figma-agent"
       # "firefox"
       "ghostty"
+      "headlamp"
       "google-drive"
       "hiddenbar"
       # "ledger-live"
@@ -98,6 +99,8 @@
       # "openbb-terminal"
       # "plex"
       "slack"
+      "zoom"
+      "parallels"
       # "steam"
       # "thinkorswim"
       # "trader-workstation"

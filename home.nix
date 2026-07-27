@@ -51,7 +51,7 @@ in
 
       # Cloud host CLI tools
       azure-cli
-      awscli
+      awscli2
       hcloud
 
       # Development tools
@@ -64,6 +64,7 @@ in
       cf-terraforming
 
       fastfetch
+      ripgrep
 
       # Nix
       nil
@@ -147,6 +148,7 @@ in
         This file documents the CLI tools available in this environment to help Claude Code make better recommendations.
 
         ## File Operations
+        - `rg` (ripgrep) - Fast recursive grep replacement for searching file contents
         - `fd` - Fast find replacement for searching files and directories
         - `bat` - Cat replacement with syntax highlighting and paging
         - `lsd` - Modern ls replacement with icons and colors
@@ -175,7 +177,7 @@ in
 
         ## Cloud Tools
         - `azure-cli` (az) - Azure command line interface
-        - `awscli` (aws) - AWS command line interface
+        - `awscli2` (aws) - AWS command line interface v2
         - `hcloud` - Hetzner Cloud CLI
         - `flyctl` - Fly.io deployment tool
 
