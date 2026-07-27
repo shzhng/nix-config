@@ -20,8 +20,18 @@ jobs:
           extra-conf: |
             accept-flake-config = true
 
-      - name: Check Nix flake
-        run: nix flake check --no-build
+      # `nix flake check` cannot run on macOS: evaluating the x86_64-linux
+      # homeConfigurations.shuo triggers import-from-derivation (catppuccin
+      # theme files) that only builds on Linux. Check the darwin-checkable
+      # outputs explicitly instead; the build jobs below cover the full
+      # darwinConfigurations.
+      - name: Build flake checks
+        run: nix build .#checks.aarch64-darwin.pre-commit-check --no-link --print-build-logs
+
+      - name: Evaluate darwin configurations
+        run: |
+          nix eval .#darwinConfigurations.Shuos-MacBook-Pro.system.drvPath
+          nix eval .#darwinConfigurations.Shuos-MacBook-Pro-Lumaril.system.drvPath
 
       - name: Check formatting
         run: |
