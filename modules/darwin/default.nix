@@ -80,7 +80,8 @@
       "ghostty"
       "google-drive"
       "hiddenbar"
-      "ledger-live"
+      "ibkr"
+      "ledger-wallet"
       "livebook"
       "logitech-g-hub"
       "microsoft-auto-update"
@@ -88,12 +89,14 @@
       "microsoft-teams"
       "moonlight"
       # "morgen"
-      "mullvadvpn"
+      "cloudflare-warp"
+      "mullvad-vpn"
       "openbb-terminal"
       "plex"
       "steam"
       "thinkorswim"
       "trader-workstation"
+      "tailscale-app"
       "yubico-authenticator"
     ];
 
@@ -105,9 +108,8 @@
 
   # Auto upgrade nix package and the daemon service.
   services = {
-    # We explicitly don't use tailscaled + tailscale cli in favor of the
-    # standalone UI version, installed via homebrew cask.
-    tailscale.enable = true;
+    # Tailscale installed via homebrew cask
+    tailscale.enable = false;
 
     # TODO temporarily disable sketchybar
     # sketchybar = {
