@@ -2,19 +2,25 @@ _: {
   programs = {
     git = {
       enable = true;
-      userName = "Shuo Zheng";
-      userEmail = "github@shuo.dev";
 
       ignores = [
         ".DS_Store"
         ".envrc"
       ];
 
-      aliases = {
-        root = "rev-parse --show-toplevel";
+      signing = {
+        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBG6S0nj4gCq5Nf2vIwBqOXVb8GQbldX8Z0dsLXWBj0";
+        signByDefault = true;
       };
 
-      extraConfig = {
+      settings = {
+        user = {
+          name = "Shuo Zheng";
+          email = "shuo@lumaril.com";
+        };
+        alias = {
+          root = "rev-parse --show-toplevel";
+        };
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
         pull.rebase = true;
@@ -24,13 +30,16 @@ _: {
         merge.conflictStyle = "diff3";
         diff.colorMoved = "default";
         credential.helper = "gh auth git-credential";
+        gpg.format = "ssh";
+        "gpg \"ssh\"".program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
       };
+    };
 
-      delta = {
-        enable = true;
-        options = {
-          # side-by-side = true;
-        };
+    delta = {
+      enable = true;
+      enableGitIntegration = true;
+      options = {
+        # side-by-side = true;
       };
     };
 
