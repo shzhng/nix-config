@@ -53,6 +53,16 @@ jobs:
             accept-flake-config = true
             system = aarch64-darwin
 
+      # Pushes everything built in this job to the shzhng cachix cache so
+      # later runs (and the laptops) substitute instead of rebuilding.
+      # Without CACHIX_AUTH_TOKEN (e.g. dependabot runs) the push is skipped
+      # and the cache is still used read-only via the flake's nixConfig.
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v17
+        with:
+          name: shzhng
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+
       - name: Build Darwin configuration
         run: |
           nix build .#darwinConfigurations.${{ matrix.host }}.system \
