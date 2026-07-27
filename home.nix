@@ -68,14 +68,14 @@ in
       duf
       dust
       jq
-      unixODBC
+      unixodbc
       uutils-coreutils-noprefix
 
       # Database tools
       duckdb
 
       # Elixir
-      elixir
+      beamPackages.elixir
       flyctl
 
       # Rust
