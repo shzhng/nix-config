@@ -39,6 +39,12 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Clawdbot - AI assistant gateway
+    nix-clawdbot = {
+      url = "github:clawdbot/nix-clawdbot";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -52,6 +58,7 @@
       home-manager,
       catppuccin,
       git-hooks,
+      nix-clawdbot,
     }:
     let
       # Define shared tap configuration
@@ -72,6 +79,9 @@
           # Add this configuration block to allow broken packages
           # nixpkgs.config.allowBroken = true;
 
+          # Clawdbot overlay disabled due to packaging bugs
+          # nixpkgs.overlays = [ nix-clawdbot.overlays.default ];
+
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
@@ -81,6 +91,7 @@
               imports = [
                 ./home.nix
                 catppuccin.homeModules.catppuccin
+                # nix-clawdbot.homeManagerModules.clawdbot  # disabled due to packaging bugs
               ];
             };
           };
