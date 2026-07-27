@@ -8,3 +8,9 @@
 
 # Configuration
 - when adding and removing cli tools, make sure to update our configuration to output it into our `~/.claude/CLAUDE.md` file
+
+# Binary Cache (cachix)
+- personal cache is `shzhng.cachix.org`; pull config (substituters + public keys) lives in `flake.nix` `nixConfig` and applies to any flake command against this repo
+- pushing needs two per-machine, non-repo steps: `cachix authtoken <write-token>` (writes `~/.config/cachix/cachix.dhall`) and `trusted-users = root shuo` in `/etc/nix/nix.custom.conf`
+- `nix.settings` in nix-darwin is disabled (`nix.enable = false`, Determinate manages nix), so system-wide nix settings must go in `/etc/nix/nix.custom.conf`, not nix-darwin
+- `rebuild` uploads only locally-built paths via cachix `watch-exec --watch-mode post-build-hook`, so it can't blow the cache quota

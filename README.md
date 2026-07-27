@@ -50,6 +50,45 @@ darwin-rebuild switch --flake .
 home-manager switch --flake .
 ```
 
+## Binary Cache (cachix)
+
+This config uses a personal [cachix](https://cachix.org) cache
+(`shzhng.cachix.org`) so both machines and CI can substitute pre-built system
+closures instead of rebuilding from scratch.
+
+**Pulling** (substituting) works out of the box: the substituters and their
+public keys are declared in `flake.nix` under `nixConfig`, so any flake command
+run against this repo picks them up automatically (the first time, nix prompts
+you to trust the settings).
+
+**Pushing** requires two one-time, per-machine steps (these are secrets/local
+state and are intentionally *not* checked into the repo):
+
+1. Authenticate so `cachix push` can upload. Grab a **write** token from
+   [app.cachix.org](https://app.cachix.org) → `shzhng` → *Settings → Auth
+   tokens*, then:
+
+   ```sh
+   cachix authtoken <token>   # writes ~/.config/cachix/cachix.dhall
+   ```
+
+2. Make your user a trusted nix user so it may push to substituters. Under the
+   Determinate installer, add this to `/etc/nix/nix.custom.conf`:
+
+   ```conf
+   trusted-users = root shuo
+   ```
+
+   > [!NOTE]
+   > nix-darwin's `nix.settings` is disabled in this config (`nix.enable =
+   > false`) because Determinate manages nix, so this must live in
+   > `nix.custom.conf` rather than being set through nix-darwin.
+
+Once both are done, the `rebuild` shell alias builds the system and uploads
+**only locally-built paths** (via cachix `watch-exec --watch-mode
+post-build-hook`) — substituted downloads are never re-uploaded, so it can't
+blow the cache quota.
+
 ## Code Formatting
 
 This repository uses automatic code formatting to maintain consistent style across all Nix files. The formatting is enforced using git pre-commit hooks that run before each commit.
