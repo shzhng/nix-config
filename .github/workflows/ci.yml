@@ -20,9 +20,6 @@ jobs:
           extra-conf: |
             accept-flake-config = true
 
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v13
-
       - name: Check Nix flake
         run: nix flake check --no-build
 
@@ -30,6 +27,7 @@ jobs:
         run: |
           nix run nixpkgs#nixfmt-rfc-style -- --check flake.nix
           nix run nixpkgs#nixfmt-rfc-style -- --check home.nix
+          nix run nixpkgs#nixfmt-rfc-style -- --check hosts/
           nix run nixpkgs#nixfmt-rfc-style -- --check modules/
 
   build:
@@ -37,8 +35,9 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        system:
-          - aarch64-darwin
+        host:
+          - Shuos-MacBook-Pro
+          - Shuos-MacBook-Pro-Lumaril
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -48,21 +47,23 @@ jobs:
         with:
           extra-conf: |
             accept-flake-config = true
-            system = ${{ matrix.system }}
-
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v13
+            system = aarch64-darwin
 
       - name: Build Darwin configuration
         run: |
-          nix build .#darwinConfigurations.Shuos-MacBook-Pro.system \
+          nix build .#darwinConfigurations.${{ matrix.host }}.system \
             --no-link \
             --print-build-logs \
-            --system ${{ matrix.system }}
+            --system aarch64-darwin
 
   validate-home-manager:
     name: Validate Home Manager Configuration
     runs-on: macos-latest
+    strategy:
+      matrix:
+        host:
+          - Shuos-MacBook-Pro
+          - Shuos-MacBook-Pro-Lumaril
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -73,12 +74,9 @@ jobs:
           extra-conf: |
             accept-flake-config = true
 
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v13
-
       - name: Validate Home Manager configuration
         run: |
-          nix build .#darwinConfigurations.Shuos-MacBook-Pro.config.home-manager.users.shuo.home.activationPackage \
+          nix build .#darwinConfigurations.${{ matrix.host }}.config.home-manager.users.shuo.home.activationPackage \
             --no-link \
             --print-build-logs
 
