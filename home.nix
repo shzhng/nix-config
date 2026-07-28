@@ -244,5 +244,13 @@ in
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
+
+    # Alias supported CLIs to `op plugin run -- <tool>` so their API keys are
+    # injected from 1Password at invocation time (nothing secret on disk).
+    # Needs the 1password-cli cask plus one-time `op plugin init <tool>`.
+    _1password-shell-plugins = {
+      enable = true;
+      plugins = with pkgs; [ hcloud ];
+    };
   };
 }
