@@ -151,6 +151,7 @@ in
 
         ## Development Tools
         - `git` - Version control
+        - `git-lfs` - Git Large File Storage (enabled via programs.git.lfs)
         - `gh` - GitHub CLI for interacting with GitHub from the command line
         - `lazygit` - Terminal UI for git commands
         - `node` - Node.js JavaScript runtime (version 18+)
