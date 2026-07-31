@@ -45,6 +45,13 @@
     claude-code = {
       url = "github:sadjow/claude-code-nix";
     };
+
+    # 1Password shell plugins: inject CLI API keys (e.g. hcloud) from
+    # 1Password at invocation time instead of storing them on disk.
+    onepassword-shell-plugins = {
+      url = "github:1Password/shell-plugins";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -59,6 +66,7 @@
       catppuccin,
       git-hooks,
       claude-code,
+      onepassword-shell-plugins,
     }:
     let
       # Define shared tap configuration
@@ -95,6 +103,7 @@
               imports = [
                 ./home.nix
                 catppuccin.homeModules.catppuccin
+                onepassword-shell-plugins.hmModules.default
               ];
             };
           };
@@ -208,6 +217,7 @@
         modules = [
           ./home.nix
           catppuccin.homeModules.catppuccin
+          onepassword-shell-plugins.hmModules.default
         ];
       };
     };

@@ -75,6 +75,7 @@
     # Shared casks only - machine-specific casks live in hosts/<hostname>/
     casks = [
       "1password"
+      "1password-cli"
       "cloudflare-warp"
       "figma"
       # TODO Broken, investigate later

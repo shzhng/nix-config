@@ -164,8 +164,9 @@ in
         ## Cloud Tools
         - `azure-cli` (az) - Azure command line interface
         - `awscli2` (aws) - AWS command line interface v2
-        - `hcloud` - Hetzner Cloud CLI
+        - `hcloud` - Hetzner Cloud CLI (aliased to `op plugin run -- hcloud`; API token injected from 1Password)
         - `flyctl` - Fly.io deployment tool
+        - `op` - 1Password CLI (installed via Homebrew; used for secret/API-key injection via shell plugins)
 
         ## Package Managers
         - `uv` - Fast Python package installer and resolver
@@ -201,6 +202,7 @@ in
         - Delta is available for manual use: `git diff | delta`
         - Shell completions are automatically configured for zsh and fish
         - Prefer these modern alternatives over traditional tools when available
+        - CLI API keys are managed via 1Password shell plugins (`op plugin init <tool>` to link a credential); no tokens in env vars or on disk
       '';
     };
   };
@@ -245,5 +247,13 @@ in
   programs = {
     # Let Home Manager install and manage itself.
     home-manager.enable = true;
+
+    # Alias supported CLIs to `op plugin run -- <tool>` so their API keys are
+    # injected from 1Password at invocation time (nothing secret on disk).
+    # Needs the 1password-cli cask plus one-time `op plugin init <tool>`.
+    _1password-shell-plugins = {
+      enable = true;
+      plugins = with pkgs; [ hcloud ];
+    };
   };
 }
