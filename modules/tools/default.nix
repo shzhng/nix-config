@@ -26,6 +26,10 @@
           light_name = "catppuccin-latte";
           dark_name = "catppuccin";
         };
+        ui = {
+          show_agent_labels_on_pane_borders = true;
+          toast.delivery = "terminal";
+        };
       };
     };
     lsd.enable = true;
