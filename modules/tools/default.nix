@@ -14,6 +14,20 @@
       # Atuin owns Ctrl-R for shell history; keep fzf for files/dirs only.
       historyWidget.command = "";
     };
+    herdr = {
+      enable = true;
+      # Config is a read-only symlink; edit here, not via herdr's own
+      # config commands. Reloads the running server automatically on change.
+      settings = {
+        onboarding = false;
+        theme = {
+          name = "catppuccin";
+          auto_switch = true;
+          light_name = "catppuccin-latte";
+          dark_name = "catppuccin";
+        };
+      };
+    };
     lsd.enable = true;
     mise = {
       enable = true;

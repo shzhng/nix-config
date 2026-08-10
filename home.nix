@@ -47,7 +47,6 @@ in
       # Development tools
       claude-code
       gh
-      herdr
       nodejs
       kubectl
       kubernetes-helm
@@ -154,7 +153,7 @@ in
         - `git` - Version control
         - `git-lfs` - Git Large File Storage (enabled via programs.git.lfs)
         - `gh` - GitHub CLI for interacting with GitHub from the command line
-        - `herdr` - Agent multiplexer that lives in your terminal
+        - `herdr` - Agent multiplexer that lives in your terminal (configured via programs.herdr)
         - `lazygit` - Terminal UI for git commands
         - `node` - Node.js JavaScript runtime (version 18+)
         - `npm` - Node.js package manager
