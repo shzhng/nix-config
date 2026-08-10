@@ -196,6 +196,10 @@ in
         - `g` -> `git` (plus many git aliases like `ga`, `gc`, `gst`, etc.)
         - `rebuild` -> darwin-rebuild build+switch, pushing built paths to cachix (run from the nix-config repo)
 
+        ## herdr
+        - When `$HERDR_TAB_ID` is set, this session is running inside a herdr pane
+        - At the start of a task, rename the tab to a short 2-4 word label for the task: `herdr tab rename "$HERDR_TAB_ID" "<label>"`; update it if the task changes significantly
+
         ## Notes
         - All tools are installed via Nix and available in PATH
         - Many tools have enhanced configurations
