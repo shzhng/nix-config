@@ -79,7 +79,7 @@
         # the (often lagging) nixpkgs versions.
         {
           nixpkgs.overlays = [
-            (final: prev: {
+            (_final: prev: {
               inherit (llm-agents.packages.${prev.stdenv.hostPlatform.system})
                 claude-code
                 herdr
