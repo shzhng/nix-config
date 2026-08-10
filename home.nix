@@ -45,7 +45,6 @@ in
       hcloud
 
       # Development tools
-      claude-code
       gh
       nodejs
       kubectl
@@ -124,10 +123,19 @@ in
         '';
     };
 
-    ".claude/CLAUDE.md" = {
-      # IMPORTANT: Keep this file updated when adding/removing CLI tools above
-      # This helps Claude Code make better tool recommendations
-      text = ''
+  };
+
+  programs.claude-code = {
+    enable = true;
+    # herdr's bundled agent skill (pane control, cross-agent orchestration);
+    # regenerated whenever the pinned herdr version changes
+    skills.herdr = pkgs.runCommand "herdr-skill" { } ''
+      ${pkgs.lib.getExe pkgs.herdr} --skill > $out
+    '';
+    # Written to ~/.claude/CLAUDE.md
+    # IMPORTANT: Keep this updated when adding/removing CLI tools above
+    # This helps Claude Code make better tool recommendations
+    context = ''
         # Available CLI Tools
 
         This file documents the CLI tools available in this environment to help Claude Code make better recommendations.
@@ -206,8 +214,7 @@ in
         - Delta is available for manual use: `git diff | delta`
         - Shell completions are automatically configured for zsh and fish
         - Prefer these modern alternatives over traditional tools when available
-      '';
-    };
+    '';
   };
 
   # Home Manager can also manage your environment variables through
