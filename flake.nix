@@ -40,10 +40,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Always-fresh Claude Code package (updated hourly).
-    # Replaces the nixpkgs claude-code via the overlay applied below.
-    claude-code = {
-      url = "github:sadjow/claude-code-nix";
+    # Daily-updated packages for AI coding agent tools (claude-code, herdr, etc.).
+    # Replaces the nixpkgs versions via the overlay applied below.
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -58,7 +59,7 @@
       home-manager,
       catppuccin,
       git-hooks,
-      claude-code,
+      llm-agents,
     }:
     let
       # Define shared tap configuration
@@ -74,11 +75,16 @@
       darwinCommonModules = [
         # catppuccin.nixosModules.catppuccin TODO only use this with NixOS
         ./modules/darwin
-        # Apply the claude-code overlay so `pkgs.claude-code` resolves to the
-        # hourly-updated build from github:sadjow/claude-code-nix.
+        # Take agent CLI tools from llm-agents.nix (daily updates) instead of
+        # the (often lagging) nixpkgs versions.
         {
           nixpkgs.overlays = [
-            claude-code.overlays.default
+            (_final: prev: {
+              inherit (llm-agents.packages.${prev.stdenv.hostPlatform.system})
+                claude-code
+                herdr
+                ;
+            })
           ];
         }
         home-manager.darwinModules.home-manager
@@ -216,10 +222,11 @@
     extra-substituters = [
       "https://nix-community.cachix.org"
       "https://cache.nixos.org"
-      "https://claude-code.cachix.org"
       # Serves the whiskers cargo-vendor FOD, letting CI avoid crates.io
       # downloads that GitHub-hosted runners get 403'd on.
       "https://catppuccin.cachix.org"
+      # numtide cache serving llm-agents.nix builds (herdr)
+      "https://cache.numtide.com"
       # Personal cache: CI pushes built system closures here; both machines
       # and later CI runs substitute from it.
       "https://shzhng.cachix.org"
@@ -227,8 +234,8 @@
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
       "catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "shzhng.cachix.org-1:qLS1ho8pcjo0IbhSiwc66NzdLWk6Mcug/+RXO3SkR2o="
     ];
   };
