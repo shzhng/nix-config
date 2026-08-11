@@ -11,7 +11,7 @@
 - agent-facing config (instructions, skills, per-harness wiring) lives in `modules/agents/`
 
 # Binary Cache (cachix)
-- personal cache is `shzhng.cachix.org`; pull config (substituters + public keys) lives in `flake.nix` `nixConfig` and applies to any flake command against this repo
+- personal cache is `shzhng.cachix.org`; pull config (substituters + public keys) lives in `flake.nix` `nixConfig`, but non-interactive nix ignores flake nixConfig ("untrusted flake configuration setting" warnings), so local substitution requires mirroring the caches into `/etc/nix/nix.custom.conf` (`extra-substituters` + `extra-trusted-public-keys`); without that, llm-agents packages (codex, herdr, ...) compile from source
 - pushing needs two per-machine, non-repo steps: `cachix authtoken <write-token>` (writes `~/.config/cachix/cachix.dhall`) and `trusted-users = root shuo` in `/etc/nix/nix.custom.conf`
 - `nix.settings` in nix-darwin is disabled (`nix.enable = false`, Determinate manages nix), so system-wide nix settings must go in `/etc/nix/nix.custom.conf`, not nix-darwin
 - `rebuild` uploads only locally-built paths via cachix `watch-exec --watch-mode post-build-hook`, so it can't blow the cache quota
