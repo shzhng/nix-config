@@ -7,7 +7,8 @@
 - `sudo darwin-rebuild switch --flake .` to rebuild the system without pushing to the cache
 
 # Configuration
-- when adding and removing cli tools, make sure to update our configuration to output it into our `~/.claude/CLAUDE.md` file
+- when adding and removing cli tools, update `modules/agents/AGENTS.md` (the shared agent context; home-manager renders it to each harness's global instructions file, e.g. `~/.claude/CLAUDE.md`)
+- agent-facing config (instructions, skills, per-harness wiring) lives in `modules/agents/`
 
 # Binary Cache (cachix)
 - personal cache is `shzhng.cachix.org`; pull config (substituters + public keys) lives in `flake.nix` `nixConfig` and applies to any flake command against this repo
