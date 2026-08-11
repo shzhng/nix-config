@@ -75,6 +75,8 @@
     # Shared casks only - machine-specific casks live in hosts/<hostname>/
     casks = [
       "1password"
+      # Claude desktop app (includes Cowork)
+      "claude"
       "cloudflare-warp"
       "figma"
       # TODO Broken, investigate later
