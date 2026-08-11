@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
   # Single source of truth for agent instructions, shared across harnesses.
@@ -19,25 +19,37 @@ let
   };
 in
 {
-  programs.claude-code = {
-    enable = true;
-    context = agentContext; # -> ~/.claude/CLAUDE.md
-    skills = agentSkills; # -> ~/.claude/skills/<name>/SKILL.md
+  # Packages come from the llm-agents.nix overlay in flake.nix. Run
+  # `herdr integration install <kind>` once per machine for herdr state
+  # detection.
+  programs = {
+    claude-code = {
+      enable = true;
+      context = agentContext; # -> ~/.claude/CLAUDE.md
+      skills = agentSkills; # -> ~/.claude/skills/<name>/SKILL.md
+    };
+
+    codex = {
+      enable = true;
+      context = agentContext; # -> $CODEX_HOME/AGENTS.md
+      skills = agentSkills;
+    };
+
+    opencode = {
+      enable = true;
+      context = agentContext; # -> ~/.config/opencode/AGENTS.md
+      skills = agentSkills;
+    };
   };
 
-  # Planned harnesses — flip on when adopted. Add the package to the
-  # llm-agents.nix overlay in flake.nix (alongside claude-code and herdr)
-  # for daily-updated builds, and run `herdr integration install <kind>`
-  # once for herdr state detection.
-  #
-  # programs.codex = {
-  #   enable = true;
-  #   custom-instructions = agentContext; # -> ~/.codex/AGENTS.md
-  # };
-  #
-  # programs.opencode = {
-  #   enable = true;
-  #   context = agentContext; # -> ~/.config/opencode/AGENTS.md
-  #   skills = agentSkills;
-  # };
+  # herdr agent-state integrations (lifecycle hooks per harness). The hook
+  # files are version-coupled to the herdr binary and herdr's installer also
+  # merges into mutable state (e.g. ~/.claude/settings.json), so install them
+  # idempotently from the pinned binary on every activation instead of
+  # managing the files declaratively.
+  home.activation.herdrIntegrations = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for kind in claude codex opencode; do
+      run ${lib.getExe pkgs.herdr} integration install "$kind" || true
+    done
+  '';
 }

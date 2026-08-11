@@ -42,10 +42,10 @@
 
     # Daily-updated packages for AI coding agent tools (claude-code, herdr, etc.).
     # Replaces the nixpkgs versions via the overlay applied below.
-    llm-agents = {
-      url = "github:numtide/llm-agents.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Deliberately NOT following our nixpkgs: rebasing onto a different
+    # nixpkgs changes every derivation hash, which misses cache.numtide.com
+    # and forces source builds (codex is a huge Rust workspace).
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs =
@@ -82,7 +82,9 @@
             (_final: prev: {
               inherit (llm-agents.packages.${prev.stdenv.hostPlatform.system})
                 claude-code
+                codex
                 herdr
+                opencode
                 ;
             })
           ];
