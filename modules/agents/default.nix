@@ -16,8 +16,8 @@ let
     herdr = pkgs.runCommand "herdr-skill" { } ''
       ${pkgs.lib.getExe pkgs.herdr} --skill > $out
     '';
-    # Repo maintenance: fast-forward main, relocate drift, prune merged
-    # worktrees. After editing, run its scripts/selftest.sh.
+    # Repo maintenance procedure: fast-forward main, relocate drift, prune
+    # merged worktrees.
     nix-config-sync = ./skills/nix-config-sync;
   };
 in

@@ -17,51 +17,49 @@ The nix-config repo follows a strict invariant:
 under `.claude/worktrees/`.**
 
 The main checkout exists to be read and to serve the running system config.
-Work in progress never blocks a `git pull`, and nothing is ever lost in a
-stray checkout.
+Work is never discarded during a sync — only relocated or left alone.
 
-## Syncing
+## Sync procedure
 
-Run the bundled script (paths relative to this skill's base directory). It is
-**dry-run by default** — run it once, show the user the plan, then re-run with
-`--apply`:
+Show the user what you intend to remove before removing it. `REPO` below is
+`~/git/shzhng/nix-config`.
 
-```bash
-python3 scripts/sync.py           # plan only
-python3 scripts/sync.py --apply   # execute
-```
+1. `git -C $REPO fetch --prune origin`
 
-One pass does all of this:
+2. Bring the main checkout to clean `main`:
+   - On `main` and clean: `git -C $REPO merge --ff-only origin/main`
+   - Dirty: relocate the changes into a worktree, then fast-forward —
+     ```bash
+     git -C $REPO stash push -u -m "sync relocate"
+     git -C $REPO worktree add $REPO/.claude/worktrees/<slug> -b worktree-<slug> origin/main
+     git -C $REPO/.claude/worktrees/<slug> stash pop
+     # then WIP-commit it there
+     ```
+   - On some other branch: stop and ask the user; don't guess.
 
-- **Fast-forwards `main`** to origin/main (fetch --prune included).
-- **Relocates drift**: uncommitted changes found in the main checkout are
-  moved into a fresh `wip-*` worktree as a WIP commit — never discarded —
-  and the checkout returns to clean `main`.
-- **Removes merged worktrees**: a worktree whose branch is an ancestor of
-  `origin/main`, or whose head matches a squash-merged PR (checked via `gh`),
-  and whose tree is clean, is removed along with its local and remote branch.
-- **Never touches** dirty worktrees, unmerged branches, or the worktree the
-  current session is running in — those land in the `attention` section of
-  the summary. Relay attention items to the user.
+3. For each worktree under `$REPO/.claude/worktrees/` (`git -C $REPO worktree
+   list`), skip any worktree the current session is running inside, then:
+   - **Dirty tree** (`git status --porcelain`): leave it, report it.
+   - **Merged?** Either ancestry — `git -C $REPO merge-base --is-ancestor
+     <branch> origin/main` — or squash-merged: PRs here are squash-merged, so
+     compare `git rev-parse <branch>` against
+     `gh pr list --head <branch> --state merged --json headRefOid`.
+   - **Merged and clean**: remove it —
+     ```bash
+     git -C $REPO worktree remove --force <path>   # --force: squash merges look unmerged to git
+     git -C $REPO branch -D <branch>
+     git push origin --delete <branch>             # if it still exists on origin
+     ```
+   - Otherwise it's active work: leave it, report it.
 
-Run from anywhere; the script targets `~/git/shzhng/nix-config` (override
-with `--repo`).
-
-After changing `sync.py`, run `scripts/selftest.sh` — it builds a throwaway
-fixture repo (with a stubbed `gh`) and asserts every behavior without touching
-the real repo or GitHub.
+4. Summarize what was done and anything left alone.
 
 ## Starting new work
 
-Use the harness's worktree mechanism (EnterWorktree) when available, or:
-
-```bash
-git -C ~/git/shzhng/nix-config worktree add \
-  ~/git/shzhng/nix-config/.claude/worktrees/<name> -b worktree-<name> origin/main
-```
-
-Then install the pre-commit hooks in the new worktree (the generated
-`.pre-commit-config.yaml` is git-ignored, so each worktree needs this once):
+Use the harness's worktree mechanism (EnterWorktree) when available, or
+`git worktree add` under `.claude/worktrees/` from `origin/main` as above.
+Then install the pre-commit hooks in the new worktree once (the generated
+config is git-ignored, so worktrees don't inherit it):
 
 ```bash
 nix run .#install-git-hooks
@@ -69,6 +67,6 @@ nix run .#install-git-hooks
 
 ## Finishing work
 
-After a PR merges, the next sync removes its worktree and branches
-automatically. PRs are squash-merged, so expect the squash detection (via
-`gh pr list --head <branch> --state merged`) to be what matches.
+After a PR merges, the next sync removes its worktree and branches. Rebuild
+with the `rebuild` alias (never raw `darwin-rebuild`) so locally-built paths
+reach the cachix cache.
