@@ -18,8 +18,8 @@
                                         "optional": ["any"]
                                     }
                                 },
-                                "to_if_held_down": [{ "key_code": "left_control" }],
-                                "to_if_tapped": [{ "key_code": "escape" }],
+                                "to": [{ "key_code": "left_control", "lazy": true }],
+                                "to_if_alone": [{ "key_code": "escape" }],
                                 "type": "basic"
                             }
                         ]
