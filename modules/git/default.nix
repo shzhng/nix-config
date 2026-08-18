@@ -8,6 +8,8 @@ _: {
       ignores = [
         ".DS_Store"
         ".envrc"
+        # agent-agnostic worktree convention: <repo>/.worktrees/<branch>
+        ".worktrees/"
       ];
 
       # Use new settings format (replaces userName, userEmail, aliases, extraConfig)

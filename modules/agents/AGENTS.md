@@ -72,6 +72,12 @@ This file documents the CLI tools available in this environment to help coding a
 - When `$HERDR_TAB_ID` is set, this session is running inside a herdr pane
 - At the start of a task, rename the tab to a short 2-4 word label for the task: `herdr tab rename "$HERDR_TAB_ID" "<label>"`; update it if the task changes significantly
 
+## Git Worktrees
+- Feature/PR work goes in worktrees at `<repo>/.worktrees/<branch>` (agent-agnostic convention; `.worktrees/` is globally gitignored)
+- Branch = directory: to work on a worktree's branch, open its directory — a branch checked out in a worktree cannot be checked out elsewhere
+- In direnv-enabled repos, give a new worktree an `.envrc` containing `source_up` so it inherits the repo root's environment
+- Remove worktrees once their branch merges (`git worktree remove <path>`)
+
 ## Notes
 - All tools are installed via Nix and available in PATH
 - Many tools have enhanced configurations
