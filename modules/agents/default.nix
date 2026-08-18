@@ -33,15 +33,15 @@ let
 
   # Codex reads its OpenRouter key from the environment (env_key above), but
   # exporting it into every shell would hand it to every process. Instead,
-  # wrap the binary to pull opencode's runtime key from its credential store
-  # at launch — scoped to codex processes, read fresh each run (rotation via
-  # `nix run ~/git/shzhng/infrastructure#sync-keys` needs no rebuild), and
+  # wrap the binary to read codex's own provisioned key (written by
+  # `nix run ~/git/shzhng/infrastructure#sync-keys`) at launch — scoped to
+  # codex processes, read fresh each run (rotation needs no rebuild), and
   # never in the nix store. An already-set OPENROUTER_API_KEY wins, so a
   # deliberate override still works.
   codexOpenrouterWrapper = pkgs.writeShellScript "codex-openrouter-wrapper" ''
-    auth="$HOME/.local/share/opencode/auth.json"
-    if [ -z "''${OPENROUTER_API_KEY:-}" ] && [ -f "$auth" ]; then
-      key="$(${lib.getExe pkgs.jq} -r '.openrouter.key // empty' "$auth")"
+    keyfile="$HOME/.local/share/openrouter/codex.key"
+    if [ -z "''${OPENROUTER_API_KEY:-}" ] && [ -f "$keyfile" ]; then
+      key="$(cat "$keyfile")"
       [ -n "$key" ] && export OPENROUTER_API_KEY="$key"
     fi
     exec ${pkgs.codex}/bin/codex "$@"
