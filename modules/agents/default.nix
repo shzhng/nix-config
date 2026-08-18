@@ -21,9 +21,14 @@ let
     nix-config-sync = ./skills/nix-config-sync;
   };
 
-  # OpenRouter provider stanza for codex, shared between the base config and
-  # the openrouter profile (codex profile files are standalone overlays, so
-  # the provider must be defined in both).
+  # OpenRouter for codex is delivered entirely through codex's runtime config
+  # layer (`-c` flags) plus an env var — deliberately NOT via
+  # programs.codex.settings/profiles. Managed files under CODEX_HOME are
+  # read-only store symlinks, which breaks codex's own writes there (it
+  # persists directory-trust decisions and TUI settings into the active
+  # config file); leaving ~/.codex/config.toml unmanaged lets codex own
+  # those. Plain `codex` stays stock (ChatGPT login); `codex-or` routes via
+  # OpenRouter.
   codexOpenrouterProvider = {
     name = "OpenRouter";
     base_url = "https://openrouter.ai/api/v1";
@@ -32,32 +37,32 @@ let
     wire_api = "responses";
   };
 
-  # Codex reads its OpenRouter key from the environment (env_key above), but
-  # exporting it into every shell would hand it to every process. Instead,
-  # wrap the binary to read codex's own provisioned key (written by
-  # `nix run ~/git/shzhng/infrastructure#sync-keys`) at launch — scoped to
-  # codex processes, read fresh each run (rotation needs no rebuild), and
-  # never in the nix store. An already-set OPENROUTER_API_KEY wins, so a
-  # deliberate override still works.
-  codexOpenrouterWrapper = pkgs.writeShellScript "codex-openrouter-wrapper" ''
+  codexOrFlags = lib.concatStringsSep " " (
+    [
+      "-c 'model_provider=\"openrouter\"'"
+      # OpenRouter's meta-router picks a model per request; override per run
+      # with `codex-or -m <model>` (openrouter/pareto-code is the
+      # coding-tuned alternative).
+      "-c 'model=\"openrouter/auto\"'"
+    ]
+    ++ lib.mapAttrsToList (
+      k: v: "-c 'model_providers.openrouter.${k}=\"${v}\"'"
+    ) codexOpenrouterProvider
+  );
+
+  # The key is codex's own provisioned OpenRouter key, written by
+  # `nix run ~/git/shzhng/infrastructure#sync-keys` — read fresh each run
+  # (rotation needs no rebuild), never in the nix store, and visible only to
+  # this process. An already-set OPENROUTER_API_KEY wins, so a deliberate
+  # override still works.
+  codexOr = pkgs.writeShellScriptBin "codex-or" ''
     keyfile="$HOME/.local/share/openrouter/codex.key"
     if [ -z "''${OPENROUTER_API_KEY:-}" ] && [ -f "$keyfile" ]; then
       key="$(cat "$keyfile")"
       [ -n "$key" ] && export OPENROUTER_API_KEY="$key"
     fi
-    exec ${pkgs.codex}/bin/codex "$@"
+    exec ${pkgs.codex}/bin/codex ${codexOrFlags} "$@"
   '';
-
-  codexWithOpenrouterKey = pkgs.symlinkJoin {
-    # keep the version in the name: the codex module version-gates features
-    # via lib.getVersion on this package
-    name = "codex-${lib.getVersion pkgs.codex}";
-    paths = [ pkgs.codex ];
-    postBuild = ''
-      rm "$out/bin/codex"
-      ln -s ${codexOpenrouterWrapper} "$out/bin/codex"
-    '';
-  };
 in
 {
   # Packages come from the llm-agents.nix overlay in flake.nix. Run
@@ -72,21 +77,9 @@ in
 
     codex = {
       enable = true;
-      package = codexWithOpenrouterKey;
       context = agentContext; # -> $CODEX_HOME/AGENTS.md
       skills = agentSkills;
-      # OpenRouter via `codex --profile openrouter`; the default profile
-      # keeps the ChatGPT login. The key comes from OPENROUTER_API_KEY,
-      # injected by the wrapper above.
-      settings.model_providers.openrouter = codexOpenrouterProvider;
-      profiles.openrouter = {
-        # OpenRouter's meta-router picks a model per request; override per
-        # run with `codex -p openrouter -m <model>` (openrouter/pareto-code
-        # is the coding-tuned alternative).
-        model = "openrouter/auto";
-        model_provider = "openrouter";
-        model_providers.openrouter = codexOpenrouterProvider;
-      };
+      # No settings/profiles here on purpose — see codexOr above.
     };
 
     opencode = {
@@ -95,6 +88,8 @@ in
       skills = agentSkills;
     };
   };
+
+  home.packages = [ codexOr ];
 
   # herdr agent-state integrations (lifecycle hooks per harness). The hook
   # files are version-coupled to the herdr binary and herdr's installer also
