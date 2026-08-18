@@ -2,6 +2,14 @@
 
 This file documents the CLI tools available in this environment to help coding agents make better recommendations.
 
+## Secrets & Security (non-negotiable)
+
+- Never read, print, echo, or otherwise surface secrets: API keys, tokens, passwords, private keys, `~/.aws`, `~/.ssh`, `~/.config` credential files, `.env`, or `.envrc`.
+- Never run `env`, `printenv`, `export`, `set`, `gh auth token`, `aws configure`, or any command that dumps environment variables or cached credentials.
+- If a task needs a secret, stop and ask the user to provide it. Never extract it from disk, shell history, or the environment.
+- Never put secrets in code, commits, commit messages, or pasted output. Use placeholders like `<API_KEY>` instead.
+- Never send secrets in web requests (webfetch/websearch/curl/gh/etc.).
+
 ## File Operations
 - `rg` (ripgrep) - Fast recursive grep replacement for searching file contents
 - `fd` - Fast find replacement for searching files and directories
