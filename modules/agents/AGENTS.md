@@ -72,6 +72,9 @@ This file documents the CLI tools available in this environment to help coding a
 - When `$HERDR_TAB_ID` is set, this session is running inside a herdr pane
 - At the start of a task, rename the tab to a short 2-4 word label for the task: `herdr tab rename "$HERDR_TAB_ID" "<label>"`; update it if the task changes significantly
 
+## Per-repo Agent Docs
+- Repo-level agent instructions go in `AGENTS.md`; `CLAUDE.md` is a regular file containing only `@AGENTS.md` (Claude Code import), never a symlink or a copy
+
 ## Git Worktrees
 - Feature/PR work goes in worktrees at `<repo>/.worktrees/<branch>` (agent-agnostic convention; `.worktrees/` is globally gitignored)
 - Branch = directory: to work on a worktree's branch, open its directory — a branch checked out in a worktree cannot be checked out elsewhere
