@@ -52,8 +52,9 @@ in
       #
       # Layers (in order of protection):
       #   read               - deny secret files INSIDE the project
-      #   external_directory - deny secret dirs OUTSIDE the project (~/.ssh, etc.)
-      #   bash               - deny env dumps + secret file reads (no catch-all)
+      #   external_directory - ask (not deny) for secret dirs OUTSIDE the project
+      #                        (~/.ssh, etc.) so legit reads are approvable
+      #   bash               - deny env dumps + in-project secret file reads (no catch-all)
       #   webfetch/websearch  - "ask" (was "allow"), so the user sees every request
       #   share               - disabled, sessions never leave the machine
       settings = {
@@ -79,25 +80,27 @@ in
             "**/.envrc.template" = lib.hm.dag.entryAfter [ "**/.env*" "**/.envrc*" ] "allow";
           };
 
-          # `~` is expanded to $HOME by opencode for these patterns. No
-          # catch-all here on purpose: the default `external_directory`
-          # behavior ("ask", with internal temp/skill dirs allowed) is
-          # already what we want, so we only add deny rules.
+          # `~` is expanded to $HOME by opencode for these patterns. Access is
+          # "ask" (not flat "deny") so legitimate reads — e.g. peeking at an
+          # ssh config or a repo's opencode settings — can be approved
+          # once/always, while anything unexpected still prompts. The default
+          # `external_directory` behavior is already "ask" for everything else,
+          # so these rules just make the intent explicit.
           external_directory = {
-            "~/.ssh/**" = "deny";
-            "~/.aws/**" = "deny";
-            "~/.azure/**" = "deny";
-            "~/.config/**" = "deny";
-            "~/.gnupg/**" = "deny";
-            "~/.kube/**" = "deny";
-            "~/.docker/**" = "deny";
-            "~/.npmrc" = "deny";
-            "~/.netrc" = "deny";
-            "~/.git-credentials" = "deny";
-            "~/.envrc*" = "deny";
-            "~/.local/share/opencode/**" = "deny";
-            "~/Library/Keychains/**" = "deny";
-            "~/Library/Group Containers/**" = "deny";
+            "~/.ssh/**" = "ask";
+            "~/.aws/**" = "ask";
+            "~/.azure/**" = "ask";
+            "~/.config/**" = "ask";
+            "~/.gnupg/**" = "ask";
+            "~/.kube/**" = "ask";
+            "~/.docker/**" = "ask";
+            "~/.npmrc" = "ask";
+            "~/.netrc" = "ask";
+            "~/.git-credentials" = "ask";
+            "~/.envrc*" = "ask";
+            "~/.local/share/opencode/**" = "ask";
+            "~/Library/Keychains/**" = "ask";
+            "~/Library/Group Containers/**" = "ask";
           };
 
           bash = {
@@ -111,19 +114,12 @@ in
             "aws configure*" = "deny";
             "gcloud auth print-access-token*" = "deny";
             "security find-generic-password*" = "deny";
+            # in-project secret files; `~/.aws`, `~/.ssh`, etc. are gated by
+            # external_directory "ask" instead (no rule here, so no double prompt)
             "cat .env*" = "deny";
             "cat */.env*" = "deny";
-            "cat ~/.aws/*" = "deny";
-            "cat ~/.ssh/*" = "deny";
-            "cat ~/.config/*" = "deny";
-            "cat ~/.npmrc" = "deny";
-            "cat ~/.netrc" = "deny";
-            "cat ~/.git-credentials" = "deny";
             "bat .env*" = "deny";
             "bat */.env*" = "deny";
-            "bat ~/.aws/*" = "deny";
-            "bat ~/.ssh/*" = "deny";
-            "bat ~/.config/*" = "deny";
             # `*env.example` etc. also match nested paths like `config/.env.example`
             "cat *env.example" = lib.hm.dag.entryAfter [ "cat .env*" "cat */.env*" ] "allow";
             "cat *env.template" = lib.hm.dag.entryAfter [ "cat .env*" "cat */.env*" ] "allow";
