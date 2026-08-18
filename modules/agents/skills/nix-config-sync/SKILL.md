@@ -14,7 +14,7 @@ The nix-config repo follows a strict invariant:
 
 **The main checkout at `~/git/shzhng/nix-config` stays on a clean, up-to-date
 `main`. All work — every branch, commit, experiment — happens in a worktree
-under `.claude/worktrees/`.**
+under `.worktrees/`.**
 
 The main checkout exists to be read and to serve the running system config.
 Work is never discarded during a sync — only relocated or left alone.
@@ -31,13 +31,13 @@ Show the user what you intend to remove before removing it. `REPO` below is
    - Dirty: relocate the changes into a worktree, then fast-forward —
      ```bash
      git -C $REPO stash push -u -m "sync relocate"
-     git -C $REPO worktree add $REPO/.claude/worktrees/<slug> -b worktree-<slug> origin/main
-     git -C $REPO/.claude/worktrees/<slug> stash pop
+     git -C $REPO worktree add $REPO/.worktrees/<slug> -b worktree-<slug> origin/main
+     git -C $REPO/.worktrees/<slug> stash pop
      # then WIP-commit it there
      ```
    - On some other branch: stop and ask the user; don't guess.
 
-3. For each worktree under `$REPO/.claude/worktrees/` (`git -C $REPO worktree
+3. For each worktree under `$REPO/.worktrees/` (`git -C $REPO worktree
    list`), skip any worktree the current session is running inside, then:
    - **Dirty tree** (`git status --porcelain`): leave it, report it.
    - **Merged?** Either ancestry — `git -C $REPO merge-base --is-ancestor
@@ -57,7 +57,7 @@ Show the user what you intend to remove before removing it. `REPO` below is
 ## Starting new work
 
 Use the harness's worktree mechanism (EnterWorktree) when available, or
-`git worktree add` under `.claude/worktrees/` from `origin/main` as above.
+`git worktree add` under `.worktrees/` from `origin/main` as above.
 Then install the pre-commit hooks in the new worktree once (the generated
 config is git-ignored, so worktrees don't inherit it):
 
