@@ -20,6 +20,43 @@ let
     # merged worktrees.
     nix-config-sync = ./skills/nix-config-sync;
   };
+
+  # OpenRouter provider stanza for codex, shared between the base config and
+  # the openrouter profile (codex profile files are standalone overlays, so
+  # the provider must be defined in both).
+  codexOpenrouterProvider = {
+    name = "OpenRouter";
+    base_url = "https://openrouter.ai/api/v1";
+    env_key = "OPENROUTER_API_KEY";
+    wire_api = "chat";
+  };
+
+  # Codex reads its OpenRouter key from the environment (env_key above), but
+  # exporting it into every shell would hand it to every process. Instead,
+  # wrap the binary to read codex's own provisioned key (written by
+  # `nix run ~/git/shzhng/infrastructure#sync-keys`) at launch — scoped to
+  # codex processes, read fresh each run (rotation needs no rebuild), and
+  # never in the nix store. An already-set OPENROUTER_API_KEY wins, so a
+  # deliberate override still works.
+  codexOpenrouterWrapper = pkgs.writeShellScript "codex-openrouter-wrapper" ''
+    keyfile="$HOME/.local/share/openrouter/codex.key"
+    if [ -z "''${OPENROUTER_API_KEY:-}" ] && [ -f "$keyfile" ]; then
+      key="$(cat "$keyfile")"
+      [ -n "$key" ] && export OPENROUTER_API_KEY="$key"
+    fi
+    exec ${pkgs.codex}/bin/codex "$@"
+  '';
+
+  codexWithOpenrouterKey = pkgs.symlinkJoin {
+    # keep the version in the name: the codex module version-gates features
+    # via lib.getVersion on this package
+    name = "codex-${lib.getVersion pkgs.codex}";
+    paths = [ pkgs.codex ];
+    postBuild = ''
+      rm "$out/bin/codex"
+      ln -s ${codexOpenrouterWrapper} "$out/bin/codex"
+    '';
+  };
 in
 {
   # Packages come from the llm-agents.nix overlay in flake.nix. Run
@@ -34,8 +71,21 @@ in
 
     codex = {
       enable = true;
+      package = codexWithOpenrouterKey;
       context = agentContext; # -> $CODEX_HOME/AGENTS.md
       skills = agentSkills;
+      # OpenRouter via `codex --profile openrouter`; the default profile
+      # keeps the ChatGPT login. The key comes from OPENROUTER_API_KEY,
+      # injected by the wrapper above.
+      settings.model_providers.openrouter = codexOpenrouterProvider;
+      profiles.openrouter = {
+        # OpenRouter's meta-router picks a model per request; override per
+        # run with `codex -p openrouter -m <model>` (openrouter/pareto-code
+        # is the coding-tuned alternative).
+        model = "openrouter/auto";
+        model_provider = "openrouter";
+        model_providers.openrouter = codexOpenrouterProvider;
+      };
     };
 
     opencode = {
