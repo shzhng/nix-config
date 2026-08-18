@@ -20,6 +20,16 @@ let
     # merged worktrees.
     nix-config-sync = ./skills/nix-config-sync;
   };
+
+  # OpenRouter provider stanza for codex, shared between the base config and
+  # the openrouter profile (codex profile files are standalone overlays, so
+  # the provider must be defined in both).
+  codexOpenrouterProvider = {
+    name = "OpenRouter";
+    base_url = "https://openrouter.ai/api/v1";
+    env_key = "OPENROUTER_API_KEY";
+    wire_api = "chat";
+  };
 in
 {
   # Packages come from the llm-agents.nix overlay in flake.nix. Run
@@ -36,6 +46,18 @@ in
       enable = true;
       context = agentContext; # -> $CODEX_HOME/AGENTS.md
       skills = agentSkills;
+      # OpenRouter via `codex --profile openrouter`; the default profile
+      # keeps the ChatGPT login. The key comes from OPENROUTER_API_KEY
+      # (see zsh.envExtra below).
+      settings.model_providers.openrouter = codexOpenrouterProvider;
+      profiles.openrouter = {
+        # OpenRouter's meta-router picks a model per request; override per
+        # run with `codex -p openrouter -m <model>` (openrouter/pareto-code
+        # is the coding-tuned alternative).
+        model = "openrouter/auto";
+        model_provider = "openrouter";
+        model_providers.openrouter = codexOpenrouterProvider;
+      };
     };
 
     opencode = {
@@ -43,6 +65,18 @@ in
       context = agentContext; # -> ~/.config/opencode/AGENTS.md
       skills = agentSkills;
     };
+
+    # Codex reads its OpenRouter key from the environment (env_key above).
+    # Reuses opencode's runtime key from its credential store, which
+    # `nix run ~/git/shzhng/infrastructure#sync-keys` keeps fresh — no
+    # second copy to rotate. Caveat: inside the infrastructure repo, direnv
+    # overrides this with the management key, which cannot call models.
+    zsh.envExtra = ''
+      if [ -f "$HOME/.local/share/opencode/auth.json" ]; then
+        OPENROUTER_API_KEY="$(${lib.getExe pkgs.jq} -r '.openrouter.key // empty' "$HOME/.local/share/opencode/auth.json")"
+        [ -n "$OPENROUTER_API_KEY" ] && export OPENROUTER_API_KEY
+      fi
+    '';
   };
 
   # herdr agent-state integrations (lifecycle hooks per harness). The hook
