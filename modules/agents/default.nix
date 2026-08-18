@@ -30,6 +30,33 @@ let
     env_key = "OPENROUTER_API_KEY";
     wire_api = "chat";
   };
+
+  # Codex reads its OpenRouter key from the environment (env_key above), but
+  # exporting it into every shell would hand it to every process. Instead,
+  # wrap the binary to pull opencode's runtime key from its credential store
+  # at launch — scoped to codex processes, read fresh each run (rotation via
+  # `nix run ~/git/shzhng/infrastructure#sync-keys` needs no rebuild), and
+  # never in the nix store. An already-set OPENROUTER_API_KEY wins, so a
+  # deliberate override still works.
+  codexOpenrouterWrapper = pkgs.writeShellScript "codex-openrouter-wrapper" ''
+    auth="$HOME/.local/share/opencode/auth.json"
+    if [ -z "''${OPENROUTER_API_KEY:-}" ] && [ -f "$auth" ]; then
+      key="$(${lib.getExe pkgs.jq} -r '.openrouter.key // empty' "$auth")"
+      [ -n "$key" ] && export OPENROUTER_API_KEY="$key"
+    fi
+    exec ${pkgs.codex}/bin/codex "$@"
+  '';
+
+  codexWithOpenrouterKey = pkgs.symlinkJoin {
+    # keep the version in the name: the codex module version-gates features
+    # via lib.getVersion on this package
+    name = "codex-${lib.getVersion pkgs.codex}";
+    paths = [ pkgs.codex ];
+    postBuild = ''
+      rm "$out/bin/codex"
+      ln -s ${codexOpenrouterWrapper} "$out/bin/codex"
+    '';
+  };
 in
 {
   # Packages come from the llm-agents.nix overlay in flake.nix. Run
@@ -44,11 +71,12 @@ in
 
     codex = {
       enable = true;
+      package = codexWithOpenrouterKey;
       context = agentContext; # -> $CODEX_HOME/AGENTS.md
       skills = agentSkills;
       # OpenRouter via `codex --profile openrouter`; the default profile
-      # keeps the ChatGPT login. The key comes from OPENROUTER_API_KEY
-      # (see zsh.envExtra below).
+      # keeps the ChatGPT login. The key comes from OPENROUTER_API_KEY,
+      # injected by the wrapper above.
       settings.model_providers.openrouter = codexOpenrouterProvider;
       profiles.openrouter = {
         # OpenRouter's meta-router picks a model per request; override per
@@ -65,18 +93,6 @@ in
       context = agentContext; # -> ~/.config/opencode/AGENTS.md
       skills = agentSkills;
     };
-
-    # Codex reads its OpenRouter key from the environment (env_key above).
-    # Reuses opencode's runtime key from its credential store, which
-    # `nix run ~/git/shzhng/infrastructure#sync-keys` keeps fresh — no
-    # second copy to rotate. Caveat: inside the infrastructure repo, direnv
-    # overrides this with the management key, which cannot call models.
-    zsh.envExtra = ''
-      if [ -f "$HOME/.local/share/opencode/auth.json" ]; then
-        OPENROUTER_API_KEY="$(${lib.getExe pkgs.jq} -r '.openrouter.key // empty' "$HOME/.local/share/opencode/auth.json")"
-        [ -n "$OPENROUTER_API_KEY" ] && export OPENROUTER_API_KEY
-      fi
-    '';
   };
 
   # herdr agent-state integrations (lifecycle hooks per harness). The hook
