@@ -9,6 +9,7 @@ This file documents the CLI tools available in this environment to help coding a
 - If a task needs a secret, stop and ask the user to provide it. Never extract it from disk, shell history, or the environment.
 - Never put secrets in code, commits, commit messages, or pasted output. Use placeholders like `<API_KEY>` instead.
 - Never send secrets in web requests (webfetch/websearch/curl/gh/etc.).
+- Never surface a secret's value into the conversation, transcript, tool-call arguments, or your reasoning. When you need to confirm a credential exists, report only presence, type, and length (e.g. `set, len ${#K}, prefix ${K:0:4}`) — never the raw value or a long substring. Prefer commands that output no secret material; if a read/`cat` would return a full key, don't run it or pipe it through a redactor first.
 
 ## File Operations
 - `rg` (ripgrep) - Fast recursive grep replacement for searching file contents
