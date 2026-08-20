@@ -44,6 +44,17 @@ in
       settings = {
         share = "disabled";
 
+        # oh-my-openagent (formerly oh-my-opencode): multi-agent harness
+        # plugin (Sisyphus orchestrator etc.), fetched from npm by opencode
+        # itself on startup. Its config lives in oh-my-openagent.jsonc (see
+        # xdg.configFile below), where every agent is routed through
+        # OpenRouter. One-time setup: `opencode auth login` -> OpenRouter.
+        plugin = [ "oh-my-openagent" ];
+
+        # default model for plain opencode agents (build/plan), also via
+        # OpenRouter to match the oh-my-openagent routing
+        model = "openrouter/auto";
+
         permission = {
           read = {
             "**/.env*" = "deny";
@@ -121,6 +132,10 @@ in
       };
     };
   };
+
+  # oh-my-openagent's own config; opencode's home-manager module has no
+  # option for plugin config files, so it's linked into place directly
+  xdg.configFile."opencode/oh-my-openagent.jsonc".source = ./oh-my-openagent.jsonc;
 
   home.packages = [ pkgs.claude-code-router ];
 
