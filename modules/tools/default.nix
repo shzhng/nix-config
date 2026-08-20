@@ -21,8 +21,12 @@
       settings = {
         onboarding = false;
         theme = {
+          # Ghostty's ?997 color-scheme report follows the macOS system
+          # appearance, not the terminal background, so auto_switch flips
+          # herdr to latte whenever macOS is in its light phase. Ghostty is
+          # pinned to mocha for both modes, so pin herdr to catppuccin too.
           name = "catppuccin";
-          auto_switch = true;
+          auto_switch = false;
           light_name = "catppuccin-latte";
           dark_name = "catppuccin";
         };
