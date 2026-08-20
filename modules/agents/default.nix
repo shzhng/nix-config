@@ -21,6 +21,24 @@ in
       enable = true;
       context = agentContext;
       skills = agentSkills;
+
+      settings = {
+        approval_policy = "on-request";
+        approvals_reviewer = "auto_review";
+      };
+
+      profiles.openrouter = {
+        model = "openrouter/auto";
+        model_provider = "openrouter";
+
+        model_providers.openrouter = {
+          name = "OpenRouter";
+          base_url = "https://openrouter.ai/api/v1";
+          env_key = "OPENROUTER_API_KEY";
+          wire_api = "responses";
+          requires_openai_auth = false;
+        };
+      };
     };
     opencode = {
       enable = true;
