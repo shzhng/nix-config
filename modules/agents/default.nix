@@ -133,16 +133,16 @@ in
     };
   };
 
-  # oh-my-openagent's own config; opencode's home-manager module has no
-  # option for plugin config files, so it's linked into place directly
-  xdg.configFile."opencode/oh-my-openagent.jsonc".source = ./oh-my-openagent.jsonc;
-
-  home.packages = [ pkgs.claude-code-router ];
-
-  home.activation.herdrIntegrations = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for kind in claude codex opencode; do
-      run ${lib.getExe pkgs.herdr} integration install "''$kind" || true
-    done
-  '';
+  # oh-my-openagent discovers its user config at ~/.omo/omo.jsonc; it is
+  # linked into place directly because the opencode module does not manage it.
+  home = {
+    file.".omo/omo.jsonc".source = ./oh-my-openagent.jsonc;
+    packages = [ pkgs.claude-code-router ];
+    activation.herdrIntegrations = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      for kind in claude codex opencode; do
+        run ${lib.getExe pkgs.herdr} integration install "''$kind" || true
+      done
+    '';
+  };
 
 }
