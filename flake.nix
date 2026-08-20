@@ -184,8 +184,12 @@
       checks = forAllSystems (system: {
         pre-commit-check = git-hooks.lib.${system}.run {
           src = ./.;
+          # Mirror the CI lint job (nixfmt + statix + deadnix) so the same
+          # checks run both locally and in CI.
           hooks = {
             nixfmt.enable = true;
+            statix.enable = true;
+            deadnix.enable = true;
           };
         };
       });
@@ -199,6 +203,27 @@
           program = toString (
             nixpkgs.legacyPackages.${system}.writeShellScript "install-git-hooks" ''
               ${self.checks.${system}.pre-commit-check.shellHook}
+
+              # Install a post-checkout hook so that creating/switching a
+              # worktree auto-installs git-hooks.nix's pre-commit hooks and
+              # .pre-commit-config.yaml there (the generated config is
+              # git-ignored, so worktrees don't inherit it). core.hooksPath is
+              # set in the shared config, so this hook fires in every worktree;
+              # install-git-hooks is idempotent, so re-running is cheap.
+              hooks_dir="$(git rev-parse --git-path hooks)"
+              mkdir -p "$hooks_dir"
+              post_checkout="$hooks_dir/post-checkout"
+              if [ ! -x "$post_checkout" ]; then
+                cat > "$post_checkout" <<'HOOK'
+              #!/usr/bin/env bash
+              set -e
+              toplevel="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+              if command -v nix >/dev/null 2>&1; then
+                nix run "$toplevel"#install-git-hooks >/dev/null 2>&1 || true
+              fi
+              HOOK
+                chmod +x "$post_checkout"
+              fi
               echo "Git hooks installed successfully!"
             ''
           );
