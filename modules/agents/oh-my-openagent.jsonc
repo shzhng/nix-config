@@ -8,29 +8,29 @@
   // if per-role tuning turns out to matter. Requires the OpenRouter key to
   // be connected once via `opencode auth login`.
   "agents": {
-    "sisyphus": { "model": "openrouter/auto" },
-    "sisyphus-junior": { "model": "openrouter/auto" },
-    "hephaestus": { "model": "openrouter/auto" },
-    "prometheus": { "model": "openrouter/auto" },
-    "oracle": { "model": "openrouter/auto" },
-    "librarian": { "model": "openrouter/auto" },
-    "explore": { "model": "openrouter/auto" },
-    "multimodal-looker": { "model": "openrouter/auto" },
-    "metis": { "model": "openrouter/auto" },
-    "momus": { "model": "openrouter/auto" },
-    "atlas": { "model": "openrouter/auto" }
+    "sisyphus": { "model": "openrouter/openrouter/auto" },
+    "sisyphus-junior": { "model": "openrouter/openrouter/auto" },
+    "hephaestus": { "model": "openrouter/openrouter/auto" },
+    "prometheus": { "model": "openrouter/openrouter/auto" },
+    "oracle": { "model": "openrouter/openrouter/auto" },
+    "librarian": { "model": "openrouter/openrouter/auto" },
+    "explore": { "model": "openrouter/openrouter/auto" },
+    "multimodal-looker": { "model": "openrouter/openrouter/auto" },
+    "metis": { "model": "openrouter/openrouter/auto" },
+    "momus": { "model": "openrouter/openrouter/auto" },
+    "atlas": { "model": "openrouter/openrouter/auto" }
   },
 
   // Sisyphus delegates subtasks by category; without these overrides the
   // built-in categories would route to first-party providers directly.
   "categories": {
-    "quick": { "model": "openrouter/auto" },
-    "unspecified-low": { "model": "openrouter/auto" },
-    "unspecified-high": { "model": "openrouter/auto" },
-    "visual-engineering": { "model": "openrouter/auto" },
-    "deep": { "model": "openrouter/auto" },
-    "ultrabrain": { "model": "openrouter/auto" },
-    "writing": { "model": "openrouter/auto" }
+    "quick": { "model": "openrouter/openrouter/auto" },
+    "unspecified-low": { "model": "openrouter/openrouter/auto" },
+    "unspecified-high": { "model": "openrouter/openrouter/auto" },
+    "visual-engineering": { "model": "openrouter/openrouter/auto" },
+    "deep": { "model": "openrouter/openrouter/auto" },
+    "ultrabrain": { "model": "openrouter/openrouter/auto" },
+    "writing": { "model": "openrouter/openrouter/auto" }
   },
 
   // no PostHog analytics

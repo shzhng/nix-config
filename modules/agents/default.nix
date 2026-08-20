@@ -53,7 +53,7 @@ in
 
         # default model for plain opencode agents (build/plan), also via
         # OpenRouter to match the oh-my-openagent routing
-        model = "openrouter/auto";
+        model = "openrouter/openrouter/auto";
 
         permission = {
           read = {
