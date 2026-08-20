@@ -26,6 +26,7 @@ This file documents the CLI tools available in this environment to help coding a
 - `herdr` - Agent multiplexer that lives in your terminal (configured via programs.herdr)
 - `codex` - OpenAI Codex coding agent CLI (configured via programs.codex)
 - `opencode` - OpenCode coding agent CLI (configured via programs.opencode)
+- `ccr` - Claude Code Router, a local model gateway that routes coding agents (Claude Code, Codex, OpenCode) to OpenRouter and other providers
 - `lazygit` - Terminal UI for git commands
 - `node` - Node.js JavaScript runtime (version 18+)
 - `npm` - Node.js package manager
