@@ -57,9 +57,10 @@ Show the user what you intend to remove before removing it. `REPO` below is
 ## Starting new work
 
 Use the harness's worktree mechanism (EnterWorktree) when available, or
-`git worktree add` under `.worktrees/` from `origin/main` as above.
-Then install the pre-commit hooks in the new worktree once (the generated
-config is git-ignored, so worktrees don't inherit it):
+`git worktree add` under `.worktrees/` from `origin/main` as above. The
+generated pre-commit config is git-ignored, so worktrees don't inherit it;
+a `post-checkout` hook auto-installs hooks on checkout (creating/switching a
+worktree already installs them). If hooks didn't fire, run it manually once:
 
 ```bash
 nix run .#install-git-hooks
