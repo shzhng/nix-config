@@ -1,5 +1,13 @@
 { pkgs, ... }:
 {
+  home-manager.backupCommand = pkgs.writeShellScript "home-manager-backup" ''
+    set -eu
+
+    target="$1"
+    timestamp="$(${pkgs.coreutils}/bin/date -u +%Y%m%dT%H%M%S.%N)"
+    ${pkgs.coreutils}/bin/mv -- "$target" "$target.backup-$timestamp"
+  '';
+
   # Provision my user account.
   users.users.shuo = {
     home = "/Users/shuo";
@@ -39,6 +47,17 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment = {
+    # Keep stable Codex defaults in the system layer so its user config stays
+    # writable for machine-local project trust decisions.
+    etc."codex/config.toml".source = (pkgs.formats.toml { }).generate "codex-system-config.toml" {
+      approval_policy = "on-request";
+      approvals_reviewer = "auto_review";
+      projects = {
+        "/Users/shuo/git/lumaril".trust_level = "trusted";
+        "/Users/shuo/git/shzhng".trust_level = "trusted";
+      };
+    };
+
     systemPackages = with pkgs; [
       vim
       bat
