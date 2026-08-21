@@ -62,6 +62,8 @@
       llm-agents,
     }:
     let
+      homeManagerBackupModule = import ./modules/home-manager-backup.nix;
+
       # Define shared tap configuration
       brewTaps = {
         "homebrew/homebrew-core" = homebrew-core;
@@ -75,6 +77,7 @@
       darwinCommonModules = [
         # catppuccin.nixosModules.catppuccin TODO only use this with NixOS
         ./modules/darwin
+        homeManagerBackupModule
         # Take agent CLI tools from llm-agents.nix (daily updates) instead of
         # the (often lagging) nixpkgs versions.
         {
@@ -162,6 +165,9 @@
         };
     in
     {
+      darwinModules.home-manager-backup = homeManagerBackupModule;
+      nixosModules.home-manager-backup = homeManagerBackupModule;
+
       # Build darwin flake using:
       # `nix run nix-darwin -- switch --flake .`
       # Switch with:

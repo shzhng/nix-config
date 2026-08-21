@@ -1,15 +1,5 @@
 { pkgs, ... }:
 {
-  # Replace Home Manager's fixed backup suffix globally so repeated conflicts
-  # preserve every displaced file instead of failing on an existing backup.
-  home-manager.backupCommand = pkgs.writeShellScript "home-manager-backup" ''
-    set -eu
-
-    target="$1"
-    timestamp="$(${pkgs.coreutils}/bin/date -u +%Y%m%dT%H%M%S.%N)"
-    ${pkgs.coreutils}/bin/mv -- "$target" "$target.backup-$timestamp"
-  '';
-
   # Provision my user account.
   users.users.shuo = {
     home = "/Users/shuo";
