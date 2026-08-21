@@ -39,6 +39,13 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment = {
+    # Keep stable Codex defaults in the system layer so its user config stays
+    # writable for machine-local project trust decisions.
+    etc."codex/config.toml".source = (pkgs.formats.toml { }).generate "codex-system-config.toml" {
+      approval_policy = "on-request";
+      approvals_reviewer = "auto_review";
+    };
+
     systemPackages = with pkgs; [
       vim
       bat
