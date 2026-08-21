@@ -1,5 +1,7 @@
 { pkgs, ... }:
 {
+  # Replace Home Manager's fixed backup suffix globally so repeated conflicts
+  # preserve every displaced file instead of failing on an existing backup.
   home-manager.backupCommand = pkgs.writeShellScript "home-manager-backup" ''
     set -eu
 
@@ -52,10 +54,6 @@
     etc."codex/config.toml".source = (pkgs.formats.toml { }).generate "codex-system-config.toml" {
       approval_policy = "on-request";
       approvals_reviewer = "auto_review";
-      projects = {
-        "/Users/shuo/git/lumaril".trust_level = "trusted";
-        "/Users/shuo/git/shzhng".trust_level = "trusted";
-      };
     };
 
     systemPackages = with pkgs; [

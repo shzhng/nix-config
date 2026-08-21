@@ -23,8 +23,6 @@ in
       skills = agentSkills;
 
       profiles.openrouter = {
-        approval_policy = "on-request";
-        approvals_reviewer = "auto_review";
         model = "openrouter/auto";
         model_provider = "openrouter";
 
