@@ -13,8 +13,9 @@ _: {
       ];
 
       # Use new settings format (replaces userName, userEmail, aliases, extraConfig)
-      # user.email and commit signing are machine-specific and set in
-      # hosts/<hostname>/home.nix
+      # user.email is machine-specific and set in hosts/<hostname>/home.nix.
+      # Lumaril work signing is scoped to ~/git/lumaril via conditional include
+      # below so the work key is never used for personal repos.
       settings = {
         user = {
           name = "Shuo Zheng";
@@ -29,6 +30,21 @@ _: {
         diff.colorMoved = "default";
         credential.helper = "gh auth git-credential";
       };
+
+      # Conditional include: only applies inside ~/git/lumaril/**. Signs commits
+      # with the Lumaril SSH key held in 1Password; personal commits are unsigned
+      # by default.
+      includes = [
+        {
+          condition = "gitdir:~/git/lumaril/";
+          contents = {
+            user.signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEBG6S0nj4gCq5Nf2vIwBqOXVb8GQbldX8Z0dsLXWBj0";
+            commit.gpgsign = true;
+            gpg.format = "ssh";
+            gpg.ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+          };
+        }
+      ];
     };
 
     # Delta installed for manual use, but not as default git pager (for agent compatibility)

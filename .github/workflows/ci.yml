@@ -20,10 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v22
+        uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
 
       - name: Check formatting with nixfmt
         run: nix run nixpkgs#nixfmt -- --check flake.nix home.nix hosts/ modules/
@@ -44,10 +44,10 @@ jobs:
           - Shuos-MacBook-Pro-Lumaril
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v22
+        uses: DeterminateSystems/nix-installer-action@ef8a148080ab6020fd15196c2084a2eea5ff2d25 # v22
         with:
           extra-conf: |
             accept-flake-config = true
@@ -58,7 +58,7 @@ jobs:
       # Without CACHIX_AUTH_TOKEN (e.g. dependabot runs) the push is skipped
       # and the cache is still used read-only via the flake's nixConfig.
       - name: Setup Cachix
-        uses: cachix/cachix-action@v17
+        uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
         with:
           name: shzhng
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"

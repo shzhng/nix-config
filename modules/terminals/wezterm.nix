@@ -2,13 +2,6 @@
 let
   fonts = import ../fonts.nix { inherit pkgs; };
 
-  # Generate harfbuzz features list from font configuration
-  harfbuzzFeatures = builtins.filter (s: s != "") (
-    builtins.map (name: if fonts.fonts.primary.features.${name} then name else "") (
-      builtins.attrNames fonts.fonts.primary.features
-    )
-  );
-
   weztermConfig = ''
     local wezterm = require 'wezterm'
 
@@ -25,7 +18,9 @@ let
       font = wezterm.font {
         family = '${fonts.fonts.primary.family}',
         harfbuzz_features = {
-          ${builtins.concatStringsSep ",\n          " (builtins.map (f: "'${f}'") harfbuzzFeatures)}
+          ${builtins.concatStringsSep ",\n          " (
+            builtins.map (f: "'${f}'") fonts.harfbuzzFeatureList
+          )}
         }
       },
 
