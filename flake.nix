@@ -104,6 +104,7 @@
             verbose = true;
             extraSpecialArgs = {
               username = "shuo";
+              flakeSelf = self;
             };
             users.shuo = {
               imports = [
@@ -249,6 +250,7 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {
           username = "shuo";
+          flakeSelf = self;
         };
         modules = [
           ./home.nix

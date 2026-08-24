@@ -1,4 +1,14 @@
-{ pkgs, username, ... }:
+{
+  pkgs,
+  username,
+  flakeSelf ? null,
+  ...
+}:
+
+let
+  flakeRef =
+    if flakeSelf != null && flakeSelf ? outPath then "${flakeSelf}" else "~/git/shzhng/nix-config";
+in
 
 let
   fonts = import ./modules/fonts.nix { inherit pkgs; };
@@ -151,7 +161,7 @@ in
     # Requires one-time setup per machine:
     #   cachix authtoken <token>
     #   trusted-users = root shuo   (in /etc/nix/nix.custom.conf)
-    rebuild = "cachix watch-exec --watch-mode post-build-hook shzhng -- darwin-rebuild build --flake ~/git/shzhng/nix-config && sudo darwin-rebuild switch --flake ~/git/shzhng/nix-config";
+    rebuild = "cachix watch-exec --watch-mode post-build-hook shzhng -- darwin-rebuild build --flake ${flakeRef} && sudo darwin-rebuild switch --flake ${flakeRef}";
   };
 
   catppuccin = {
