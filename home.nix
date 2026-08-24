@@ -6,12 +6,10 @@
 }:
 
 let
+  fonts = import ./modules/fonts.nix { inherit pkgs; };
+
   flakeRef =
     if flakeSelf != null && flakeSelf ? outPath then "${flakeSelf}" else "~/git/shzhng/nix-config";
-in
-
-let
-  fonts = import ./modules/fonts.nix { inherit pkgs; };
 in
 {
   # Note: nixpkgs.config is set in modules/darwin (allowUnfree) when using
