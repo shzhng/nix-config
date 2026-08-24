@@ -102,6 +102,9 @@
             useGlobalPkgs = true;
             useUserPackages = true;
             verbose = true;
+            extraSpecialArgs = {
+              username = "shuo";
+            };
             users.shuo = {
               imports = [
                 ./home.nix
@@ -244,6 +247,9 @@
       homeConfigurations.shuo = home-manager.lib.homeManagerConfiguration {
         # TODO make this configurable
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        extraSpecialArgs = {
+          username = "shuo";
+        };
         modules = [
           ./home.nix
           catppuccin.homeModules.catppuccin

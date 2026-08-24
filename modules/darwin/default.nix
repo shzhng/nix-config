@@ -110,12 +110,6 @@
     # Tailscale installed via homebrew cask
     tailscale.enable = false;
 
-    # TODO temporarily disable sketchybar
-    # sketchybar = {
-    #   enable = true;
-    #   extraPackages = [ pkgs.jq ];
-    #   config = builtins.readFile ../../config/sketchybar/sketchybarrc;
-    # };
     skhd = {
       enable = false;
       skhdConfig = builtins.readFile ../../config/skhd/skhdrc;

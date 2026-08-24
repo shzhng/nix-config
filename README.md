@@ -1,7 +1,6 @@
 # Nix/MacOS System Configurations
 
-[![NixOS 24.05](https://img.shields.io/badge/NixOS-24.05-blue.svg?style=flat-square&logo=NixOS&logoColor=white)](https://nixos.org)
-[![NixOS 24.05](https://img.shields.io/badge/nixpkgs-24.05-blue.svg?style=flat-square&logo=NixOS&logoColor=white)](https://github.com/NixOS/nixpkgs)
+[![nixpkgs unstable](https://img.shields.io/badge/nixpkgs-unstable-blue.svg?style=flat-square&logo=NixOS&logoColor=white)](https://github.com/NixOS/nixpkgs/tree/nixos-unstable)
 
 This repository contains my own personal MacOS (using
 [nix-darwin](https://github.com/LnL7/nix-darwin)) and
@@ -101,21 +100,21 @@ To set up the pre-commit hooks:
 nix run .#install-git-hooks
 ```
 
-This will install a git pre-commit hook that automatically formats all Nix files using `nixfmt-rfc-style` whenever you make a commit.
+This will install a git pre-commit hook that automatically formats all Nix files using `nixfmt` whenever you make a commit.
 
 ### Manual Formatting
 
 If you want to manually format all Nix files in the repository:
 
 ```sh
-find . -name "*.nix" -type f -exec nix run nixpkgs#nixfmt-rfc-style -- {} \;
+find . -name "*.nix" -type f -exec nix run nixpkgs#nixfmt -- {} \;
 ```
 
 ### How It Works
 
 - The hooks are configured in the `flake.nix` file using [git-hooks.nix](https://github.com/cachix/git-hooks.nix)
 - A `.pre-commit-config.yaml` file is generated automatically (and git-ignored)
-- The hooks run `nixfmt-rfc-style` on all Nix files before each commit
+- The hooks run `nixfmt` on all Nix files before each commit
 - If formatting fails, the commit is aborted
 
 ### Skipping Hooks

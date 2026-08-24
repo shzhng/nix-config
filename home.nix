@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, username, ... }:
 
 let
   fonts = import ./modules/fonts.nix { inherit pkgs; };
@@ -19,9 +19,8 @@ in
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home = {
-    username = "shuo";
-    # TODO this probably should be passed in as a parameter? and derived from username
-    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/shuo" else "/home/shuo";
+    inherit username;
+    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
 
     # This value determines the Home Manager release that your configuration is
     # compatible with. This helps avoid breakage when a new Home Manager release
@@ -152,7 +151,7 @@ in
     # Requires one-time setup per machine:
     #   cachix authtoken <token>
     #   trusted-users = root shuo   (in /etc/nix/nix.custom.conf)
-    rebuild = "cachix watch-exec --watch-mode post-build-hook shzhng -- darwin-rebuild build --flake . && sudo darwin-rebuild switch --flake .";
+    rebuild = "cachix watch-exec --watch-mode post-build-hook shzhng -- darwin-rebuild build --flake ~/git/shzhng/nix-config && sudo darwin-rebuild switch --flake ~/git/shzhng/nix-config";
   };
 
   catppuccin = {
