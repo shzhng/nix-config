@@ -46,6 +46,18 @@
     # nixpkgs changes every derivation hash, which misses cache.numtide.com
     # and forces source builds (codex is a huge Rust workspace).
     llm-agents.url = "github:numtide/llm-agents.nix";
+
+    # MCP server packages + curated home-manager modules. Feeds home-manager's
+    # shared programs.mcp registry; each agent consumes it via
+    # enableMcpIntegration. Note: `follows` does not govern server package
+    # sourcing — its HM module overlays the host nixpkgs regardless. It has no
+    # binary cache of its own and some of its packages are full pnpm/npm
+    # builds, so packages with nixpkgs equivalents are overridden to the
+    # cached nixpkgs builds in modules/agents/default.nix.
+    mcp-servers-nix = {
+      url = "github:natsukium/mcp-servers-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -60,9 +72,18 @@
       catppuccin,
       git-hooks,
       llm-agents,
+      mcp-servers-nix,
     }:
     let
       homeManagerBackupModule = import ./modules/home-manager-backup.nix;
+
+      # Home-manager modules shared by the darwin hosts and the standalone
+      # Linux homeConfiguration — one list so the two can't silently diverge.
+      sharedHomeModules = [
+        ./home.nix
+        catppuccin.homeModules.catppuccin
+        mcp-servers-nix.homeManagerModules.default
+      ];
 
       # Define shared tap configuration
       brewTaps = {
@@ -107,10 +128,7 @@
               flakeSelf = self;
             };
             users.shuo = {
-              imports = [
-                ./home.nix
-                catppuccin.homeModules.catppuccin
-              ];
+              imports = sharedHomeModules;
             };
           };
 
@@ -252,10 +270,7 @@
           username = "shuo";
           flakeSelf = self;
         };
-        modules = [
-          ./home.nix
-          catppuccin.homeModules.catppuccin
-        ];
+        modules = sharedHomeModules;
       };
     };
 

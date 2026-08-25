@@ -8,6 +8,7 @@
 
 # Configuration
 - when adding and removing cli tools, update `modules/agents/AGENTS.md` (the shared agent context; home-manager renders it to each harness's global instructions file, e.g. `~/.claude/CLAUDE.md`)
+- when adding or removing MCP servers (`mcp-servers.programs` / `programs.mcp.servers` in `modules/agents/default.nix`), update the "MCP Servers" roster in `modules/agents/AGENTS.md` in the same change
 - agent-facing config (instructions, skills, per-harness wiring) lives in `modules/agents/`
 
 # Binary Cache (cachix)
