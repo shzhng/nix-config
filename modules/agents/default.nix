@@ -149,6 +149,18 @@ in
 
           webfetch = "ask";
           websearch = "ask";
+
+          # MCP tool calls are permission-checked as "<server>_<tool>" against
+          # a base catch-all allow rule, so without explicit entries they
+          # bypass every gate above — a prompt-injected playwright navigation
+          # or github write would run silently while the equivalent
+          # webfetch/bash command prompts. Gate the servers with side effects;
+          # context7/nixos/terraform-registry are read-only docs lookups and
+          # stay on the default allow (terraform_* is gated anyway since its
+          # toolset gains HCP write tools if `terraform login` is ever run).
+          "github_*" = "ask";
+          "playwright_*" = "ask";
+          "terraform_*" = "ask";
         };
       };
     };
@@ -160,12 +172,25 @@ in
   # `command = "npx"` as a last resort).
   mcp-servers.programs = {
     # up-to-date library documentation
-    context7.enable = true;
+    context7 = {
+      enable = true;
+      # nixpkgs' build is binary-cached; mcp-servers-nix's overlay build is a
+      # full pnpm build that recompiles on every nixpkgs bump
+      package = pkgs.context7-mcp;
+    };
     # NixOS/nixpkgs packages plus NixOS, home-manager, and nix-darwin options
     # from live data (mcp-nixos)
     nixos.enable = true;
     # browser automation / screenshots
-    playwright.enable = true;
+    playwright = {
+      enable = true;
+      # nixpkgs' build is binary-cached; mcp-servers-nix's overlay build is not
+      package = pkgs.playwright-mcp;
+      # reuse the homebrew-cask Chrome (auto-updating) instead of pulling a
+      # second, nixpkgs-pinned ~400MB Chrome into the store; Linux keeps the
+      # module's chromium default
+      executable = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+    };
     # Terraform/OpenTofu registry and provider docs
     terraform.enable = true;
     github = {
