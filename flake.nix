@@ -117,7 +117,6 @@
             (_final: prev: {
               inherit (llm-agents.packages.${prev.stdenv.hostPlatform.system})
                 claude-code
-                claude-code-router
                 codex
                 herdr
                 opencode

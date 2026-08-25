@@ -231,10 +231,7 @@ in
   # linked into place directly because the opencode module does not manage it.
   home = {
     file.".omo/omo.jsonc".source = ./oh-my-openagent.jsonc;
-    packages = [
-      pkgs.claude-code-router
-      ori
-    ];
+    packages = [ ori ];
     activation.herdrIntegrations = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       for kind in claude codex opencode; do
         run ${lib.getExe pkgs.herdr} integration install "''$kind" || true
