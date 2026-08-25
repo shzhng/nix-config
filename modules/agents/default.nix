@@ -156,8 +156,8 @@ in
 
   # MCP servers, via mcp-servers-nix's curated modules. These land in
   # programs.mcp.servers; one-off servers can be added there directly
-  # (nixpkgs package via `command`, hosted via `url`) — see
-  # docs/superpowers/specs/2026-08-25-agent-mcp-servers-design.md.
+  # (nixpkgs package via `command`, hosted via `url`, npm-only via
+  # `command = "npx"` as a last resort).
   mcp-servers.programs = {
     # up-to-date library documentation
     context7.enable = true;
