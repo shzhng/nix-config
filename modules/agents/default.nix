@@ -161,8 +161,13 @@ in
   mcp-servers.programs = {
     # up-to-date library documentation
     context7.enable = true;
+    # NixOS/nixpkgs packages plus NixOS, home-manager, and nix-darwin options
+    # from live data (mcp-nixos)
+    nixos.enable = true;
     # browser automation / screenshots
     playwright.enable = true;
+    # Terraform/OpenTofu registry and provider docs
+    terraform.enable = true;
     github = {
       enable = true;
       # Token is pulled from gh's keychain at server spawn (via a generated
