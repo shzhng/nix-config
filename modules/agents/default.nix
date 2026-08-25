@@ -12,13 +12,20 @@ let
 in
 {
   programs = {
+    # Shared MCP server registry (~/.config/mcp/mcp.json). Servers are defined
+    # once in `mcp-servers.programs` below and consumed by each agent via
+    # enableMcpIntegration.
+    mcp.enable = true;
+
     claude-code = {
       enable = true;
+      enableMcpIntegration = true;
       context = agentContext;
       skills = agentSkills;
     };
     codex = {
       enable = true;
+      enableMcpIntegration = true;
       context = agentContext;
       skills = agentSkills;
 
@@ -37,6 +44,7 @@ in
     };
     opencode = {
       enable = true;
+      enableMcpIntegration = true;
       context = agentContext;
       skills = agentSkills;
 
@@ -143,6 +151,27 @@ in
           websearch = "ask";
         };
       };
+    };
+  };
+
+  # MCP servers, via mcp-servers-nix's curated modules. These land in
+  # programs.mcp.servers; one-off servers can be added there directly
+  # (nixpkgs package via `command`, hosted via `url`) — see
+  # docs/superpowers/specs/2026-08-25-agent-mcp-servers-design.md.
+  mcp-servers.programs = {
+    # up-to-date library documentation
+    context7.enable = true;
+    # browser automation / screenshots
+    playwright.enable = true;
+    github = {
+      enable = true;
+      # Token is pulled from gh's keychain at server spawn (via a generated
+      # wrapper script) — no secret at rest. Requires `gh auth login` once.
+      passwordCommand.GITHUB_PERSONAL_ACCESS_TOKEN = [
+        "gh"
+        "auth"
+        "token"
+      ];
     };
   };
 
