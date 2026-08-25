@@ -82,6 +82,12 @@ This file documents the CLI tools available in this environment to help coding a
 - When `$HERDR_TAB_ID` is set, this session is running inside a herdr pane
 - At the start of a task, rename the tab to a short 2-4 word label for the task: `herdr tab rename "$HERDR_TAB_ID" "<label>"`; update it if the task changes significantly
 
+## MCP Servers
+- MCP servers are managed declaratively in nix-config (`modules/agents/default.nix`, `mcp-servers.programs` / `programs.mcp.servers`) and shared by Claude Code, Codex, and OpenCode
+- Currently configured: `context7` (library docs), `playwright` (browser automation via nix-provided Chrome), `github` (GitHub API)
+- The github server's wrapper runs `gh auth token` itself at spawn (managed config, requires `gh auth login` once); this does not exempt agents from the rule above against running it
+- Do not add MCP servers imperatively (`claude mcp add`, editing harness config files); edit nix-config instead
+
 ## Per-repo Agent Docs
 - Repo-level agent instructions go in `AGENTS.md`; `CLAUDE.md` is a regular file containing only `@AGENTS.md` (Claude Code import), never a symlink or a copy
 
