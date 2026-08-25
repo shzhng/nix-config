@@ -46,6 +46,15 @@
     # nixpkgs changes every derivation hash, which misses cache.numtide.com
     # and forces source builds (codex is a huge Rust workspace).
     llm-agents.url = "github:numtide/llm-agents.nix";
+
+    # MCP server packages + curated home-manager modules. Feeds home-manager's
+    # shared programs.mcp registry; each agent consumes it via
+    # enableMcpIntegration. Follows our nixpkgs: it publishes no binary cache
+    # of its own, and its packages are thin wrappers (cheap local builds).
+    mcp-servers-nix = {
+      url = "github:natsukium/mcp-servers-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -60,6 +69,7 @@
       catppuccin,
       git-hooks,
       llm-agents,
+      mcp-servers-nix,
     }:
     let
       homeManagerBackupModule = import ./modules/home-manager-backup.nix;
@@ -110,6 +120,7 @@
               imports = [
                 ./home.nix
                 catppuccin.homeModules.catppuccin
+                mcp-servers-nix.homeManagerModules.default
               ];
             };
           };
@@ -255,6 +266,7 @@
         modules = [
           ./home.nix
           catppuccin.homeModules.catppuccin
+          mcp-servers-nix.homeManagerModules.default
         ];
       };
     };
