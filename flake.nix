@@ -58,6 +58,16 @@
       url = "github:natsukium/mcp-servers-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Fork branch carrying the ori package (OpenRouter's agent CLI) until it
+    # lands upstream. Only `ori` is taken from here; everything else stays on
+    # the numtide input above. Following our nixpkgs is fine for this input
+    # (unlike llm-agents): ori is a prebuilt-binary fetch, so there are no
+    # heavy source builds and no numtide cache to preserve.
+    llm-agents-ori = {
+      url = "github:shzhng/llm-agents.nix/feat/add-ori";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -73,6 +83,7 @@
       git-hooks,
       llm-agents,
       mcp-servers-nix,
+      llm-agents-ori,
     }:
     let
       homeManagerBackupModule = import ./modules/home-manager-backup.nix;
@@ -106,10 +117,12 @@
             (_final: prev: {
               inherit (llm-agents.packages.${prev.stdenv.hostPlatform.system})
                 claude-code
-                claude-code-router
                 codex
                 herdr
                 opencode
+                ;
+              inherit (llm-agents-ori.packages.${prev.stdenv.hostPlatform.system})
+                ori
                 ;
             })
           ];
