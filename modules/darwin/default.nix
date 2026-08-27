@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   # Provision my user account.
   users.users.shuo = {
@@ -39,12 +44,42 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment = {
-    # Keep stable Codex defaults in the system layer so its user config stays
-    # writable for machine-local project trust decisions.
-    etc."codex/config.toml".source = (pkgs.formats.toml { }).generate "codex-system-config.toml" {
-      approval_policy = "on-request";
-      approvals_reviewer = "auto_review";
-    };
+    # Codex loads config in layers: this system file (/etc/codex/config.toml),
+    # then the managed layer, then the per-user ~/.codex/config.toml, then
+    # profile/project layers. Everything below lives in the SYSTEM layer on
+    # purpose:
+    #   - MCP servers and stable defaults never need to change at runtime, and
+    #     Codex NEVER writes this file, so read-only Nix store content is fine.
+    #   - The user's ~/.codex/config.toml therefore stays a real, writable file
+    #     that Codex persists trust decisions into. (When home-manager managed
+    #     it as a store symlink, every trust write failed with "failed to
+    #     persist config.toml".) At load time the user layer merges ON TOP of
+    #     this layer, so personal settings in config.toml always win over the
+    #     defaults here.
+    # The MCP server set comes from the same home-manager registry
+    # (mcp-servers.programs, see modules/agents/default.nix) so there is still
+    # a single source of truth; the HM programs.codex module deliberately does
+    # not consume it via enableMcpIntegration (see its block in
+    # modules/agents/default.nix).
+    etc."codex/config.toml".source = (pkgs.formats.toml { }).generate "codex-system-config.toml" (
+      {
+        approval_policy = "on-request";
+        approvals_reviewer = "auto_review";
+      }
+      // lib.optionalAttrs (config.home-manager.users.shuo.programs.mcp.servers != { }) {
+        mcp_servers = lib.mapAttrs (
+          _: srv:
+          lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) {
+            command = srv.command or null;
+            args = srv.args or null;
+            url = srv.url or null;
+            env = srv.env or null;
+            # home-manager calls it `headers`, Codex schema calls it http_headers
+            http_headers = srv.headers or null;
+          }
+        ) config.home-manager.users.shuo.programs.mcp.servers;
+      }
+    );
 
     systemPackages = with pkgs; [
       vim

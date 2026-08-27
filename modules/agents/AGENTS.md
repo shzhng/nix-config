@@ -84,6 +84,7 @@ This file documents the CLI tools available in this environment to help coding a
 
 ## MCP Servers
 - MCP servers are managed declaratively in nix-config (`modules/agents/default.nix`, `mcp-servers.programs` / `programs.mcp.servers`) and shared by Claude Code, Codex, and OpenCode
+- Codex consumes the registry via the `/etc/codex/config.toml` system layer (`modules/darwin/default.nix`) rather than `programs.codex.enableMcpIntegration`, so that `~/.codex/config.toml` stays a real writable file for Codex's trust decisions. Do not re-enable `enableMcpIntegration` on the `codex` HM module without also keeping the user config.toml writable.
 - Currently configured: `context7` (library docs), `nixos` (nixpkgs/NixOS/home-manager/nix-darwin packages and options), `playwright` (browser automation via nix-provided Chrome), `terraform` (Terraform/OpenTofu registry docs), `github` (GitHub API)
 - The github server's wrapper runs `gh auth token` itself at spawn (managed config, requires `gh auth login` once); this does not exempt agents from the rule above against running it
 - Do not add MCP servers imperatively (`claude mcp add`, editing harness config files); edit nix-config instead
