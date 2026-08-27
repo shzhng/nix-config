@@ -36,6 +36,8 @@ This file documents the CLI tools available in this environment to help coding a
 - `codex` - OpenAI Codex coding agent CLI (configured via programs.codex)
 - `opencode` - OpenCode coding agent CLI (configured via programs.opencode)
 - `ori` - OpenRouter's agent environment CLI (launches Claude Code through OpenRouter; the nix wrapper defaults Claude Code's tier-alias env vars ANTHROPIC_DEFAULT_{SONNET,OPUS,HAIKU}_MODEL to openrouter/auto so background classifier calls stay on the configured route)
+- `hermes-agent` - Self-improving AI agent by Nous Research (creates skills from experience, runs anywhere)
+- `omp` - Terminal-based coding agent with multi-model support (oh-my-pi)
 - `lazygit` - Terminal UI for git commands
 - `node` - Node.js JavaScript runtime (version 18+)
 - `npm` - Node.js package manager
@@ -83,8 +85,10 @@ This file documents the CLI tools available in this environment to help coding a
 - At the start of a task, rename the tab to a short 2-4 word label for the task: `herdr tab rename "$HERDR_TAB_ID" "<label>"`; update it if the task changes significantly
 
 ## MCP Servers
-- MCP servers are managed declaratively in nix-config (`modules/agents/default.nix`, `mcp-servers.programs` / `programs.mcp.servers`) and shared by Claude Code, Codex, and OpenCode
+- MCP servers are managed declaratively in nix-config (`modules/agents/default.nix`, `mcp-servers.programs` / `programs.mcp.servers`) and shared by Claude Code, Codex, OpenCode, omp, and hermes-agent
 - Codex consumes the registry via the `/etc/codex/config.toml` system layer (`modules/darwin/default.nix`) rather than `programs.codex.enableMcpIntegration`, so that `~/.codex/config.toml` stays a real writable file for Codex's trust decisions. Do not re-enable `enableMcpIntegration` on the `codex` HM module without also keeping the user config.toml writable.
+- hermes-agent consumes the registry via `services.hermes-agent.mcpServers` (upstream HM module from `hermes-agent.homeManagerModules.default`). The module manages `~/.hermes/config.yaml` declaratively and sets `HERMES_MANAGED`, which blocks `hermes config set` and `hermes setup` — edit nix-config instead. `gateway.enable` is not set (no background messaging service).
+- omp consumes the registry via a `home.file` bridge to `~/.omp/agent/mcp.json` (the omp HM module from `oh-my-pi.homeManagerModules.default` manages the package and `config.yml` but not `mcp.json`).
 - Currently configured: `context7` (library docs), `nixos` (nixpkgs/NixOS/home-manager/nix-darwin packages and options), `playwright` (browser automation via nix-provided Chrome), `terraform` (Terraform/OpenTofu registry docs), `github` (GitHub API)
 - The github server's wrapper runs `gh auth token` itself at spawn (managed config, requires `gh auth login` once); this does not exempt agents from the rule above against running it
 - Do not add MCP servers imperatively (`claude mcp add`, editing harness config files); edit nix-config instead
