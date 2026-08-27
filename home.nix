@@ -1,15 +1,17 @@
 {
   pkgs,
   username,
-  flakeSelf ? null,
   ...
 }:
 
 let
   fonts = import ./modules/fonts.nix { inherit pkgs; };
 
-  flakeRef =
-    if flakeSelf != null && flakeSelf ? outPath then "${flakeSelf}" else "~/git/shzhng/nix-config";
+  # The rebuild alias must reference the live checkout, not the flake's own
+  # store path (flakeSelf.outPath): that snapshot is frozen at the time the
+  # running generation was built, so an alias pointing at it rebuilds the old
+  # sources forever and never picks up new commits.
+  flakeRef = "~/git/shzhng/nix-config";
 in
 {
   # Note: nixpkgs.config is set in modules/darwin (allowUnfree) when using

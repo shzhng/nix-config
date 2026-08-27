@@ -138,7 +138,6 @@
             verbose = true;
             extraSpecialArgs = {
               username = "shuo";
-              flakeSelf = self;
             };
             users.shuo = {
               imports = sharedHomeModules;
@@ -281,7 +280,6 @@
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {
           username = "shuo";
-          flakeSelf = self;
         };
         modules = sharedHomeModules;
       };
