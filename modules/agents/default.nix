@@ -35,8 +35,9 @@ in
 {
   programs = {
     # Shared MCP server registry (~/.config/mcp/mcp.json). Servers are defined
-    # once in `mcp-servers.programs` below and consumed by each agent via
-    # enableMcpIntegration.
+    # once in `mcp-servers.programs` below; claude-code and opencode consume it
+    # via enableMcpIntegration, codex via the /etc/codex/config.toml system
+    # layer (see the codex block below and modules/darwin/default.nix).
     mcp.enable = true;
 
     claude-code = {
@@ -45,9 +46,24 @@ in
       context = agentContext;
       skills = agentSkills;
     };
+    # Codex config is layered: /etc/codex/config.toml (system) -> managed
+    # -> $CODEX_HOME/config.toml (user) -> profile/project layers. The user
+    # config.toml is the ONLY file Codex writes at runtime (project trust
+    # levels, "don't show again" notices, personal overrides), so it must stay
+    # a real writable file — if home-manager symlinks it into the read-only
+    # Nix store, every trust decision fails with "failed to persist
+    # config.toml".
+    #
+    # So this module deliberately does NOT manage config.toml (no `settings`,
+    # no `enableMcpIntegration`). The pieces home-manager writes below are
+    # only ever READ by Codex, never written: AGENTS.md context, skills, and
+    # the openrouter.config.toml profile. MCP servers and the stable defaults
+    # live in the read-only /etc/codex/config.toml system layer instead (see
+    # modules/darwin/default.nix), which Codex never writes; anything set in
+    # the writable user config.toml merges on top of it, so personal settings
+    # always win.
     codex = {
       enable = true;
-      enableMcpIntegration = true;
       context = agentContext;
       skills = agentSkills;
 
@@ -236,6 +252,18 @@ in
       for kind in claude codex opencode; do
         run ${lib.getExe pkgs.herdr} integration install "''$kind" || true
       done
+    '';
+    # One-time migration: home-manager used to manage ~/.codex/config.toml as
+    # a symlink into the read-only Nix store, which broke Codex's trust writes
+    # ("failed to persist config.toml"). The user config.toml is now
+    # intentionally unmanaged (see the codex block above), so drop the stale
+    # link HM left behind; Codex recreates config.toml as a regular writable
+    # file on its next write. Idempotent: only fires while the store symlink
+    # exists, so a future REAL user config.toml is never touched.
+    activation.removeStaleCodexConfigLink = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      if [ -L "$HOME/.codex/config.toml" ] && [[ "$(readlink "$HOME/.codex/config.toml")" == /nix/store/* ]]; then
+        rm -f "$HOME/.codex/config.toml"
+      fi
     '';
   };
 
