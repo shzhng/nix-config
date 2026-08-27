@@ -11,23 +11,30 @@ let
   };
 
   # ori launches Claude Code against OpenRouter with the main model taken from
-  # its own config (e.g. openrouter/auto), but Claude Code's auto-mode
-  # permission classifier pins claude-sonnet-5 via ANTHROPIC_DEFAULT_SONNET_MODEL
-  # instead of the main model setting, so classifier calls (~full context, a
-  # few output tokens, every turn) silently route to paid Anthropic providers
-  # on OpenRouter. Defaulting the tier aliases to openrouter/auto here keeps
-  # every request on the configured route; scoping it to the ori wrapper
-  # (rather than home.sessionVariables) leaves direct `claude` runs against
-  # Anthropic untouched. --set-default still allows per-invocation overrides.
+  # its own config, but Claude Code's auto-mode permission classifier pins
+  # claude-sonnet-5 via ANTHROPIC_DEFAULT_SONNET_MODEL instead of the main
+  # model setting, so classifier calls (~full context, a few output tokens,
+  # every turn) silently route to paid Anthropic providers on OpenRouter.
+
+  # Pin the tier aliases to Anthropic models with reasoning.mandatory=false:
+  # `openrouter/auto` routes into the low-cost band, which currently contains
+  # reasoning-REQUIRED models (e.g. openai/gpt-5, gemini-3.7-flash) —
+  # any client sending "reasoning off" (Claude Code's thinking:disabled on
+  # background/classifier turns, codex's effort:none) then gets a 400
+  # "Reasoning is mandatory for this endpoint" from OpenRouter. Pinning
+  # avoids the router entirely; scoping it to the ori wrapper (rather than
+  # home.sessionVariables) leaves direct `claude` runs against Anthropic
+  # untouched. --set-default still allows per-invocation overrides.do
   ori = pkgs.symlinkJoin {
+
     name = "ori-openrouter";
     paths = [ pkgs.ori ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       wrapProgram $out/bin/ori \
-        --set-default ANTHROPIC_DEFAULT_SONNET_MODEL openrouter/auto \
-        --set-default ANTHROPIC_DEFAULT_OPUS_MODEL openrouter/auto \
-        --set-default ANTHROPIC_DEFAULT_HAIKU_MODEL openrouter/auto
+        --set-default ANTHROPIC_DEFAULT_SONNET_MODEL anthropic/claude-sonnet-4.6 \
+        --set-default ANTHROPIC_DEFAULT_OPUS_MODEL anthropic/claude-opus-4.6 \
+        --set-default ANTHROPIC_DEFAULT_HAIKU_MODEL anthropic/claude-haiku-4.5
     '';
     inherit (pkgs.ori) meta;
   };
@@ -56,29 +63,23 @@ in
     #
     # So this module deliberately does NOT manage config.toml (no `settings`,
     # no `enableMcpIntegration`). The pieces home-manager writes below are
-    # only ever READ by Codex, never written: AGENTS.md context, skills, and
-    # the openrouter.config.toml profile. MCP servers and the stable defaults
-    # live in the read-only /etc/codex/config.toml system layer instead (see
-    # modules/darwin/default.nix), which Codex never writes; anything set in
-    # the writable user config.toml merges on top of it, so personal settings
-    # always win.
+    # only ever READ by Codex, never written: AGENTS.md context and skills.
+
+    # MCP servers and the stable defaults live in the read-only
+    # /etc/codex/config.toml system layer instead (see modules/darwin/default.nix,
+    # which Codex never writes; anything set in the writable user config.toml
+    # merges on top of it, so personal settings always win.
+    #
+    # No `profiles` block: codex runs through `ori codex --model <id>` (see
+    # the ori wrapper above), which passes the model on the CLI — the old
+    # openrouter.config.toml profile was never selected and only pinned the broken
+    # openrouter/auto anyway.
     codex = {
+
       enable = true;
       context = agentContext;
       skills = agentSkills;
 
-      profiles.openrouter = {
-        model = "openrouter/auto";
-        model_provider = "openrouter";
-
-        model_providers.openrouter = {
-          name = "OpenRouter";
-          base_url = "https://openrouter.ai/api/v1";
-          env_key = "OPENROUTER_API_KEY";
-          wire_api = "responses";
-          requires_openai_auth = false;
-        };
-      };
     };
     opencode = {
       enable = true;

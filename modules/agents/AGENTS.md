@@ -35,7 +35,7 @@ This file documents the CLI tools available in this environment to help coding a
 - `herdr` - Agent multiplexer that lives in your terminal (configured via programs.herdr)
 - `codex` - OpenAI Codex coding agent CLI (configured via programs.codex)
 - `opencode` - OpenCode coding agent CLI (configured via programs.opencode)
-- `ori` - OpenRouter's agent environment CLI (launches Claude Code through OpenRouter; the nix wrapper defaults Claude Code's tier-alias env vars ANTHROPIC_DEFAULT_{SONNET,OPUS,HAIKU}_MODEL to openrouter/auto so background classifier calls stay on the configured route)
+- `ori` - OpenRouter's agent environment CLI (launches Claude Code through OpenRouter; the nix wrapper defaults Claude Code's tier-alias env vars ANTHROPIC_DEFAULT_{SONNET,OPUS,HAIKU}_MODEL to pinned Anthropic models — anthropic/claude-sonnet-4.6, claude-opus-4.6, claude-haiku-4.5, all reasoning.mandatory=false — so background classifier calls avoid `openrouter/auto`'s mandatory-reasoning routing)
 - `lazygit` - Terminal UI for git commands
 - `node` - Node.js JavaScript runtime (version 18+)
 - `npm` - Node.js package manager
