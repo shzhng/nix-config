@@ -1,18 +1,20 @@
 name: Update Dependencies
 
+# Renovate handles GitHub Actions digest pins (renovate.json); this workflow
+# owns flake.lock. PRs created here use GITHUB_TOKEN, which GitHub blocks from
+# triggering other workflows — close & reopen the PR (or push to its branch)
+# to run CI on it.
+
 on:
   schedule:
-    # Update llm-agents biweekly on Monday at 3am UTC (fast-moving agent tools)
-    - cron: '0 3 * * 1/2'
-    # Update everything (including nixpkgs) weekly on Thursday at 3am UTC
-    - cron: '0 3 * * 4'
+    # Update all flake inputs weekly on Monday at 3am UTC
     - cron: '0 3 * * 1'
   workflow_dispatch:
 
 jobs:
   update:
     name: Update flake.lock
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
@@ -31,12 +33,11 @@ jobs:
         with:
           pr-title: "chore: update flake inputs"
           pr-body: |
-            Automated update of flake.lock inputs.
+            Automated weekly update of all flake.lock inputs.
 
-            - `llm-agents` updates biweekly (fast-moving agent tools)
-            - All other inputs (including nixpkgs) update weekly
-
-            Please review the changes and ensure everything builds correctly before merging.
+            CI does not run on this PR automatically (it was created with
+            GITHUB_TOKEN); close & reopen it, or push to the branch, to
+            trigger the build before merging.
           pr-labels: |
             dependencies
             automated
