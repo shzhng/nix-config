@@ -1,14 +1,14 @@
 name: Update Dependencies
 
-# Renovate handles GitHub Actions digest pins (renovate.json); this workflow
-# owns flake.lock. PRs created here use GITHUB_TOKEN, which GitHub blocks from
-# triggering other workflows — close & reopen the PR (or push to its branch)
-# to run CI on it.
+# Renovate is the primary flake updater (renovate.json enables the nix
+# manager; inputs are grouped into one weekly "flake inputs" PR that, unlike
+# PRs from this workflow's GITHUB_TOKEN, actually triggers CI). This workflow
+# is kept as a manual fallback — dispatch it if Renovate's nix support (beta,
+# runs on the hosted app) fails; failures show on the Dependency Dashboard.
+# Note: PRs created here use GITHUB_TOKEN, which GitHub blocks from
+# triggering other workflows — close & reopen the PR to run CI on it.
 
 on:
-  schedule:
-    # Update all flake inputs weekly on Monday at 3am UTC
-    - cron: '0 3 * * 1'
   workflow_dispatch:
 
 jobs:
@@ -33,7 +33,8 @@ jobs:
         with:
           pr-title: "chore: update flake inputs"
           pr-body: |
-            Automated weekly update of all flake.lock inputs.
+            Manually dispatched update of all flake.lock inputs (fallback for
+            Renovate's nix manager).
 
             CI does not run on this PR automatically (it was created with
             GITHUB_TOKEN); close & reopen it, or push to the branch, to

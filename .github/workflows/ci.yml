@@ -55,7 +55,7 @@ jobs:
 
       # Pushes everything built in this job to the shzhng cachix cache so
       # later runs (and the laptops) substitute instead of rebuilding.
-      # Without CACHIX_AUTH_TOKEN (e.g. dependabot runs) the push is skipped
+      # Without CACHIX_AUTH_TOKEN (e.g. PRs from forks) the push is skipped
       # and the cache is still used read-only via the flake's nixConfig.
       - name: Setup Cachix
         uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
