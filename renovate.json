@@ -12,6 +12,7 @@
     },
     {
       "matchManagers": ["github-actions"],
+      "groupName": "github actions",
       "schedule": ["before 6am"]
     }
   ]
