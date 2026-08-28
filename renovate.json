@@ -8,11 +8,11 @@
     {
       "matchManagers": ["nix"],
       "groupName": "flake inputs",
-      "schedule": ["before 6am on monday"]
+      "schedule": ["before 6am"]
     },
     {
       "matchManagers": ["github-actions"],
-      "schedule": ["before 6am on monday"]
+      "schedule": ["before 6am"]
     }
   ]
 }
