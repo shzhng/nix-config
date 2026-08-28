@@ -68,6 +68,20 @@
       url = "github:shzhng/llm-agents.nix/feat/add-ori";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Hermes Agent (Nous Research) — self-improving AI agent. Provides both
+    # the package and a home-manager module (services.hermes-agent +
+    # programs.hermes-agent). Not following our nixpkgs: it uses uv2nix
+    # which is sensitive to nixpkgs versions, and has no dedicated binary
+    # cache to preserve.
+    hermes-agent.url = "github:NousResearch/hermes-agent";
+
+    # OMP / oh-my-pi — terminal-based coding agent with multi-model support.
+    # Provides both the package and a home-manager module (programs.omp).
+    # Not following our nixpkgs: the flake uses nix-community.cachix.org
+    # (already in our substituters) and has special nixpkgs handling for
+    # x86_64-darwin.
+    oh-my-pi.url = "github:can1357/oh-my-pi";
   };
 
   outputs =
@@ -84,6 +98,8 @@
       llm-agents,
       mcp-servers-nix,
       llm-agents-ori,
+      hermes-agent,
+      oh-my-pi,
     }:
     let
       homeManagerBackupModule = import ./modules/home-manager-backup.nix;
@@ -94,6 +110,8 @@
         ./home.nix
         catppuccin.homeModules.catppuccin
         mcp-servers-nix.homeManagerModules.default
+        hermes-agent.homeManagerModules.default
+        oh-my-pi.homeManagerModules.default
       ];
 
       # Define shared tap configuration
@@ -111,7 +129,9 @@
         ./modules/darwin
         homeManagerBackupModule
         # Take agent CLI tools from llm-agents.nix (daily updates) instead of
-        # the (often lagging) nixpkgs versions.
+        # the (often lagging) nixpkgs versions. hermes-agent and omp are
+        # sourced from their own upstream flakes (which also provide
+        # home-manager modules) — see the flake inputs above.
         {
           nixpkgs.overlays = [
             (_final: prev: {

@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 let
   agentContext = builtins.readFile ./AGENTS.md;
@@ -9,6 +14,48 @@ let
     '';
     nix-config-sync = ./skills/nix-config-sync;
   };
+
+  # Extract MCP servers from the shared programs.mcp.servers registry
+  # into a clean attrset with only the fields each tool needs.  Mirrors
+  # the extraction in modules/darwin/default.nix for the codex system
+  # config — same source of truth, different output format.
+  mcpServerEntries = lib.mapAttrs (
+    _: srv:
+    lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) {
+      command = srv.command or null;
+      args = srv.args or null;
+      url = srv.url or null;
+      env = srv.env or null;
+      headers = srv.headers or null;
+    }
+  ) config.programs.mcp.servers;
+
+  # omp (oh-my-pi) MCP config: ~/.omp/agent/mcp.json (JSON, separate
+  # file).  The omp HM module (programs.omp) manages config.yml and the
+  # package, but does NOT manage mcp.json — omp discovers MCP servers
+  # from this file separately.  omp uses "mcpServers" (camelCase) and
+  # expects a "type" field for non-stdio servers.
+  ompMcpJson = pkgs.writeText "omp-mcp.json" (
+    builtins.toJSON {
+      mcpServers = lib.mapAttrs (
+        _: srv:
+        lib.filterAttrs (_: v: v != null && v != [ ] && v != { }) (
+          if srv ? url then
+            {
+              type = "http";
+              inherit (srv) url;
+              headers = srv.headers or null;
+            }
+          else
+            {
+              command = srv.command or null;
+              args = srv.args or null;
+              env = srv.env or null;
+            }
+        )
+      ) mcpServerEntries;
+    }
+  );
 
   # ori launches Claude Code against OpenRouter with the main model taken from
   # its own config (e.g. openrouter/auto), but Claude Code's auto-mode
@@ -37,7 +84,9 @@ in
     # Shared MCP server registry (~/.config/mcp/mcp.json). Servers are defined
     # once in `mcp-servers.programs` below; claude-code and opencode consume it
     # via enableMcpIntegration, codex via the /etc/codex/config.toml system
-    # layer (see the codex block below and modules/darwin/default.nix).
+    # layer (see the codex block below and modules/darwin/default.nix),
+    # hermes-agent via services.hermes-agent.mcpServers, and omp via the
+    # home.file mcp.json bridge below.
     mcp.enable = true;
 
     claude-code = {
@@ -202,6 +251,34 @@ in
         };
       };
     };
+
+    # Hermes Agent (Nous Research) — CLI installation. The upstream HM
+    # module (hermes-agent.homeManagerModules.default, imported in
+    # flake.nix) splits into programs.hermes-agent (CLI + desktop) and
+    # services.hermes-agent (config, MCP, services). Enabling
+    # programs.hermes-agent puts `hermes` on PATH and exports HERMES_HOME.
+    # services.hermes-agent manages config.yaml declaratively (sets
+    # HERMES_MANAGED, which blocks `hermes config set` and `hermes setup`
+    # — same tradeoff as codex). gateway.enable is deliberately NOT set:
+    # we want the CLI + declarative config, not a background messaging
+    # gateway service.
+    hermes-agent.enable = true;
+
+    # omp (oh-my-pi) — CLI installation. The upstream HM module
+    # (oh-my-pi.homeManagerModules.default, imported in flake.nix)
+    # manages the package and optionally config.yml (via settings).
+    # MCP servers go in a separate mcp.json that the module does NOT
+    # manage, so it's bridged via home.file below.
+    omp.enable = true;
+  };
+
+  # Hermes Agent service — declarative config management without the
+  # gateway. mcpServers are bridged from the shared programs.mcp.servers
+  # registry (same source of truth as all other agents). The module
+  # merges these into settings.mcp_servers in config.yaml.
+  services.hermes-agent = {
+    enable = true;
+    mcpServers = mcpServerEntries;
   };
 
   # MCP servers, via mcp-servers-nix's curated modules. These land in
@@ -245,8 +322,23 @@ in
 
   # oh-my-openagent discovers its user config at ~/.omo/omo.jsonc; it is
   # linked into place directly because the opencode module does not manage it.
+  # omp's mcp.json is also linked here — the omp HM module manages the
+  # package and config.yml but not MCP server config.
   home = {
-    file.".omo/omo.jsonc".source = ./oh-my-openagent.jsonc;
+    file = {
+      ".omo/omo.jsonc".source = ./oh-my-openagent.jsonc;
+
+      # omp (oh-my-pi) — ~/.omp/agent/mcp.json is the user-level MCP
+      # config file.  The omp HM module (programs.omp) manages config.yml
+      # and the package, but does NOT manage mcp.json.  A Nix store
+      # symlink is safe here: omp discovers MCP servers from this file but
+      # never writes to it via settings commands (interactive `/mcp add`
+      # writes here, but that's expected to fail under declarative
+      # management — add servers to mcp-servers.programs in nix-config
+      # instead).
+      "omp/agent/mcp.json".source = ompMcpJson;
+      "omp/agent/AGENTS.md".text = agentContext;
+    };
     packages = [ ori ];
     activation.herdrIntegrations = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       for kind in claude codex opencode; do
