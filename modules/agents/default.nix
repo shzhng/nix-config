@@ -10,15 +10,18 @@ let
     nix-config-sync = ./skills/nix-config-sync;
   };
 
-  # ori launches Claude Code against OpenRouter with the main model taken from
-  # its own config (e.g. openrouter/auto), but Claude Code's auto-mode
-  # permission classifier pins claude-sonnet-5 via ANTHROPIC_DEFAULT_SONNET_MODEL
-  # instead of the main model setting, so classifier calls (~full context, a
-  # few output tokens, every turn) silently route to paid Anthropic providers
-  # on OpenRouter. Defaulting the tier aliases to openrouter/auto here keeps
-  # every request on the configured route; scoping it to the ori wrapper
-  # (rather than home.sessionVariables) leaves direct `claude` runs against
-  # Anthropic untouched. --set-default still allows per-invocation overrides.
+  # ori launches Claude Code against OpenRouter; its own harness now sets
+  # ANTHROPIC_DEFAULT_{SONNET,OPUS,HAIKU,FABLE}_MODEL to per-tier
+  # anthropic/claude-*-latest[1m] aliases. But Claude Code's auto-mode
+  # permission classifier pins those tier aliases instead of the main model
+  # setting, so with ori's defaults those classifier calls (~full context, a
+  # few output tokens, every turn) would silently route to paid Anthropic
+  # providers rather than the user's configured openrouter/auto main model.
+  # ori respects already-set values, so pre-setting these tiers to
+  # openrouter/auto here keeps every request on the configured route; scoping
+  # it to the ori wrapper (rather than home.sessionVariables) leaves direct
+  # `claude` runs against Anthropic untouched. --set-default still allows
+  # per-invocation overrides.
   ori = pkgs.symlinkJoin {
     name = "ori-openrouter";
     paths = [ pkgs.ori ];
@@ -27,7 +30,8 @@ let
       wrapProgram $out/bin/ori \
         --set-default ANTHROPIC_DEFAULT_SONNET_MODEL openrouter/auto \
         --set-default ANTHROPIC_DEFAULT_OPUS_MODEL openrouter/auto \
-        --set-default ANTHROPIC_DEFAULT_HAIKU_MODEL openrouter/auto
+        --set-default ANTHROPIC_DEFAULT_HAIKU_MODEL openrouter/auto \
+        --set-default ANTHROPIC_DEFAULT_FABLE_MODEL openrouter/auto
     '';
     inherit (pkgs.ori) meta;
   };
