@@ -1,18 +1,29 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "semanticCommits": "enabled",
   "nix": {
-    "enabled": true
+    "enabled": true,
+    "lockFileMaintenance": {
+      "description": "Flake inputs without a pinned rev are only ever updated by lock file maintenance (`nix flake update`), never by per-input PRs, so this must stay enabled.",
+      "enabled": true,
+      "schedule": ["before 6am on monday"],
+      "branchTopic": "flake-inputs",
+      "commitMessageAction": "Update",
+      "commitMessageTopic": "flake inputs",
+      "semanticCommitScope": "flake"
+    }
   },
   "packageRules": [
     {
-      "matchManagers": ["nix"],
-      "groupName": "flake inputs",
+      "matchManagers": ["github-actions"],
       "schedule": ["before 6am"]
     },
     {
+      "description": "DeterminateSystems actions are released and tested together",
       "matchManagers": ["github-actions"],
-      "schedule": ["before 6am"]
+      "matchPackageNames": ["DeterminateSystems/**"],
+      "groupName": "DeterminateSystems actions"
     }
   ]
 }

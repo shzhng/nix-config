@@ -1,10 +1,12 @@
 name: Update Dependencies
 
-# Renovate is the primary flake updater (renovate.json enables the nix
-# manager; inputs are grouped into one weekly "flake inputs" PR that, unlike
-# PRs from this workflow's GITHUB_TOKEN, actually triggers CI). This workflow
-# is kept as a manual fallback — dispatch it if Renovate's nix support (beta,
-# runs on the hosted app) fails; failures show on the Dependency Dashboard.
+# Renovate is the primary flake updater: renovate.json enables the nix
+# manager's lock file maintenance, which runs `nix flake update` and opens one
+# weekly "chore(flake): update flake inputs" PR (unlike PRs from this
+# workflow's GITHUB_TOKEN, it triggers CI). Inputs without a pinned rev are
+# only ever updated by lock file maintenance, so keep that enabled. This
+# workflow is kept as a manual fallback — dispatch it if Renovate's nix
+# support fails; failures show on the Dependency Dashboard.
 # Note: PRs created here use GITHUB_TOKEN, which GitHub blocks from
 # triggering other workflows — close & reopen the PR to run CI on it.
 
