@@ -190,6 +190,33 @@
       darwinModules.home-manager-backup = homeManagerBackupModule;
       nixosModules.home-manager-backup = homeManagerBackupModule;
 
+      # Home-manager module sets for other flakes (shzhng/homelab-nix's
+      # headless NixOS hosts). Split so a server can take the portable CLI
+      # environment without the Darwin-only GUI parts or the agent tooling
+      # (which needs the llm-agents overlay and mcp-servers-nix above).
+      # home.nix imports the same directories directly.
+      homeModules = {
+        cli = {
+          imports = [
+            ./modules/shells
+            ./modules/git
+            ./modules/tools
+          ];
+        };
+        agents = {
+          imports = [
+            ./modules/agents
+            mcp-servers-nix.homeManagerModules.default
+          ];
+        };
+        gui = {
+          imports = [
+            ./modules/terminals
+            ./modules/editors
+          ];
+        };
+      };
+
       # Build darwin flake using:
       # `nix run nix-darwin -- switch --flake .`
       # Switch with:
