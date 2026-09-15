@@ -54,8 +54,7 @@ in
       awscli2
       hcloud
 
-      # Development tools
-      gh
+      # Development tools (gh comes with modules/git)
       nodejs
       kubectl
       kubernetes-helm
