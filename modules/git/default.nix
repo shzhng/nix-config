@@ -50,7 +50,10 @@ _: {
     # The credential helper above and the agents module's GitHub MCP wrapper
     # both call gh, so the git module installs it: hosts that import only
     # homeModules.cli (nickel) get it too, not just home.nix on the Macs.
-    gh.enable = true;
+    gh = {
+      enable = true;
+      settings.git_protocol = "ssh";
+    };
 
     # Delta installed for manual use, but not as default git pager (for agent compatibility)
     # Use manually with: git diff | delta
