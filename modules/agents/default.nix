@@ -35,6 +35,31 @@ let
     '';
     inherit (pkgs.ori) meta;
   };
+
+  # Claude Code status line, styled after the starship prompt (bold cyan
+  # directory, bold purple git branch) plus the model and context usage.
+  # Reads Claude Code's status JSON on stdin.
+  claudeStatusLine = pkgs.writeShellApplication {
+    name = "claude-statusline";
+    runtimeInputs = [
+      pkgs.jq
+      pkgs.git
+    ];
+    text = ''
+      input=$(cat)
+      dir=$(jq -r '.workspace.current_dir // .cwd // empty' <<<"$input")
+      model=$(jq -r '.model.display_name // empty' <<<"$input")
+      ctx=$(jq -r '.context_window.used_percentage // empty | floor? // empty' <<<"$input")
+
+      out=$(printf '\033[1;36m%s\033[0m' "''${dir/#$HOME/\~}")
+      if branch=$(git -C "$dir" --no-optional-locks branch --show-current 2>/dev/null) && [ -n "$branch" ]; then
+        out+=$(printf ' on \033[1;35m\uf418 %s\033[0m' "$branch")
+      fi
+      [ -n "$model" ] && out+=$(printf ' \033[2m· %s\033[0m' "$model")
+      [ -n "$ctx" ] && out+=$(printf ' \033[2m· ctx %s%%\033[0m' "$ctx")
+      printf '%s' "$out"
+    '';
+  };
 in
 {
   programs = {
@@ -256,6 +281,24 @@ in
       for kind in claude codex opencode; do
         run ${lib.getExe pkgs.herdr} integration install "''$kind" || true
       done
+    '';
+    # ~/.claude/settings.json stays a real writable file (Claude Code and the
+    # herdr hooks above write to it at runtime), so programs.claude-code.settings
+    # is deliberately unused; merge the statusLine key in instead.
+    activation.claudeStatusLine = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      settings="$HOME/.claude/settings.json"
+      if [ ! -L "$settings" ]; then
+        run mkdir -p "$HOME/.claude"
+        [ -s "$settings" ] || run sh -c 'echo "{}" > "$1"' _ "$settings"
+        tmp=$(mktemp)
+        if ${lib.getExe pkgs.jq} --arg cmd ${lib.getExe claudeStatusLine} \
+          '.statusLine = { type: "command", command: $cmd, padding: 0 }' \
+          "$settings" > "$tmp"; then
+          # cp (not mv) rewrites in place, keeping the file's owner/mode
+          run cp "$tmp" "$settings"
+        fi
+        rm -f "$tmp"
+      fi
     '';
     # One-time migration: home-manager used to manage ~/.codex/config.toml as
     # a symlink into the read-only Nix store, which broke Codex's trust writes
