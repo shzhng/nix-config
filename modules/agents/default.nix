@@ -277,41 +277,43 @@ in
   home = {
     file.".omo/omo.jsonc".source = ./oh-my-openagent.jsonc;
     packages = [ ori ];
-    activation.herdrIntegrations = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      for kind in claude codex opencode; do
-        run ${lib.getExe pkgs.herdr} integration install "''$kind" || true
-      done
-    '';
-    # ~/.claude/settings.json stays a real writable file (Claude Code and the
-    # herdr hooks above write to it at runtime), so programs.claude-code.settings
-    # is deliberately unused; merge the statusLine key in instead.
-    activation.claudeStatusLine = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      settings="$HOME/.claude/settings.json"
-      if [ ! -L "$settings" ]; then
-        run mkdir -p "$HOME/.claude"
-        [ -s "$settings" ] || run sh -c 'echo "{}" > "$1"' _ "$settings"
-        tmp=$(mktemp)
-        if ${lib.getExe pkgs.jq} --arg cmd ${lib.getExe claudeStatusLine} \
-          '.statusLine = { type: "command", command: $cmd, padding: 0 }' \
-          "$settings" > "$tmp"; then
-          # cp (not mv) rewrites in place, keeping the file's owner/mode
-          run cp "$tmp" "$settings"
+    activation = {
+      herdrIntegrations = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        for kind in claude codex opencode; do
+          run ${lib.getExe pkgs.herdr} integration install "''$kind" || true
+        done
+      '';
+      # ~/.claude/settings.json stays a real writable file (Claude Code and the
+      # herdr hooks above write to it at runtime), so programs.claude-code.settings
+      # is deliberately unused; merge the statusLine key in instead.
+      claudeStatusLine = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        settings="$HOME/.claude/settings.json"
+        if [ ! -L "$settings" ]; then
+          run mkdir -p "$HOME/.claude"
+          [ -s "$settings" ] || run sh -c 'echo "{}" > "$1"' _ "$settings"
+          tmp=$(mktemp)
+          if ${lib.getExe pkgs.jq} --arg cmd ${lib.getExe claudeStatusLine} \
+            '.statusLine = { type: "command", command: $cmd, padding: 0 }' \
+            "$settings" > "$tmp"; then
+            # cp (not mv) rewrites in place, keeping the file's owner/mode
+            run cp "$tmp" "$settings"
+          fi
+          rm -f "$tmp"
         fi
-        rm -f "$tmp"
-      fi
-    '';
-    # One-time migration: home-manager used to manage ~/.codex/config.toml as
-    # a symlink into the read-only Nix store, which broke Codex's trust writes
-    # ("failed to persist config.toml"). The user config.toml is now
-    # intentionally unmanaged (see the codex block above), so drop the stale
-    # link HM left behind; Codex recreates config.toml as a regular writable
-    # file on its next write. Idempotent: only fires while the store symlink
-    # exists, so a future REAL user config.toml is never touched.
-    activation.removeStaleCodexConfigLink = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      if [ -L "$HOME/.codex/config.toml" ] && [[ "$(readlink "$HOME/.codex/config.toml")" == /nix/store/* ]]; then
-        rm -f "$HOME/.codex/config.toml"
-      fi
-    '';
+      '';
+      # One-time migration: home-manager used to manage ~/.codex/config.toml as
+      # a symlink into the read-only Nix store, which broke Codex's trust writes
+      # ("failed to persist config.toml"). The user config.toml is now
+      # intentionally unmanaged (see the codex block above), so drop the stale
+      # link HM left behind; Codex recreates config.toml as a regular writable
+      # file on its next write. Idempotent: only fires while the store symlink
+      # exists, so a future REAL user config.toml is never touched.
+      removeStaleCodexConfigLink = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+        if [ -L "$HOME/.codex/config.toml" ] && [[ "$(readlink "$HOME/.codex/config.toml")" == /nix/store/* ]]; then
+          rm -f "$HOME/.codex/config.toml"
+        fi
+      '';
+    };
   };
 
 }
