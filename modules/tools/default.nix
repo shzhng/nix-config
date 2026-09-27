@@ -31,6 +31,8 @@
           dark_name = "catppuccin";
         };
         ui = {
+          # distinct glyphs per agent state instead of colour-only dots
+          status_indicators = "symbols";
           show_agent_labels_on_pane_borders = true;
           toast.delivery = "terminal";
         };
