@@ -43,7 +43,9 @@ in
   };
 
   # The home.packages option allows you to install Nix packages into your
-  # environment. Machine-specific packages live in hosts/<hostname>/home.nix.
+  # environment. Machine-specific packages live in hosts/<hostname>/home.nix;
+  # the portable everyday CLI set lives in modules/tools (homeModules.cli), so
+  # the NixOS hosts get it too. This list is what only the Macs carry.
   # IMPORTANT: When adding/removing CLI tools, update modules/agents/AGENTS.md
   # to keep coding agents informed about available tools
   home.packages =
@@ -55,32 +57,15 @@ in
       hcloud
 
       # Development tools (gh comes with modules/git)
-      nodejs
       kubectl
       kubernetes-helm
       opentofu
       cf-terraforming
 
-      fastfetch
-      ripgrep
-
-      # Nix
-      cachix
-      nil
-      nixfmt
-      nixd
-
       # Utils
       certbot
-      doggo
-      duf
-      dust
-      jq
       unixodbc
       uutils-coreutils-noprefix
-
-      # Database tools
-      duckdb
 
       # Elixir
       beamPackages.elixir
