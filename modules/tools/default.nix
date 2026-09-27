@@ -47,6 +47,31 @@
   };
 
   home = {
+    # The everyday CLI set that is not a programs.* module, shared by every
+    # host that imports homeModules.cli (the Macs via home.nix, and the NixOS
+    # hosts: nickel, and aluminum for its Hermes agent). Mac-only tools stay in
+    # home.nix.
+    packages = with pkgs; [
+      nodejs
+      fastfetch
+      ripgrep
+
+      # Nix
+      cachix
+      nil
+      nixfmt
+      nixd
+
+      # Utils
+      doggo
+      duf
+      dust
+      jq
+
+      # Database tools
+      duckdb
+    ];
+
     sessionVariables = {
       # Use bat for man pages, though we prob won't need this since
       # installed batman
