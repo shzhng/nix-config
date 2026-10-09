@@ -117,6 +117,8 @@
     # Shared casks only - machine-specific casks live in hosts/<hostname>/
     casks = [
       "1password"
+      # `op`; desktop-app integration unlocks it with Touch ID
+      "1password-cli"
       # Claude desktop app (includes Cowork)
       "claude"
       "cloudflare-warp"
