@@ -92,6 +92,13 @@
       # Mac-specific apps
       raycast
 
+      # Delta CLI ships inside the zed-delta cask's app bundle; exec it by its
+      # real path (the app locates itself from the executable) and keep it on
+      # PATH, where the Delta Claude Code plugin looks first
+      (writeShellScriptBin "delta" ''
+        exec /Applications/Delta.app/Contents/MacOS/delta "$@"
+      '')
+
       docker_29
       # colima
     ];
@@ -120,6 +127,8 @@
       # Claude desktop app (includes Cowork)
       "claude"
       "cloudflare-warp"
+      # Zed's Delta: multiplayer agent threads (DeltaDB); CLI wrapper below
+      "zed-delta"
       "figma"
       # TODO Broken, investigate later
       # "figma-agent"

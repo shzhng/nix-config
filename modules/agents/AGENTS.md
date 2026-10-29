@@ -37,6 +37,7 @@ This file documents the CLI tools available in this environment to help coding a
 - `opencode` - OpenCode coding agent CLI (configured via programs.opencode)
 - `ori` - OpenRouter's agent environment CLI (launches Claude Code through OpenRouter; the nix wrapper defaults Claude Code's tier-alias env vars ANTHROPIC_DEFAULT_{SONNET,OPUS,HAIKU}_MODEL to openrouter/auto so background classifier calls stay on the configured route)
 - `lazygit` - Terminal UI for git commands
+- `delta` - Zed's Delta CLI (multiplayer agent threads on DeltaDB; app via the `zed-delta` cask). Not the git-delta diff pager, which is not installed
 - `node` - Node.js JavaScript runtime (version 18+)
 - `npm` - Node.js package manager
 - `kubectl` - Kubernetes command line tool
@@ -101,6 +102,5 @@ This file documents the CLI tools available in this environment to help coding a
 ## Notes
 - All tools are installed via Nix and available in PATH
 - Many tools have enhanced configurations
-- Delta is available for manual use: `git diff | delta`
 - Shell completions are automatically configured for zsh and fish
 - Prefer these modern alternatives over traditional tools when available
