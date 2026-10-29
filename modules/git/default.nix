@@ -55,26 +55,7 @@ _: {
       settings.git_protocol = "ssh";
     };
 
-    # Delta installed for manual use, but not as default git pager (for agent compatibility)
-    # Use manually with: git diff | delta
-    delta = {
-      enable = true;
-      enableGitIntegration = false;
-    };
-
-    lazygit = {
-      enable = true;
-      settings = {
-        git = {
-          paging = {
-            # https://github.com/jesseduffield/lazygit/blob/master/docs/Custom_Pagers.md
-            colorArg = "always";
-            useConfig = false;
-            pager = "delta --dark --paging=never";
-          };
-        };
-      };
-    };
+    lazygit.enable = true;
   };
 
   home.shellAliases = {
