@@ -271,4 +271,6 @@
 
   # Enable Touch ID for sudo, instead of entering password.
   security.pam.services.sudo_local.touchIdAuth = true;
+  # Reattach to the user session so Touch ID works under tmux/herdr.
+  security.pam.services.sudo_local.reattach = true;
 }
