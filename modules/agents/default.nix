@@ -3,6 +3,17 @@
 let
   agentContext = builtins.readFile ./AGENTS.md;
 
+  # plannotator's agent integrations ship in its source tree, pinned to the
+  # same release as the llm-agents binary so hooks and CLI never drift.
+  plannotatorSkills =
+    dir:
+    lib.genAttrs [
+      "plannotator-annotate"
+      "plannotator-inbox"
+      "plannotator-last"
+      "plannotator-review"
+    ] (name: "${pkgs.plannotator.src}/apps/skills/${dir}/${name}");
+
   agentSkills = {
     herdr = pkgs.runCommand "herdr-skill" { } ''
       ${pkgs.lib.getExe pkgs.herdr} --skill > $out
@@ -47,7 +58,10 @@ in
       enable = true;
       enableMcpIntegration = true;
       context = agentContext;
-      skills = agentSkills;
+      skills = agentSkills // plannotatorSkills "claude";
+      # plan-mode review: hooks ExitPlanMode/EnterPlanMode and calls the
+      # plannotator binary from home.packages
+      plugins.plannotator = "${pkgs.plannotator.src}/apps/hook";
     };
     # Codex config is layered: /etc/codex/config.toml (system) -> managed
     # -> $CODEX_HOME/config.toml (user) -> profile/project layers. The user
@@ -68,7 +82,9 @@ in
     codex = {
       enable = true;
       context = agentContext;
-      skills = agentSkills;
+      # plannotator's plan-review Stop hook lives in /etc/codex/config.toml
+      # (modules/darwin/default.nix)
+      skills = agentSkills // plannotatorSkills "core";
 
       profiles.openrouter = {
         model = "openrouter/auto";

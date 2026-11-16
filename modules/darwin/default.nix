@@ -65,6 +65,20 @@
       {
         approval_policy = "on-request";
         approvals_reviewer = "auto_review";
+        # plannotator plan review, as its installer would write into
+        # ~/.codex (hooks.json + features.hooks)
+        features.hooks = true;
+        hooks.Stop = [
+          {
+            hooks = [
+              {
+                type = "command";
+                command = lib.getExe pkgs.plannotator;
+                timeout = 345600;
+              }
+            ];
+          }
+        ];
       }
       // lib.optionalAttrs (config.home-manager.users.shuo.programs.mcp.servers != { }) {
         mcp_servers = lib.mapAttrs (
