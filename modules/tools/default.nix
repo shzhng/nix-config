@@ -36,6 +36,82 @@
           show_agent_labels_on_pane_borders = true;
           toast.delivery = "terminal";
         };
+        # herdr-annotate (plannotator) plugin actions; the plugin itself is
+        # installed imperatively with `herdr plugin install
+        # plannotator/herdr-annotate`. Keys follow its README and are free in
+        # herdr's defaults (prefix+o is taken, so document review is prefix+d).
+        keys.command =
+          map
+            (
+              b:
+              b
+              // {
+                type = "plugin_action";
+                command = "annotate.${b.command}";
+              }
+            )
+            [
+              {
+                key = "prefix+a";
+                command = "capture";
+                description = "annotate text";
+              }
+              {
+                key = "prefix+shift+a";
+                command = "copy-context";
+                description = "copy annotations as context";
+              }
+              {
+                key = "prefix+ctrl+a";
+                command = "copy-archive";
+                description = "copy annotations as context and archive them";
+              }
+              {
+                key = "prefix+ctrl+v";
+                command = "paste-archive";
+                description = "paste annotations into the agent's prompt and archive them";
+              }
+              {
+                key = "prefix+ctrl+s";
+                command = "send-archive";
+                description = "send annotations to the agent and archive them";
+              }
+              {
+                key = "prefix+m";
+                command = "manage";
+                description = "manage annotations";
+              }
+              {
+                key = "prefix+d";
+                command = "open";
+                description = "review documents in this folder";
+              }
+              {
+                key = "prefix+ctrl+d";
+                command = "gate";
+                description = "review documents here, with Approve";
+              }
+              {
+                key = "prefix+shift+o";
+                command = "last";
+                description = "review the agent's last reply";
+              }
+              {
+                key = "prefix+ctrl+o";
+                command = "last-newest";
+                description = "review the agent's newest reply";
+              }
+              {
+                key = "prefix+t";
+                command = "terminal";
+                description = "review this pane's recent output";
+              }
+              {
+                key = "prefix+ctrl+r";
+                command = "review";
+                description = "review this repo's changes";
+              }
+            ];
       };
     };
     lsd.enable = true;
