@@ -111,6 +111,8 @@
                 herdr
                 ori
                 opencode
+                plannotator
+                plannotator-tui
                 ;
             })
           ];

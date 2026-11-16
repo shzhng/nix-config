@@ -36,6 +36,8 @@ This file documents the CLI tools available in this environment to help coding a
 - `codex` - OpenAI Codex coding agent CLI (configured via programs.codex)
 - `opencode` - OpenCode coding agent CLI (configured via programs.opencode)
 - `ori` - OpenRouter's agent environment CLI (launches Claude Code, Codex, and other harnesses through OpenRouter, e.g. `ori claude --model <openrouter-model-id>`)
+- `plannotator` - Browser-based plan/document review for coding agents (hooks Claude Code plan mode via its plugin; `plannotator annotate <file>`, `plannotator inbox`)
+- `plannotator-tui` - Terminal Markdown annotation for coding agents (powers the herdr-annotate plugin)
 - `lazygit` - Terminal UI for git commands
 - `node` - Node.js JavaScript runtime (version 18+)
 - `npm` - Node.js package manager
