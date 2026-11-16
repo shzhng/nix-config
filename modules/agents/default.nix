@@ -10,32 +10,6 @@ let
     nix-config-sync = ./skills/nix-config-sync;
   };
 
-  # ori launches Claude Code against OpenRouter; its own harness now sets
-  # ANTHROPIC_DEFAULT_{SONNET,OPUS,HAIKU,FABLE}_MODEL to per-tier
-  # anthropic/claude-*-latest[1m] aliases. But Claude Code's auto-mode
-  # permission classifier pins those tier aliases instead of the main model
-  # setting, so with ori's defaults those classifier calls (~full context, a
-  # few output tokens, every turn) would silently route to paid Anthropic
-  # providers rather than the user's configured openrouter/auto main model.
-  # ori respects already-set values, so pre-setting these tiers to
-  # openrouter/auto here keeps every request on the configured route; scoping
-  # it to the ori wrapper (rather than home.sessionVariables) leaves direct
-  # `claude` runs against Anthropic untouched. --set-default still allows
-  # per-invocation overrides.
-  ori = pkgs.symlinkJoin {
-    name = "ori-openrouter";
-    paths = [ pkgs.ori ];
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-    postBuild = ''
-      wrapProgram $out/bin/ori \
-        --set-default ANTHROPIC_DEFAULT_SONNET_MODEL openrouter/auto \
-        --set-default ANTHROPIC_DEFAULT_OPUS_MODEL openrouter/auto \
-        --set-default ANTHROPIC_DEFAULT_HAIKU_MODEL openrouter/auto \
-        --set-default ANTHROPIC_DEFAULT_FABLE_MODEL openrouter/auto
-    '';
-    inherit (pkgs.ori) meta;
-  };
-
   # Claude Code status line, styled after the starship prompt (bold cyan
   # directory, bold purple git branch) plus the model and context usage.
   # Reads Claude Code's status JSON on stdin.
@@ -276,7 +250,7 @@ in
   # linked into place directly because the opencode module does not manage it.
   home = {
     file.".omo/omo.jsonc".source = ./oh-my-openagent.jsonc;
-    packages = [ ori ];
+    packages = [ pkgs.ori ];
     activation = {
       herdrIntegrations = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         for kind in claude codex opencode; do
