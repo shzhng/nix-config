@@ -110,6 +110,10 @@ in
         # One-time setup: `opencode auth login` -> OpenRouter.
         model = "openrouter/openrouter/auto";
 
+        # plannotator's opencode plugin (plan review via the plannotator
+        # binary); the installer can't add it since opencode.json is managed
+        plugin = [ "@plannotator/opencode@latest" ];
+
         permission = {
           read = {
             "**/.env*" = "deny";
@@ -240,7 +244,11 @@ in
   };
 
   home = {
-    packages = [ pkgs.ori ];
+    packages = [
+      pkgs.ori
+      pkgs.plannotator
+      pkgs.plannotator-tui
+    ];
     activation = {
       herdrIntegrations = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         for kind in claude codex opencode; do
